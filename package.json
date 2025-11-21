@@ -1,0 +1,39 @@
+{
+  "name": "react-mfe-portal",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "scripts": {
+    "start": "nx serve shell",
+    "start:shell": "nx serve shell",
+    "start:mfe1": "nx serve mfe1",
+    "start:mfe2": "nx serve mfe2",
+    "build": "nx build shell && nx build mfe1 && nx build mfe2",
+    "graph": "nx graph"
+  },
+  "devDependencies": {
+    "@module-federation/enhanced": "latest",
+    "@nx/js": "^22.0.4",
+    "@nx/react": "^22.0.4",
+    "@nx/webpack": "^22.0.4",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "html-webpack-plugin": "^5.6.5",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "webpack": "^5.103.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "dependencies": {
+    "@module-federation/runtime": "latest",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "react-router-dom": "^7.9.6",
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.8.0"
+  }
+}

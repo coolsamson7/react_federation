@@ -1,0 +1,30 @@
+{
+  "name": "shell",
+  "sourceRoot": "apps/shell/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "options": {
+        "port": 3000,
+        "webpackConfig": "apps/shell/webpack.config.js",
+        "liveReload": true
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "options": {
+        "webpackConfig": "apps/shell/webpack.config.js",
+        "outputPath": "dist/apps/shell"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    }
+  }
+}

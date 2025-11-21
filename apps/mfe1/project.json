@@ -1,0 +1,30 @@
+{
+  "name": "mfe1",
+  "sourceRoot": "apps/mfe1/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "options": {
+        "port": 3001,
+        "webpackConfig": "apps/mfe1/webpack.config.js",
+        "liveReload": true
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "options": {
+        "webpackConfig": "apps/mfe1/webpack.config.js",
+        "outputPath": "dist/apps/mfe1"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    }
+  }
+}

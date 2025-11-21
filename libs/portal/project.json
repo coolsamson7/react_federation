@@ -1,0 +1,15 @@
+{
+  "name": "portal",
+  "sourceRoot": "libs/portal/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "dist/libs/portal",
+        "tsConfig": "libs/portal/tsconfig.lib.json",
+        "main": "libs/portal/src/index.ts"
+      }
+    }
+  }
+}
