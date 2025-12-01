@@ -1,6 +1,9 @@
 {
   "npmScope": "my-org",
-  "implicitDependencies": {},
+  "namedInputs": {
+    "default": ["{projectRoot}/**"],
+    "production": ["!{projectRoot}/**/*.spec.ts"]
+  },
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx/tasks-runners/default"

@@ -4,29 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="INITIAL CODE">
-      <change afterPath="$PROJECT_DIR$/.mcp.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/mfe1/public/manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/shell/src/ShellHome.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/shell/src/ShellLayout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/shell/src/config/remotes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/component-registry.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/manifest-loader.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/remote-loader.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/route-manager.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="dynamic mfe working">
+      <change afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Bar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/metadata/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/metadata/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/metadata/project.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/metadata/src/build-metadata.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/metadata/src/feature-parser.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/metadata/tsconfig.lib.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/dist/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/dist/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/dist/remoteEntry.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/dist/remoteEntry.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mfe1/project.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/project.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/public/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Home.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mfe1/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/main.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mfe1/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/webpack.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/project.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/project.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/dist/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/dist/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/shell/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/main.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/webpack.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/di.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/di.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/component-registry.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/component-registry.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/manifest-loader.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/manifest-loader.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/registry.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/registry.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nx.json" beforeDir="false" afterPath="$PROJECT_DIR$/nx.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,42 +74,52 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;dev.nx.console.last_ai_configure_notification_timestamp&quot;: &quot;1764603125517&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/andreasernst/Documents/projects/react_federation&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Applications/PyCharm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Nx.metadata:scan.executor": "Run",
+    "Nx.mfe1:build-with-metadata.executor": "Run",
+    "Nx.mfe1:serve:development.executor": "Run",
+    "Nx.shell:serve:development.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "dev.nx.console.last_ai_configure_notification_timestamp": "1764603125517",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/andreasernst/Documents/projects/react_federation/apps/mfe1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.mfe1 > scan:metadata.executor": "Run",
+    "npm.mfe1 > serve.executor": "Run",
+    "show.migrate.to.gradle.popup": "false",
+    "ts.external.directory.path": "/Users/andreasernst/Documents/projects/react_federation/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;dev.nx.console.project_details_files&quot;: [
-      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/project.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/package.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/shell/project.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/shell/package.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/libs/portal/project.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/libs/portal/package.json&quot;
+  "keyToStringList": {
+    "dev.nx.console.project_details_files": [
+      "/Users/andreasernst/Documents/projects/react_federation/tools/metadata/project.json",
+      "/Users/andreasernst/Documents/projects/react_federation/tools/metadata/package.json",
+      "/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/project.json",
+      "/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/package.json",
+      "/Users/andreasernst/Documents/projects/react_federation/apps/shell/project.json",
+      "/Users/andreasernst/Documents/projects/react_federation/apps/shell/package.json",
+      "/Users/andreasernst/Documents/projects/react_federation/libs/portal/project.json",
+      "/Users/andreasernst/Documents/projects/react_federation/libs/portal/package.json"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/mfe1" />
+      <recent name="$PROJECT_DIR$/tools/metadata" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/libs/portal" />
       <recent name="$PROJECT_DIR$/libs/portal/src" />
-      <recent name="$PROJECT_DIR$/apps/shell" />
-      <recent name="$PROJECT_DIR$/apps/shell/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Nx.mfe1:serve:development">
+  <component name="RunManager" selected="Nx.mfe1:build-with-metadata">
     <configuration default="true" factoryName="Applet" type="Applet">
       <module />
       <option name="WIDTH" value="400" />
@@ -154,6 +167,22 @@
       <predefined_log_file enabled="true" id="idea.log" />
       <method />
     </configuration>
+    <configuration name="metadata:scan" type="NxRunConfigurationType">
+      <option name="nx-projects" value="metadata" />
+      <option name="nx-targets" value="scan" />
+      <option name="nx-target-configuration" value="" />
+      <envs />
+      <option name="arguments" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mfe1:build-with-metadata" type="NxRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="nx-projects" value="mfe1" />
+      <option name="nx-targets" value="build-with-metadata" />
+      <option name="nx-target-configuration" value="" />
+      <envs />
+      <option name="arguments" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="mfe1:serve:development" type="NxRunConfigurationType">
       <option name="nx-projects" value="mfe1" />
       <option name="nx-targets" value="serve" />
@@ -170,6 +199,33 @@
       <option name="arguments" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="mfe1 &gt; scan:metadata" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/apps/mfe1/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="scan:metadata" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="mfe1 &gt; serve" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/apps/mfe1/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="serve" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Nx.mfe1:build-with-metadata" />
+        <item itemvalue="npm.mfe1 &gt; scan:metadata" />
+        <item itemvalue="npm.mfe1 &gt; serve" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -187,6 +243,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1763714353731</updated>
+      <workItem from="1764603291270" duration="3278000" />
     </task>
     <task id="LOCAL-00001" summary="INITIAL CODE">
       <option name="closed" value="true" />
@@ -204,7 +261,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763731450085</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="dynamic mfe working">
+      <option name="closed" value="true" />
+      <created>1764603337255</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1764603337255</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -212,6 +277,29 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="INITIAL CODE" />
-    <option name="LAST_COMMIT_MESSAGE" value="INITIAL CODE" />
+    <MESSAGE value="dynamic mfe working" />
+    <option name="LAST_COMMIT_MESSAGE" value="dynamic mfe working" />
+  </component>
+  <component name="com.gk646.codestats.settings.Save">
+    <option name="commitTimePoints">
+      <list>
+        <TimePoint>
+          <option name="timestamp" value="1764603337311" />
+          <option name="linesCode" value="65703" />
+          <option name="totalLines" value="67571" />
+          <option name="info" value="dynamic mfe working" />
+        </TimePoint>
+      </list>
+    </option>
+    <option name="genericTimePoints">
+      <list>
+        <TimePoint>
+          <option name="timestamp" value="1764603337311" />
+          <option name="linesCode" value="65703" />
+          <option name="totalLines" value="67571" />
+          <option name="info" value="01.12.2025" />
+        </TimePoint>
+      </list>
+    </option>
   </component>
 </project>
