@@ -6,20 +6,27 @@ module.exports = {
   entry: "./apps/shell/src/main.tsx",
   mode: "development",
   devServer: {
-    port: 3000
+    port: 3000,
+    historyApiFallback: true,
+    static: {
+      directory: path.join(__dirname, "public"),
+    },
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    publicPath: "auto"
+    publicPath: "/",
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
     alias: {
-      "@portal/*": path.resolve(process.cwd(), './libs/portal/src/*'),
-    }
+      "@portal/*": path.resolve(process.cwd(), "./libs/portal/src/*"),
+    },
   },
   module: {
-    rules: [{ test: /\.tsx?$/, loader: "ts-loader" }]
+    rules: [{ test: /\.tsx?$/, loader: "ts-loader" }],
   },
   plugins: [
     new ModuleFederationPlugin({
@@ -30,11 +37,11 @@ module.exports = {
       shared: {
         react: { singleton: true, eager: true },
         "react-dom": { singleton: true, eager: true },
-        tsyringe: { singleton: true, eager: true }
-      }
+        tsyringe: { singleton: true, eager: true },
+      },
     }),
     new HtmlWebpackPlugin({
-      template: "apps/shell/public/index.html"
-    })
-  ]
+      template: "apps/shell/public/index.html",
+    }),
+  ],
 };

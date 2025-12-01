@@ -1,10 +1,16 @@
 import React from "react";
-import { DI } from "@portal/di";
-import { DefaultComponentRegistry } from "@portal/registry";
+import { registerRemoteComponent } from "@portal/component-registry";
 
-export default function MFE1Home() {
-  return <div>MFE1 Home Page</div>;
+function MFE1Home() {
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>MFE1 Home Page</h2>
+      <p>This component is loaded via Module Federation from the mfe1 remote.</p>
+    </div>
+  );
 }
 
-// Register component in DI
-DI.resolve(DefaultComponentRegistry).register("MFE1Home", () => import("./MFE1Home"));
+export default registerRemoteComponent("MFE1Home", MFE1Home);
+
+
+

@@ -6,6 +6,7 @@
     "serve": {
       "executor": "@nx/webpack:dev-server",
       "options": {
+        "buildTarget": "shell:build",
         "port": 3000,
         "webpackConfig": "apps/shell/webpack.config.js",
         "liveReload": true

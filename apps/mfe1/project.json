@@ -6,6 +6,7 @@
     "serve": {
       "executor": "@nx/webpack:dev-server",
       "options": {
+        "buildTarget": "mfe1:build",
         "port": 3001,
         "webpackConfig": "apps/mfe1/webpack.config.js",
         "liveReload": true

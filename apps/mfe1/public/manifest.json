@@ -1,0 +1,11 @@
+{
+  "name": "mfe1",
+  "version": "1.0.0",
+  "routes": [
+    {
+      "path": "/mfe1",
+      "component": "MFE1Home",
+      "label": "MFE1 Home"
+    }
+  ]
+}

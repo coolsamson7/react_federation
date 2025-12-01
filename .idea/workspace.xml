@@ -5,7 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="INITIAL CODE">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mcp.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/mfe1/public/manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/shell/src/ShellHome.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/shell/src/ShellLayout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/shell/src/config/remotes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/libs/portal/src/component-registry.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/libs/portal/src/manifest-loader.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/libs/portal/src/remote-loader.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/libs/portal/src/route-manager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/project.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/project.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/main.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/project.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/project.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/main.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/di.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/di.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,10 +44,21 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:coolsamson7/react_federation.git&quot;,
+    &quot;url&quot;: &quot;https://github.com/coolsamson7/react_federation.git&quot;,
     &quot;accountId&quot;: &quot;5eada779-732f-475d-af7f-05973b6b02ee&quot;
   }
 }</component>
+  <component name="McpProjectServerCommands">
+    <McpServerCommand sourceId="UserConfigurationSource">
+      <option name="allowedToolsNames" />
+      <option name="enabled" value="true" />
+      <option name="name" value="nx-mcp" />
+      <option name="programPath" value="npx" />
+      <option name="arguments" value="-y nx-mcp@latest /Users/andreasernst/Documents/projects/react_federation" />
+      <option name="workingDirectory" value="" />
+      <envs />
+    </McpServerCommand>
+  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>
@@ -44,70 +76,66 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;dev.nx.console.last_ai_configure_notification_timestamp&quot;: &quot;1764603125517&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/andreasernst/Documents/projects/react_federation&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/PyCharm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;dev.nx.console.project_details_files&quot;: [
+      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/project.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/package.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/shell/project.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/shell/package.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/libs/portal/project.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/libs/portal/package.json&quot;
+    ]
   }
 }</component>
-  <component name="RunManager">
-    <configuration default="true" type="Applet" factoryName="Applet">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/libs/portal" />
+      <recent name="$PROJECT_DIR$/libs/portal/src" />
+      <recent name="$PROJECT_DIR$/apps/shell" />
+      <recent name="$PROJECT_DIR$/apps/shell/src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Nx.mfe1:serve:development">
+    <configuration default="true" factoryName="Applet" type="Applet">
       <module />
       <option name="WIDTH" value="400" />
       <option name="HEIGHT" value="300" />
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method />
     </configuration>
-    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
-      <module name="" />
-      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
-      <option name="PROGRAM_PARAMETERS" />
-      <predefined_log_file id="idea.log" enabled="true" />
-      <method />
-    </configuration>
-    <configuration default="true" type="Application" factoryName="Application">
+    <configuration default="true" factoryName="Application" type="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
-        <option name="Make" enabled="true" />
+        <option enabled="true" name="Make" />
       </method>
     </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit">
+    <configuration default="true" factoryName="JUnit" type="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
       <method v="2">
-        <option name="Make" enabled="true" />
+        <option enabled="true" name="Make" />
       </method>
     </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="react_federation" />
       <method v="2">
-        <option name="Make" enabled="true" />
+        <option enabled="true" name="Make" />
       </method>
     </configuration>
     <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
       <module name="react_federation" />
       <option name="filePath" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <module name="react_federation" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
     <configuration default="true" type="TestNG">
@@ -116,55 +144,40 @@
       <properties />
       <listeners />
       <method v="2">
-        <option name="Make" enabled="true" />
+        <option enabled="true" name="Make" />
       </method>
     </configuration>
-    <configuration default="true" type="Tox" factoryName="Tox">
-      <module name="react_federation" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
+    <configuration default="true" factoryName="Plugin" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file enabled="true" id="idea.log" />
+      <method />
+    </configuration>
+    <configuration name="mfe1:serve:development" type="NxRunConfigurationType">
+      <option name="nx-projects" value="mfe1" />
+      <option name="nx-targets" value="serve" />
+      <option name="nx-target-configuration" value="development" />
+      <envs />
+      <option name="arguments" value="" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="tests" factoryName="Autodetect">
-      <module name="react_federation" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
+    <configuration name="shell:serve:development" type="NxRunConfigurationType">
+      <option name="nx-projects" value="shell" />
+      <option name="nx-targets" value="serve" />
+      <option name="nx-target-configuration" value="development" />
+      <envs />
+      <option name="arguments" value="" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="tests" factoryName="Doctests">
-      <module name="react_federation" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method v="2" />
-    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-PY-252.27397.106" />
+        <option value="bundled-python-sdk-4e2b1448bda8-9a97661f3031-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.27397.106" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -193,6 +206,9 @@
     </task>
     <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="INITIAL CODE" />
