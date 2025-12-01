@@ -1,6 +1,49 @@
 import { singleton } from "tsyringe";
 
 /**
+ * Remote module configuration
+ */
+export interface RemoteConfig {
+  url: string;
+  scope: string;
+  module: string;
+}
+
+/**
+ * Base metadata interface
+ */
+export interface Metadata {
+  id: string;
+  label?: string;
+  icon?: string;
+  description?: string;
+  sourceFile?: string;
+}
+
+/**
+ * Module metadata with features and permissions
+ */
+export interface ModuleMetadata extends Metadata {
+  remote?: RemoteConfig;
+  version: string;
+  features?: FeatureMetadata[];
+  permissions?: string[];
+  moduleName?: string;
+}
+
+/**
+ * Feature metadata for individual components
+ */
+export interface FeatureMetadata extends Metadata {
+  module?: ModuleMetadata;
+  permissions?: string[];
+  meta?: Record<string, any>;
+  component: string;
+  path: string;
+  children?: FeatureMetadata[];
+}
+
+/**
  * Interface for the component registry
  */
 export interface ComponentRegistry {

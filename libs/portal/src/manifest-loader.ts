@@ -1,4 +1,5 @@
 import { singleton } from "tsyringe";
+import { ModuleMetadata, FeatureMetadata } from "./registry";
 
 export interface MFEManifest {
   name: string;
@@ -63,7 +64,8 @@ export class ManifestLoader {
   }
 
   /**
-   * Internal method to load manifest from remote HTTP endpoint
+   * Internal method to load manifest.json from remote HTTP endpoint
+   * Now loads auto-generated metadata in manifest.json format
    */
   private async _loadManifest(
     remoteName: string,
@@ -81,12 +83,42 @@ export class ManifestLoader {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      const manifest = await response.json();
-      return manifest;
+      const data = await response.json();
+      
+      // If it's ModuleMetadata (has 'features' array), convert it
+      if (data.features && Array.isArray(data.features)) {
+        return this._convertMetadataToManifest(data, remoteName);
+      }
+      
+      // Otherwise assume it's already an MFEManifest
+      return data as MFEManifest;
     } catch (error) {
       console.error(`Error loading manifest from ${remoteName}:`, error);
       throw new Error(`Failed to load manifest for ${remoteName}: ${error}`);
     }
+  }
+
+  /**
+   * Convert ModuleMetadata to MFEManifest format
+   */
+  private _convertMetadataToManifest(
+    metadata: ModuleMetadata,
+    remoteName: string
+  ): MFEManifest {
+    console.log(`Converting metadata for ${remoteName}:`, metadata);
+    const routes = (metadata.features || []).map((feature: FeatureMetadata) => ({
+      path: feature.path,
+      component: feature.component,
+      label: feature.label || feature.id,
+    }));
+
+    console.log(`Converted routes for ${remoteName}:`, routes);
+
+    return {
+      name: metadata.id || remoteName,
+      version: metadata.version,
+      routes,
+    };
   }
 
   /**
