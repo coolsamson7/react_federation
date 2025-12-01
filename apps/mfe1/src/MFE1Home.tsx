@@ -1,16 +1,26 @@
 import React from "react";
-import { registerRemoteComponent } from "@portal/component-registry";
+import { Feature } from "@portal/component-registry";
 
-function MFE1Home() {
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>MFE1 Home Page</h2>
-      <p>This component is loaded via Module Federation from the mfe1 remote.</p>
-    </div>
-  );
+@Feature({
+  id: "mfe1-home",
+  label: "MFE1 Home",
+  icon: "🏠",
+  description: "Home page of MFE1 module",
+  path: "/mfe1",
+  meta: { requiresAuth: false },
+})
+class MFE1Home extends React.Component {
+  render() {
+    return (
+      <div style={{ padding: "20px" }}>
+        <h2>MFE1 Home Page</h2>
+        <p>This component is loaded via Module Federation from the mfe1 remote.</p>
+      </div>
+    );
+  }
 }
 
-export default registerRemoteComponent("MFE1Home", MFE1Home);
+export default MFE1Home;
 
 
 

@@ -52,11 +52,14 @@ export default function App() {
 
         // Subscribe to route changes
         const unsubscribe = routeManager.onRoutesChange((updatedRoutes: RouteMeta[]) => {
+          console.log("Routes updated:", updatedRoutes);
           setRoutes(updatedRoutes);
         });
 
         // Initial load
-        setRoutes(routeManager.getRoutes());
+        const initialRoutes = routeManager.getRoutes();
+        console.log("Initial routes:", initialRoutes);
+        setRoutes(initialRoutes);
         setLoading(false);
 
         return unsubscribe;

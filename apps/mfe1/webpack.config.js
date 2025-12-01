@@ -1,6 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
-const CopyPlugin = require("copy-webpack-plugin");
 const path = require("path");
 
 module.exports = {
@@ -37,6 +36,8 @@ module.exports = {
       filename: "remoteEntry.js",
       exposes: {
         "./MFE1Home": "./apps/mfe1/src/MFE1Home",
+        "./MFE1Foo": "./apps/mfe1/src/MFE1Foo",
+        "./MFE1Bar": "./apps/mfe1/src/MFE1Bar",
       },
       shared: {
         react: { singleton: true, eager: true },
@@ -46,14 +47,6 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: "./apps/mfe1/public/index.html",
-    }),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, "public/manifest.json"),
-          to: path.resolve(__dirname, "dist/manifest.json"),
-        },
-      ],
     }),
   ],
 };

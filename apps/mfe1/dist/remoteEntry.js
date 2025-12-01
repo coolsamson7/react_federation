@@ -377,7 +377,7 @@ eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpa
   \***********************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-eval("{var moduleMap = {\n\t\"./MFE1Home\": () => {\n\t\treturn Promise.all([__webpack_require__.e(\"vendors-node_modules_react_jsx-runtime_js-node_modules_reflect-metadata_Reflect_js\"), __webpack_require__.e(\"apps_mfe1_src_MFE1Home_tsx-webpack_sharing_consume_default_react_react\")]).then(() => (() => ((__webpack_require__(/*! ./apps/mfe1/src/MFE1Home */ \"./apps/mfe1/src/MFE1Home.tsx\")))));\n\t}\n};\nvar get = (module, getScope) => {\n\t__webpack_require__.R = getScope;\n\tgetScope = (\n\t\t__webpack_require__.o(moduleMap, module)\n\t\t\t? moduleMap[module]()\n\t\t\t: Promise.resolve().then(() => {\n\t\t\t\tthrow new Error('Module \"' + module + '\" does not exist in container.');\n\t\t\t})\n\t);\n\t__webpack_require__.R = undefined;\n\treturn getScope;\n};\nvar init = (shareScope, initScope) => {\n\tif (!__webpack_require__.S) return;\n\tvar name = \"default\"\n\tvar oldScope = __webpack_require__.S[name];\n\tif(oldScope && oldScope !== shareScope) throw new Error(\"Container initialization failed as it has already been initialized with a different share scope\");\n\t__webpack_require__.S[name] = shareScope;\n\treturn __webpack_require__.I(name, initScope);\n};\n\n// This exports getters to disallow modifications\n__webpack_require__.d(exports, {\n\tget: () => (get),\n\tinit: () => (init)\n});\n\n//# sourceURL=webpack://react-mfe-portal/container_entry?\n}");
+eval("{var moduleMap = {\n\t\"./MFE1Home\": () => {\n\t\treturn Promise.all([__webpack_require__.e(\"vendors-node_modules_react_jsx-runtime_js-node_modules_reflect-metadata_Reflect_js\"), __webpack_require__.e(\"webpack_sharing_consume_default_react_react-webpack_sharing_consume_default_react_react-webpa-e176fd\"), __webpack_require__.e(\"apps_mfe1_src_MFE1Home_tsx\")]).then(() => (() => ((__webpack_require__(/*! ./apps/mfe1/src/MFE1Home */ \"./apps/mfe1/src/MFE1Home.tsx\")))));\n\t},\n\t\"./MFE1Foo\": () => {\n\t\treturn Promise.all([__webpack_require__.e(\"vendors-node_modules_react_jsx-runtime_js-node_modules_reflect-metadata_Reflect_js\"), __webpack_require__.e(\"webpack_sharing_consume_default_react_react-webpack_sharing_consume_default_react_react-webpa-e176fd\"), __webpack_require__.e(\"apps_mfe1_src_MFE1Foo_tsx\")]).then(() => (() => ((__webpack_require__(/*! ./apps/mfe1/src/MFE1Foo */ \"./apps/mfe1/src/MFE1Foo.tsx\")))));\n\t},\n\t\"./MFE1Bar\": () => {\n\t\treturn Promise.all([__webpack_require__.e(\"vendors-node_modules_react_jsx-runtime_js-node_modules_reflect-metadata_Reflect_js\"), __webpack_require__.e(\"webpack_sharing_consume_default_react_react-webpack_sharing_consume_default_react_react-webpa-e176fd\"), __webpack_require__.e(\"apps_mfe1_src_MFE1Bar_tsx\")]).then(() => (() => ((__webpack_require__(/*! ./apps/mfe1/src/MFE1Bar */ \"./apps/mfe1/src/MFE1Bar.tsx\")))));\n\t}\n};\nvar get = (module, getScope) => {\n\t__webpack_require__.R = getScope;\n\tgetScope = (\n\t\t__webpack_require__.o(moduleMap, module)\n\t\t\t? moduleMap[module]()\n\t\t\t: Promise.resolve().then(() => {\n\t\t\t\tthrow new Error('Module \"' + module + '\" does not exist in container.');\n\t\t\t})\n\t);\n\t__webpack_require__.R = undefined;\n\treturn getScope;\n};\nvar init = (shareScope, initScope) => {\n\tif (!__webpack_require__.S) return;\n\tvar name = \"default\"\n\tvar oldScope = __webpack_require__.S[name];\n\tif(oldScope && oldScope !== shareScope) throw new Error(\"Container initialization failed as it has already been initialized with a different share scope\");\n\t__webpack_require__.S[name] = shareScope;\n\treturn __webpack_require__.I(name, initScope);\n};\n\n// This exports getters to disallow modifications\n__webpack_require__.d(exports, {\n\tget: () => (get),\n\tinit: () => (init)\n});\n\n//# sourceURL=webpack://react-mfe-portal/container_entry?\n}");
 
 /***/ })
 
@@ -598,25 +598,7 @@ eval("{var moduleMap = {\n\t\"./MFE1Home\": () => {\n\t\treturn Promise.all([__w
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		var scriptUrl;
-/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-/******/ 		var document = __webpack_require__.g.document;
-/******/ 		if (!scriptUrl && document) {
-/******/ 			if (document.currentScript && document.currentScript.tagName.toUpperCase() === 'SCRIPT')
-/******/ 				scriptUrl = document.currentScript.src;
-/******/ 			if (!scriptUrl) {
-/******/ 				var scripts = document.getElementsByTagName("script");
-/******/ 				if(scripts.length) {
-/******/ 					var i = scripts.length - 1;
-/******/ 					while (i > -1 && (!scriptUrl || !/^http(s?):/.test(scriptUrl))) scriptUrl = scripts[i--].src;
-/******/ 				}
-/******/ 			}
-/******/ 		}
-/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
-/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
-/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
-/******/ 		scriptUrl = scriptUrl.replace(/^blob:/, "").replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-/******/ 		__webpack_require__.p = scriptUrl;
+/******/ 		__webpack_require__.p = "http://localhost:3001/";
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/consumes */
@@ -744,13 +726,15 @@ eval("{var moduleMap = {\n\t\"./MFE1Home\": () => {\n\t\treturn Promise.all([__w
 /******/ 		});
 /******/ 		var installedModules = {};
 /******/ 		var moduleToHandlerMapping = {
-/******/ 			"webpack/sharing/consume/default/react/react": () => (loadSingleton("default", "react", true, () => (() => (__webpack_require__(/*! react */ "./node_modules/react/index.js"))))),
+/******/ 			"webpack/sharing/consume/default/react/react?b46c": () => (loadSingletonVersion("default", "react", true, [1,18,3,0], () => (() => (__webpack_require__(/*! react */ "./node_modules/react/index.js"))))),
+/******/ 			"webpack/sharing/consume/default/react/react?e43f": () => (loadSingleton("default", "react", true, () => (() => (__webpack_require__(/*! react */ "./node_modules/react/index.js"))))),
 /******/ 			"webpack/sharing/consume/default/tsyringe/tsyringe": () => (loadSingletonVersion("default", "tsyringe", true, [1,4,8,0], () => (() => (__webpack_require__(/*! tsyringe */ "./node_modules/tsyringe/dist/esm5/index.js")))))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		var chunkMapping = {
-/******/ 			"apps_mfe1_src_MFE1Home_tsx-webpack_sharing_consume_default_react_react": [
-/******/ 				"webpack/sharing/consume/default/react/react",
+/******/ 			"webpack_sharing_consume_default_react_react-webpack_sharing_consume_default_react_react-webpa-e176fd": [
+/******/ 				"webpack/sharing/consume/default/react/react?b46c",
+/******/ 				"webpack/sharing/consume/default/react/react?e43f",
 /******/ 				"webpack/sharing/consume/default/tsyringe/tsyringe"
 /******/ 			]
 /******/ 		};
@@ -807,7 +791,7 @@ eval("{var moduleMap = {\n\t\"./MFE1Home\": () => {\n\t\treturn Promise.all([__w
 /******/ 					if(installedChunkData) {
 /******/ 						promises.push(installedChunkData[2]);
 /******/ 					} else {
-/******/ 						if(true) { // all chunks have JS
+/******/ 						if("webpack_sharing_consume_default_react_react-webpack_sharing_consume_default_react_react-webpa-e176fd" != chunkId) {
 /******/ 							// setup Promise in chunk cache
 /******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
@@ -832,7 +816,7 @@ eval("{var moduleMap = {\n\t\"./MFE1Home\": () => {\n\t\treturn Promise.all([__w
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						}
+/******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
 /******/ 		};

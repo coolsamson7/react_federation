@@ -3,6 +3,12 @@
   "sourceRoot": "apps/mfe1/src",
   "projectType": "application",
   "targets": {
+    "scan-metadata": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run metadata:scan --moduleFolder=apps/mfe1 --outFile=dist/apps/mfe1/metadata.json"
+      }
+    },
     "serve": {
       "executor": "@nx/webpack:dev-server",
       "options": {
@@ -25,6 +31,16 @@
       "configurations": {
         "development": {},
         "production": {}
+      }
+    },
+    "build-with-metadata": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run mfe1:scan-metadata",
+          "nx run mfe1:build"
+        ],
+        "parallel": false
       }
     }
   }

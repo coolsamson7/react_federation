@@ -1,11 +1,46 @@
 {
-  "name": "mfe1",
+  "id": "mfe1",
+  "label": "MFE1 Module",
   "version": "1.0.0",
-  "routes": [
+  "features": [
     {
+      "id": "mfe1-home",
+      "label": "MFE1 Home",
       "path": "/mfe1",
       "component": "MFE1Home",
-      "label": "MFE1 Home"
+      "sourceFile": "apps/mfe1/src/MFE1Home.tsx",
+      "icon": "🏠",
+      "description": "Home page of MFE1 module",
+      "meta": {
+        "requiresAuth": false
+      }
+    },
+    {
+      "id": "mfe1-foo",
+      "label": "Foo Page",
+      "path": "/mfe1/foo",
+      "component": "MFE1Foo",
+      "sourceFile": "apps/mfe1/src/MFE1Foo.tsx",
+      "icon": "📄",
+      "description": "Foo feature page",
+      "meta": {
+        "requiresAuth": false
+      }
+    },
+    {
+      "id": "mfe1-bar",
+      "label": "Bar Page",
+      "path": "/mfe1/bar",
+      "component": "MFE1Bar",
+      "sourceFile": "apps/mfe1/src/MFE1Bar.tsx",
+      "icon": "🎯",
+      "description": "Bar feature page",
+      "meta": {
+        "requiresAuth": false
+      }
     }
-  ]
+  ],
+  "moduleName": "MFE1Module",
+  "sourceFile": "apps/mfe1/src/Module.ts",
+  "description": "MFE1 Micro Frontend Module"
 }
