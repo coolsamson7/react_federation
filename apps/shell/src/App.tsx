@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { DefaultComponentRegistry } from "@portal/registry";
 import { DI } from "@portal/di";
 import { RouteManager, type RouteMeta } from "@portal/route-manager";
-import { ManifestLoader, type MFEManifest } from "@portal/manifest-loader";
+import { ManifestLoader, type Manifest } from "@portal/manifest-loader";
 import { initializeRemote, loadRemoteModule } from "@portal/remote-loader";
 import ShellLayout from "./ShellLayout";
 import ShellHome from "./ShellHome";
@@ -25,21 +25,35 @@ export default function App() {
     // Initialize remotes and load routes
     const initializeApp = async () => {
       try {
-        // Load remote entry scripts first
+          // NEW
+
+           const deployment = await manifestLoader.loadDeployment({
+               application: "foo"
+           });
+
+           console.log(deployment)
+
+          // NEW
+
+        /* Load remote entry scripts first
         for (const remote of MFE_REMOTES) {
           await loadRemoteScript(remote.url);
-        }
+        }*/
+
+          for ( const module of Object.values(deployment.modules)) {
+               await loadRemoteScript(module.uri + "/remoteEntry.js");
+          }
 
         // Initialize Module Federation with all remotes
-        await initializeRemote("mfe1");
+        await initializeRemote("mfe1"); //TODO what is that?????
 
         // Load manifests from all MFEs
-        const manifests = await manifestLoader.loadManifests(MFE_REMOTES);
+        //const manifests = await manifestLoader.loadManifests(MFE_REMOTES);
 
         // Convert manifests to routes
-        const mfeRoutes = manifests.flatMap((manifest: MFEManifest) =>
-          manifest.routes.map((route) => ({
-            ...route,
+        const mfeRoutes = Object.values(deployment.modules).flatMap((manifest: Manifest) =>
+          manifest.features.map((feature) => ({
+            ...feature,
             remote: manifest.name,
           }))
         );

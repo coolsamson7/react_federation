@@ -7,9 +7,9 @@ import { Feature as FeatureDecorator, getFeatureMetadata, Module } from "./decor
  * Enhanced @Feature decorator that combines:
  * 1. Registration in the component registry (for runtime)
  * 2. Metadata storage (for the parser)
- * 
+ *
  * Works as both a decorator and a HOC wrapper.
- * 
+ *
  * Usage as decorator:
  * @Feature({
  *   id: "mfe1-home",
@@ -17,15 +17,22 @@ import { Feature as FeatureDecorator, getFeatureMetadata, Module } from "./decor
  *   icon: "🏠",
  *   description: "Home page of MFE1 module",
  *   path: "/mfe1",
- *   meta: { requiresAuth: false },
+ *   tags: [],
+ *   permissions: [],
+ *   features: [],
+ *   visibility: ["public"],
  * })
  * class MFE1Home extends React.Component { ... }
- * 
+ *
  * Usage as HOC wrapper (functional):
  * export default Feature({
  *   id: "product-list",
  *   path: "/products",
  *   label: "Product List",
+ *   tags: ["products"],
+ *   permissions: [],
+ *   features: [],
+ *   visibility: ["public"],
  * })(ProductList);
  */
 export function Feature(config: Omit<FeatureMetadata, "component" | "sourceFile">) {

@@ -29,7 +29,10 @@ export function getModuleMetadata(target: any): ModuleMetadata | undefined {
  *   description: "Product list",
  *   path: "/products",
  *   component: "ProductList",
- *   meta: { requiresAuth: true },
+ *   tags: ["products"],
+ *   permissions: ["product:read"],
+ *   features: [],
+ *   visibility: ["public"],
  * })
  * export class ProductListFeature {}
  */

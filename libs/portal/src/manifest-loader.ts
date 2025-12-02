@@ -1,6 +1,40 @@
 import { singleton } from "tsyringe";
 import { ModuleMetadata, FeatureMetadata } from "./registry";
 
+//export
+
+
+export interface FeatureDescriptor {
+    id: string
+    label: string
+    icon: string
+    path: string,
+    component: string
+    tags: string[]
+    permissions: string[]
+    features: string[]
+    visibility: ("public" | "private")[]
+}
+
+export interface Manifest {
+    name: string
+    //type: string
+    //version: string
+    uri: string
+    module: string
+    features: FeatureDescriptor[]
+    }
+
+
+export interface Deployment {
+    modules: { [name: string]: Manifest }
+}
+
+export interface DeploymentRequest {
+    application: string
+}
+
+//
 export interface MFEManifest {
   name: string;
   version?: string;
@@ -15,6 +49,22 @@ export interface MFEManifest {
 export class ManifestLoader {
   private manifests: Map<string, MFEManifest> = new Map();
   private loadingPromises: Map<string, Promise<MFEManifest>> = new Map();
+
+  // NEW
+
+
+  async loadDeployment(request: DeploymentRequest) : Promise<Deployment> {
+    const response = await fetch(`http://localhost:8000/portal/deployment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    });
+    return response.json();
+  }
+
+    // NEW
 
   /**
    * Load manifest from a single remote via HTTP

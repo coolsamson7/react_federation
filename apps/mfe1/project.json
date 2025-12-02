@@ -6,7 +6,7 @@
     "scan-metadata": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "nx run metadata:scan --moduleFolder=apps/mfe1 --outFile=dist/apps/mfe1/metadata.json"
+        "command": "nx run metadata:scan --moduleFolder=apps/mfe1 --outFile=apps/mfe1/public/manifest.json"
       }
     },
     "serve": {

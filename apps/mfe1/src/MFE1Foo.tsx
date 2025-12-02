@@ -7,7 +7,10 @@ import { Feature } from "@portal/component-registry";
   icon: "📄",
   description: "Foo feature page",
   path: "/mfe1/foo",
-  meta: { requiresAuth: false },
+  tags: [],
+  permissions: [],
+  features: [],
+  visibility: ["public"],
 })
 class MFE1Foo extends React.Component {
   render() {

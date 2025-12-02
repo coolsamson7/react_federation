@@ -7,7 +7,10 @@ import { Feature } from "@portal/component-registry";
   icon: "🎯",
   description: "Bar feature page",
   path: "/mfe1/bar",
-  meta: { requiresAuth: false },
+  tags: ["secret"],
+  permissions: [],
+  features: [],
+  visibility: ["public"],
 })
 class MFE1Bar extends React.Component {
   render() {

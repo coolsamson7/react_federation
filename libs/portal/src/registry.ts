@@ -37,7 +37,9 @@ export interface ModuleMetadata extends Metadata {
 export interface FeatureMetadata extends Metadata {
   module?: ModuleMetadata;
   permissions?: string[];
-  meta?: Record<string, any>;
+  tags?: string[];
+  features?: string[];
+  visibility?: ("public" | "private")[];
   component: string;
   path: string;
   children?: FeatureMetadata[];

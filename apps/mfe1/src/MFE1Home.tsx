@@ -7,7 +7,10 @@ import { Feature } from "@portal/component-registry";
   icon: "🏠",
   description: "Home page of MFE1 module",
   path: "/mfe1",
-  meta: { requiresAuth: false },
+  tags: [],
+  permissions: [],
+  features: [],
+  visibility: ["public"],
 })
 class MFE1Home extends React.Component {
   render() {

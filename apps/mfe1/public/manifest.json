@@ -11,9 +11,12 @@
       "sourceFile": "apps/mfe1/src/MFE1Home.tsx",
       "icon": "🏠",
       "description": "Home page of MFE1 module",
-      "meta": {
-        "requiresAuth": false
-      }
+      "tags": [],
+      "permissions": [],
+      "features": [],
+      "visibility": [
+        "public"
+      ]
     },
     {
       "id": "mfe1-foo",
@@ -23,9 +26,12 @@
       "sourceFile": "apps/mfe1/src/MFE1Foo.tsx",
       "icon": "📄",
       "description": "Foo feature page",
-      "meta": {
-        "requiresAuth": false
-      }
+      "tags": [],
+      "permissions": [],
+      "features": [],
+      "visibility": [
+        "public"
+      ]
     },
     {
       "id": "mfe1-bar",
@@ -35,9 +41,12 @@
       "sourceFile": "apps/mfe1/src/MFE1Bar.tsx",
       "icon": "🎯",
       "description": "Bar feature page",
-      "meta": {
-        "requiresAuth": false
-      }
+      "tags": ["secret"],
+      "permissions": [],
+      "features": [],
+      "visibility": [
+        "public"
+      ]
     }
   ],
   "moduleName": "MFE1Module",
