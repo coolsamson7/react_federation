@@ -12,9 +12,11 @@ type RouteMeta = {
 interface ShellLayoutProps {
   routes: RouteMeta[];
   children: React.ReactNode;
+  loadedRemotes: string[];
+  remoteUrlMap: Map<string, string>;
 }
 
-export default function ShellLayout({ routes, children }: ShellLayoutProps) {
+export default function ShellLayout({ routes, children, loadedRemotes, remoteUrlMap }: ShellLayoutProps) {
   const location = useLocation();
   const currentRoute = routes.find(r => r.path === location.pathname);
   const [showRemotesModal, setShowRemotesModal] = useState(false);
@@ -23,7 +25,9 @@ export default function ShellLayout({ routes, children }: ShellLayoutProps) {
   const remotes = Array.from(new Set(routes.filter(r => r.remote).map(r => r.remote)));
   const remoteGroups = remotes.map(remoteName => ({
     name: remoteName,
-    features: routes.filter(r => r.remote === remoteName)
+    features: routes.filter(r => r.remote === remoteName),
+    isLoaded: loadedRemotes.includes(remoteName as string),
+    url: remoteUrlMap.get(remoteName as string) || "Unknown"
   }));
 
   return (
@@ -84,7 +88,7 @@ export default function ShellLayout({ routes, children }: ShellLayoutProps) {
             }}
           >
             <span>🔌</span>
-            <span>Remotes ({remotes.length})</span>
+            <span>Remotes ({loadedRemotes.length}/{remotes.length})</span>
           </button>
 
           {/* User Avatar */}
@@ -191,38 +195,64 @@ export default function ShellLayout({ routes, children }: ShellLayoutProps) {
                 {remoteGroups.map((remote) => (
                   <div key={remote.name} style={{
                     backgroundColor: "#1a1a1a",
-                    border: "1px solid #333",
+                    border: `1px solid ${remote.isLoaded ? "#22c55e" : "#333"}`,
                     borderRadius: "8px",
                     padding: "20px"
                   }}>
                     <div style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "12px",
+                      justifyContent: "space-between",
                       marginBottom: "16px"
                     }}>
-                      <span style={{ fontSize: "24px" }}>📦</span>
-                      <h3 style={{
-                        margin: 0,
-                        fontSize: "18px",
-                        fontWeight: "600",
-                        color: "#60a5fa"
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px"
                       }}>
-                        {remote.name}
-                      </h3>
+                        <span style={{ fontSize: "24px" }}>📦</span>
+                        <h3 style={{
+                          margin: 0,
+                          fontSize: "18px",
+                          fontWeight: "600",
+                          color: "#60a5fa"
+                        }}>
+                          {remote.name}
+                        </h3>
+                      </div>
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        padding: "6px 12px",
+                        borderRadius: "6px",
+                        backgroundColor: remote.isLoaded ? "#22c55e20" : "#71717a20",
+                        border: `1px solid ${remote.isLoaded ? "#22c55e" : "#71717a"}`,
+                        fontSize: "12px",
+                        fontWeight: "600",
+                        color: remote.isLoaded ? "#22c55e" : "#a0a0a0"
+                      }}>
+                        <span>{remote.isLoaded ? "●" : "○"}</span>
+                        <span>{remote.isLoaded ? "LOADED" : "NOT LOADED"}</span>
+                      </div>
                     </div>
 
                     <div style={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: "8px"
+                      gap: "12px"
                     }}>
                       <div style={{
-                        fontSize: "14px",
-                        color: "#a0a0a0",
-                        marginBottom: "8px"
+                        fontSize: "13px",
+                        color: "#a0a0a0"
                       }}>
-                        Features: {remote.features.length}
+                        <strong style={{ color: "#e0e0e0" }}>URL:</strong> {remote.url}
+                      </div>
+                      <div style={{
+                        fontSize: "13px",
+                        color: "#a0a0a0"
+                      }}>
+                        <strong style={{ color: "#e0e0e0" }}>Features:</strong> {remote.features.length}
                       </div>
 
                       <div style={{

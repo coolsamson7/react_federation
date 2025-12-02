@@ -11,14 +11,28 @@ import shellRoutes from "./shell-routes.json";
 import { MFE_REMOTES } from "./config/remotes";
 
 // Track which remotes have been loaded
-const loadedRemotes = new Set<string>();
-const remoteUrlMap = new Map<string, string>();
+const loadedRemotesSet = new Set<string>();
+const remoteUrlMapGlobal = new Map<string, string>();
+
+// Callback to notify when a remote is loaded
+let notifyRemoteLoaded: ((remoteName: string) => void) | null = null;
 
 export default function App() {
   const [routes, setRoutes] = useState<RouteMeta[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadedRemotes, setLoadedRemotes] = useState<string[]>([]);
   const routeManager = React.useMemo(() => DI.resolve(RouteManager), []);
   const manifestLoader = React.useMemo(() => DI.resolve(ManifestLoader), []);
+
+  // Set up callback for remote loading notifications
+  React.useEffect(() => {
+    notifyRemoteLoaded = (remoteName: string) => {
+      setLoadedRemotes(prev => [...prev, remoteName]);
+    };
+    return () => {
+      notifyRemoteLoaded = null;
+    };
+  }, []);
 
   useEffect(() => {
     // Register ShellHome component
@@ -38,7 +52,7 @@ export default function App() {
 
         // Store remote URLs for lazy loading later
         for (const module of Object.values(deployment.modules)) {
-          remoteUrlMap.set(module.name, module.uri);
+          remoteUrlMapGlobal.set(module.name, module.uri);
         }
 
         // Convert manifests to routes (metadata only)
@@ -84,7 +98,11 @@ export default function App() {
 
   return (
     <Router>
-      <ShellLayout routes={routes}>
+      <ShellLayout
+        routes={routes}
+        loadedRemotes={loadedRemotes}
+        remoteUrlMap={remoteUrlMapGlobal}
+      >
         <Routes>
           {routes.map((route, idx) => {
             const LazyComp = React.lazy(async () => {
@@ -132,11 +150,11 @@ async function loadRemoteScript(url: string): Promise<void> {
 async function loadRemoteComponent(remote: string, module: string) {
   try {
     // Check if remote has been loaded yet
-    if (!loadedRemotes.has(remote)) {
+    if (!loadedRemotesSet.has(remote)) {
       console.log(`Loading remote "${remote}" on demand...`);
 
       // Get the remote URL from our map
-      const remoteUrl = remoteUrlMap.get(remote);
+      const remoteUrl = remoteUrlMapGlobal.get(remote);
       if (!remoteUrl) {
         throw new Error(`Remote "${remote}" URL not found in deployment`);
       }
@@ -148,8 +166,13 @@ async function loadRemoteComponent(remote: string, module: string) {
       await initializeRemote(remote);
 
       // Mark as loaded
-      loadedRemotes.add(remote);
+      loadedRemotesSet.add(remote);
       console.log(`Remote "${remote}" loaded successfully`);
+
+      // Notify the UI to update
+      if (notifyRemoteLoaded) {
+        notifyRemoteLoaded(remote);
+      }
     }
 
     // Load the specific module from the remote
