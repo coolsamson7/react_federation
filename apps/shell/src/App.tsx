@@ -10,6 +10,10 @@ import ShellHome from "./ShellHome";
 import shellRoutes from "./shell-routes.json";
 import { MFE_REMOTES } from "./config/remotes";
 
+// Track which remotes have been loaded
+const loadedRemotes = new Set<string>();
+const remoteUrlMap = new Map<string, string>();
+
 export default function App() {
   const [routes, setRoutes] = useState<RouteMeta[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,35 +26,22 @@ export default function App() {
       Promise.resolve({ default: ShellHome })
     );
 
-    // Initialize remotes and load routes
+    // Initialize app - load metadata only, not remote scripts
     const initializeApp = async () => {
       try {
-          // NEW
+        // Load deployment metadata (just the manifest, not the actual remotes)
+        const deployment = await manifestLoader.loadDeployment({
+          application: "foo"
+        });
 
-           const deployment = await manifestLoader.loadDeployment({
-               application: "foo"
-           });
+        console.log("Deployment metadata loaded:", deployment);
 
-           console.log(deployment)
+        // Store remote URLs for lazy loading later
+        for (const module of Object.values(deployment.modules)) {
+          remoteUrlMap.set(module.name, module.uri);
+        }
 
-          // NEW
-
-        /* Load remote entry scripts first
-        for (const remote of MFE_REMOTES) {
-          await loadRemoteScript(remote.url);
-        }*/
-
-          for ( const module of Object.values(deployment.modules)) {
-               await loadRemoteScript(module.uri + "/remoteEntry.js");
-          }
-
-        // Initialize Module Federation with all remotes
-        await initializeRemote("mfe1"); //TODO what is that?????
-
-        // Load manifests from all MFEs
-        //const manifests = await manifestLoader.loadManifests(MFE_REMOTES);
-
-        // Convert manifests to routes
+        // Convert manifests to routes (metadata only)
         const mfeRoutes = Object.values(deployment.modules).flatMap((manifest: Manifest) =>
           manifest.features.map((feature) => ({
             ...feature,
@@ -137,10 +128,31 @@ async function loadRemoteScript(url: string): Promise<void> {
   });
 }
 
-// Minimal Webpack Module Federation remote loader
+// Lazy load remote on first access
 async function loadRemoteComponent(remote: string, module: string) {
   try {
-    // Use the Module Federation runtime loader
+    // Check if remote has been loaded yet
+    if (!loadedRemotes.has(remote)) {
+      console.log(`Loading remote "${remote}" on demand...`);
+
+      // Get the remote URL from our map
+      const remoteUrl = remoteUrlMap.get(remote);
+      if (!remoteUrl) {
+        throw new Error(`Remote "${remote}" URL not found in deployment`);
+      }
+
+      // Load the remote entry script
+      await loadRemoteScript(remoteUrl + "/remoteEntry.js");
+
+      // Initialize the remote
+      await initializeRemote(remote);
+
+      // Mark as loaded
+      loadedRemotes.add(remote);
+      console.log(`Remote "${remote}" loaded successfully`);
+    }
+
+    // Load the specific module from the remote
     const moduleName = module.replace("./", "");
     const loadedModule = await loadRemoteModule(remote, moduleName);
     return loadedModule;

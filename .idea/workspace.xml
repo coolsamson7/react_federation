@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="harmonized structures with server">
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Bar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Bar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/src/ShellHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/ShellHome.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/src/ShellLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/ShellLayout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/src/shell-routes.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/shell-routes.json" afterDir="false" />
+    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="pretty">
+      <change beforePath="$PROJECT_DIR$/apps/shell/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/App.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -240,7 +235,7 @@
       <option name="presentableId" value="Default" />
       <updated>1763714353731</updated>
       <workItem from="1764603291270" duration="11358000" />
-      <workItem from="1764688527101" duration="3406000" />
+      <workItem from="1764688527101" duration="3796000" />
     </task>
     <task id="LOCAL-00001" summary="INITIAL CODE">
       <option name="closed" value="true" />
@@ -306,7 +301,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764693104831</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="pretty">
+      <option name="closed" value="true" />
+      <created>1764693651354</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1764693651354</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -318,7 +321,8 @@
     <MESSAGE value="parser intregration" />
     <MESSAGE value="new stuff" />
     <MESSAGE value="harmonized structures with server" />
-    <option name="LAST_COMMIT_MESSAGE" value="harmonized structures with server" />
+    <MESSAGE value="pretty" />
+    <option name="LAST_COMMIT_MESSAGE" value="pretty" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -330,7 +334,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/apps/shell/src/App.tsx</url>
-          <line>38</line>
+          <line>37</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
@@ -375,6 +379,12 @@
           <option name="totalLines" value="71775" />
           <option name="info" value="harmonized structures with server" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1764693651381" />
+          <option name="linesCode" value="69359" />
+          <option name="totalLines" value="72107" />
+          <option name="info" value="pretty" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -386,9 +396,9 @@
           <option name="info" value="01.12.2025" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1764693104897" />
-          <option name="linesCode" value="69354" />
-          <option name="totalLines" value="71775" />
+          <option name="timestamp" value="1764693651381" />
+          <option name="linesCode" value="69359" />
+          <option name="totalLines" value="72107" />
           <option name="info" value="02.12.2025" />
         </TimePoint>
       </list>
