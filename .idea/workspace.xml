@@ -4,18 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="new stuff">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/project.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/project.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/public/manifest.json" afterDir="false" />
+    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="harmonized structures with server">
       <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Bar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Bar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/component-registry.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/component-registry.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/decorators.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/decorators.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/manifest-loader.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/manifest-loader.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/registry.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/registry.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/src/ShellHome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/ShellHome.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/src/ShellLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/ShellLayout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/src/shell-routes.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/shell-routes.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -245,7 +240,7 @@
       <option name="presentableId" value="Default" />
       <updated>1763714353731</updated>
       <workItem from="1764603291270" duration="11358000" />
-      <workItem from="1764688527101" duration="2989000" />
+      <workItem from="1764688527101" duration="3406000" />
     </task>
     <task id="LOCAL-00001" summary="INITIAL CODE">
       <option name="closed" value="true" />
@@ -303,7 +298,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764607564825</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="harmonized structures with server">
+      <option name="closed" value="true" />
+      <created>1764693104831</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1764693104831</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -314,7 +317,8 @@
     <MESSAGE value="dynamic mfe working" />
     <MESSAGE value="parser intregration" />
     <MESSAGE value="new stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="new stuff" />
+    <MESSAGE value="harmonized structures with server" />
+    <option name="LAST_COMMIT_MESSAGE" value="harmonized structures with server" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -365,6 +369,12 @@
           <option name="totalLines" value="71849" />
           <option name="info" value="new stuff" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1764693104897" />
+          <option name="linesCode" value="69354" />
+          <option name="totalLines" value="71775" />
+          <option name="info" value="harmonized structures with server" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -374,6 +384,12 @@
           <option name="linesCode" value="69287" />
           <option name="totalLines" value="71849" />
           <option name="info" value="01.12.2025" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1764693104897" />
+          <option name="linesCode" value="69354" />
+          <option name="totalLines" value="71775" />
+          <option name="info" value="02.12.2025" />
         </TimePoint>
       </list>
     </option>

@@ -15,9 +15,10 @@ import { Feature } from "@portal/component-registry";
 class MFE1Bar extends React.Component {
   render() {
     return (
-      <div style={{ padding: "20px" }}>
-        <h2>MFE1 Bar Page</h2>
-        <p>This is the bar feature page from MFE1.</p>
+      <div>
+        <p style={{ color: "#a0a0a0", lineHeight: "1.6" }}>
+          This is the bar feature page from MFE1.
+        </p>
       </div>
     );
   }

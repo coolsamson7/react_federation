@@ -1,3 +1,8 @@
 [
-  { "path": "/", "component": "ShellHome" }
+  {
+    "path": "/",
+    "component": "ShellHome",
+    "label": "Home",
+    "icon": "🏡"
+  }
 ]

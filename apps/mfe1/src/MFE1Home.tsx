@@ -15,9 +15,24 @@ import { Feature } from "@portal/component-registry";
 class MFE1Home extends React.Component {
   render() {
     return (
-      <div style={{ padding: "20px" }}>
-        <h2>MFE1 Home Page</h2>
-        <p>This component is loaded via Module Federation from the mfe1 remote.</p>
+      <div>
+        <p style={{ color: "#a0a0a0", lineHeight: "1.6", marginBottom: "12px" }}>
+          This component is loaded via Module Federation from the mfe1 remote.
+        </p>
+        <div style={{
+          backgroundColor: "#0d0d0d",
+          padding: "20px",
+          borderRadius: "8px",
+          border: "1px solid #333",
+          marginTop: "20px"
+        }}>
+          <h3 style={{ color: "#60a5fa", marginBottom: "12px" }}>Features</h3>
+          <ul style={{ color: "#a0a0a0", lineHeight: "1.8" }}>
+            <li>Dynamic module loading</li>
+            <li>Shared dependencies with the shell</li>
+            <li>Independent deployment</li>
+          </ul>
+        </div>
       </div>
     );
   }
