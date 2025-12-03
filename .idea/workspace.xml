@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="navigation is dynamic">
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" afterDir="false" />
+    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="delayed rebndering of navigation">
+      <change afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1FooLarge.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1FooSmall.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/main.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mfe1/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/webpack.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/shell/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/App.tsx" afterDir="false" />
     </list>
@@ -238,7 +242,7 @@
       <updated>1763714353731</updated>
       <workItem from="1764603291270" duration="11358000" />
       <workItem from="1764688527101" duration="11992000" />
-      <workItem from="1764755846039" duration="680000" />
+      <workItem from="1764755846039" duration="1330000" />
     </task>
     <task id="LOCAL-00001" summary="INITIAL CODE">
       <option name="closed" value="true" />
@@ -352,7 +356,23 @@
       <option name="project" value="LOCAL" />
       <updated>1764756390184</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="fix">
+      <option name="closed" value="true" />
+      <created>1764756683175</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1764756683175</updated>
+    </task>
+    <task id="LOCAL-00016" summary="delayed rebndering of navigation">
+      <option name="closed" value="true" />
+      <created>1764756792937</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1764756792937</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -370,7 +390,9 @@
     <MESSAGE value="added client info" />
     <MESSAGE value="fix client info" />
     <MESSAGE value="navigation is dynamic" />
-    <option name="LAST_COMMIT_MESSAGE" value="navigation is dynamic" />
+    <MESSAGE value="fix" />
+    <MESSAGE value="delayed rebndering of navigation" />
+    <option name="LAST_COMMIT_MESSAGE" value="delayed rebndering of navigation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -469,6 +491,12 @@
           <option name="totalLines" value="75815" />
           <option name="info" value="fix" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1764756792965" />
+          <option name="linesCode" value="70804" />
+          <option name="totalLines" value="75796" />
+          <option name="info" value="delayed rebndering of navigation" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -486,9 +514,9 @@
           <option name="info" value="02.12.2025" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1764756683288" />
+          <option name="timestamp" value="1764756792965" />
           <option name="linesCode" value="70804" />
-          <option name="totalLines" value="75815" />
+          <option name="totalLines" value="75796" />
           <option name="info" value="03.12.2025" />
         </TimePoint>
       </list>

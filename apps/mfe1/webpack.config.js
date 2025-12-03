@@ -36,7 +36,8 @@ module.exports = {
       filename: "remoteEntry.js",
       exposes: {
         "./MFE1Home": "./apps/mfe1/src/MFE1Home",
-        "./MFE1Foo": "./apps/mfe1/src/MFE1Foo",
+        "./MFE1FooSmall": "./apps/mfe1/src/MFE1FooSmall",
+        "./MFE1FooLarge": "./apps/mfe1/src/MFE1FooLarge",
         "./MFE1Bar": "./apps/mfe1/src/MFE1Bar",
         "./DesktopNavigation": "./apps/mfe1/src/DesktopNavigation",
         "./IOSNavigation": "./apps/mfe1/src/IOSNavigation",
