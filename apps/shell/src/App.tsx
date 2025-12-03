@@ -5,6 +5,7 @@ import { DI } from "@portal/di";
 import { RouteManager, type RouteMeta } from "@portal/route-manager";
 import { ManifestLoader, type Manifest } from "@portal/manifest-loader";
 import { initializeRemote, loadRemoteModule } from "@portal/remote-loader";
+import { detectClient, clientMatchesConstraints } from "@portal/client-detector";
 import ShellLayout from "./ShellLayout";
 import ShellHome from "./ShellHome";
 import shellRoutes from "./shell-routes.json";
@@ -43,9 +44,14 @@ export default function App() {
     // Initialize app - load metadata only, not remote scripts
     const initializeApp = async () => {
       try {
-        // Load deployment metadata (just the manifest, not the actual remotes)
+        // Detect client information
+        const clientInfo = detectClient();
+        console.log("Detected client:", clientInfo);
+
+        // Load deployment metadata with client info for server-side filtering
         const deployment = await manifestLoader.loadDeployment({
-          application: "foo"
+          application: "foo",
+          client_info: clientInfo
         });
 
         console.log("Deployment metadata loaded:", deployment);
@@ -55,13 +61,17 @@ export default function App() {
           remoteUrlMapGlobal.set(module.name, module.uri);
         }
 
-        // Convert manifests to routes (metadata only)
+        // Convert manifests to routes and filter by client (client-side fallback)
         const mfeRoutes = Object.values(deployment.modules).flatMap((manifest: Manifest) =>
-          manifest.features.map((feature) => ({
-            ...feature,
-            remote: manifest.name,
-          }))
+          manifest.features
+            .filter((feature) => clientMatchesConstraints(clientInfo, feature.clients))
+            .map((feature) => ({
+              ...feature,
+              remote: manifest.name,
+            }))
         );
+
+        console.log(`Filtered ${mfeRoutes.length} features for client:`, clientInfo.screen_size, clientInfo.platform);
 
         // Merge shell routes with MFE routes loaded from manifests
         await routeManager.mergeRoutes(

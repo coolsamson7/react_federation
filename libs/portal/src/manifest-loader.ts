@@ -1,10 +1,8 @@
 import { singleton } from "tsyringe";
 import { ModuleMetadata, FeatureMetadata } from "./registry";
+import type { ClientConstraints, ClientInfo } from "./client-detector";
 
-//export
-
-
-export interface FeatureDescriptor {
+export interface ManifestFeature {
     id: string
     label: string
     icon: string
@@ -14,17 +12,15 @@ export interface FeatureDescriptor {
     permissions: string[]
     features: string[]
     visibility: ("public" | "private")[]
+    clients?: ClientConstraints
 }
 
 export interface Manifest {
     name: string
-    //type: string
-    //version: string
     uri: string
     module: string
-    features: FeatureDescriptor[]
-    }
-
+    features: ManifestFeature[]
+}
 
 export interface Deployment {
     modules: { [name: string]: Manifest }
@@ -32,6 +28,7 @@ export interface Deployment {
 
 export interface DeploymentRequest {
     application: string
+    client_info?: ClientInfo  // Client information for filtering
 }
 
 //

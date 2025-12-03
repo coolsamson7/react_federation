@@ -4,8 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="pretty">
+    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="show load status">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/dist/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/shell/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/decorators.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/decorators.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/manifest-loader.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/manifest-loader.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/registry.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/registry.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -235,7 +241,7 @@
       <option name="presentableId" value="Default" />
       <updated>1763714353731</updated>
       <workItem from="1764603291270" duration="11358000" />
-      <workItem from="1764688527101" duration="3796000" />
+      <workItem from="1764688527101" duration="6670000" />
     </task>
     <task id="LOCAL-00001" summary="INITIAL CODE">
       <option name="closed" value="true" />
@@ -309,7 +315,23 @@
       <option name="project" value="LOCAL" />
       <updated>1764693651354</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="cleanup and lazy loading">
+      <option name="closed" value="true" />
+      <created>1764693859564</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1764693859564</updated>
+    </task>
+    <task id="LOCAL-00011" summary="show load status">
+      <option name="closed" value="true" />
+      <created>1764694058723</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1764694058723</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -322,19 +344,21 @@
     <MESSAGE value="new stuff" />
     <MESSAGE value="harmonized structures with server" />
     <MESSAGE value="pretty" />
-    <option name="LAST_COMMIT_MESSAGE" value="pretty" />
+    <MESSAGE value="cleanup and lazy loading" />
+    <MESSAGE value="show load status" />
+    <option name="LAST_COMMIT_MESSAGE" value="show load status" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/libs/portal/src/manifest-loader.ts</url>
-          <line>63</line>
+          <line>60</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/apps/shell/src/App.tsx</url>
-          <line>37</line>
+          <line>57</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
@@ -385,6 +409,18 @@
           <option name="totalLines" value="72107" />
           <option name="info" value="pretty" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1764693859589" />
+          <option name="linesCode" value="69356" />
+          <option name="totalLines" value="72116" />
+          <option name="info" value="cleanup and lazy loading" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1764694058765" />
+          <option name="linesCode" value="69356" />
+          <option name="totalLines" value="72169" />
+          <option name="info" value="show load status" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -396,9 +432,9 @@
           <option name="info" value="01.12.2025" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1764693651381" />
-          <option name="linesCode" value="69359" />
-          <option name="totalLines" value="72107" />
+          <option name="timestamp" value="1764694058765" />
+          <option name="linesCode" value="69356" />
+          <option name="totalLines" value="72169" />
           <option name="info" value="02.12.2025" />
         </TimePoint>
       </list>

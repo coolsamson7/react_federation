@@ -33,8 +33,21 @@ export function getModuleMetadata(target: any): ModuleMetadata | undefined {
  *   permissions: ["product:read"],
  *   features: [],
  *   visibility: ["public"],
+ *   clients: {
+ *     screenSizes: ["md", "lg", "xl"],  // Tablets and desktops
+ *     platforms: ["web"]
+ *   }
  * })
  * export class ProductListFeature {}
+ *
+ * Client filtering examples:
+ * - screenSizes: ["xs", "sm"] = Small screens (phones)
+ * - screenSizes: ["md"] = Medium screens (tablets)
+ * - screenSizes: ["lg", "xl"] = Large screens (desktops)
+ * - platforms: ["ios"] = iOS devices only
+ * - orientation: ["landscape"] = Landscape mode only
+ * - minWidth: 1024 = Minimum 1024px width
+ * - capabilities: ["touch", "stylus"] = Touch with stylus support
  */
 export function Feature(config: Omit<FeatureMetadata, "sourceFile">) {
   return function decorator(target: any) {

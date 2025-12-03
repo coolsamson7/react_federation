@@ -1,4 +1,8 @@
 import { singleton } from "tsyringe";
+import type { ClientConstraints } from "./client-detector";
+
+// Re-export for convenience
+export type { ClientConstraints, ClientInfo, ScreenSize, Orientation, Platform } from "./client-detector";
 
 /**
  * Remote module configuration
@@ -40,6 +44,7 @@ export interface FeatureMetadata extends Metadata {
   tags?: string[];
   features?: string[];
   visibility?: ("public" | "private")[];
+  clients?: ClientConstraints; // Client constraints for this feature
   component: string;
   path: string;
   children?: FeatureMetadata[];
