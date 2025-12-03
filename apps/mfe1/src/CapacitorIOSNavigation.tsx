@@ -5,9 +5,9 @@ import { NavigationComponentProps } from "@portal/navigation";
 
 @Feature({
   id: "navigation",
-  label: "iOS Navigation",
+  label: "Capacitor iOS Navigation",
   icon: "📱",
-  description: "iOS-style bottom tab bar navigation",
+  description: "Native iOS-style tab bar navigation",
   path: "",
   tags: [],
   permissions: [],
@@ -17,7 +17,7 @@ import { NavigationComponentProps } from "@portal/navigation";
     platforms: ["ios", "android"], // Native mobile platforms
   },
 })
-class IOSNavigation extends React.Component<NavigationComponentProps> {
+class CapacitorIOSNavigation extends React.Component<NavigationComponentProps> {
   render() {
     const { routes, currentPath } = this.props;
 
@@ -28,15 +28,17 @@ class IOSNavigation extends React.Component<NavigationComponentProps> {
           bottom: 0,
           left: 0,
           right: 0,
-          height: "80px",
-          backgroundColor: "#0d0d0d",
-          borderTop: "1px solid #333",
+          height: "83px",
+          backgroundColor: "rgba(248, 248, 248, 0.95)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderTop: "0.5px solid rgba(0, 0, 0, 0.15)",
           display: "flex",
           justifyContent: "space-around",
-          alignItems: "center",
-          padding: "0 8px",
-          boxShadow: "0 -2px 8px rgba(0,0,0,0.3)",
+          alignItems: "stretch",
+          paddingBottom: "env(safe-area-inset-bottom, 0)",
           zIndex: 100,
+          boxShadow: "0 -1px 0 rgba(0, 0, 0, 0.05)",
         }}
       >
         {routes.slice(0, 5).map((route) => {
@@ -53,40 +55,33 @@ class IOSNavigation extends React.Component<NavigationComponentProps> {
                 justifyContent: "center",
                 gap: "4px",
                 textDecoration: "none",
-                color: isActive ? "#60a5fa" : "#8a8a8a",
-                padding: "8px",
-                borderRadius: "8px",
-                transition: "all 0.2s ease",
-                backgroundColor: isActive ? "#1e3a5f20" : "transparent",
-              }}
-              onTouchStart={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = "#1a1a1a";
-                }
-              }}
-              onTouchEnd={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                }
+                color: isActive ? "#007AFF" : "#8E8E93",
+                padding: "6px 0",
+                transition: "color 0.15s ease",
+                WebkitTapHighlightColor: "transparent",
               }}
             >
               <span
                 style={{
-                  fontSize: "24px",
-                  filter: isActive ? "none" : "grayscale(50%)",
+                  fontSize: "28px",
+                  lineHeight: "28px",
+                  marginTop: "4px",
+                  transform: isActive ? "scale(1.1)" : "scale(1)",
+                  transition: "transform 0.15s ease",
                 }}
               >
                 {route.icon || "📄"}
               </span>
               <span
                 style={{
-                  fontSize: "11px",
-                  fontWeight: isActive ? "600" : "normal",
+                  fontSize: "10px",
+                  fontWeight: isActive ? "600" : "400",
                   textAlign: "center",
-                  maxWidth: "60px",
+                  maxWidth: "70px",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
+                  letterSpacing: "-0.08px",
                 }}
               >
                 {route.label || route.component}
@@ -99,4 +94,4 @@ class IOSNavigation extends React.Component<NavigationComponentProps> {
   }
 }
 
-export default IOSNavigation;
+export default CapacitorIOSNavigation;

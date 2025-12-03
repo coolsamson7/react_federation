@@ -28,6 +28,7 @@ module.exports = {
     rules: [
       { test: /\.tsx?$/, loader: "ts-loader" },
       { test: /\.json$/, type: "json" },
+      { test: /\.css$/, use: ["style-loader", "css-loader"] },
     ],
   },
   plugins: [
@@ -39,8 +40,8 @@ module.exports = {
         "./MFE1FooSmall": "./apps/mfe1/src/MFE1FooSmall",
         "./MFE1FooLarge": "./apps/mfe1/src/MFE1FooLarge",
         "./MFE1Bar": "./apps/mfe1/src/MFE1Bar",
-        "./IOSNavigation": "./apps/mfe1/src/IOSNavigation",
         "./DesktopNavigation": "./apps/mfe1/src/DesktopNavigation",
+        "./CapacitorIOSNavigation": "./apps/mfe1/src/CapacitorIOSNavigation",
       },
       shared: {
         react: { singleton: true, eager: true },

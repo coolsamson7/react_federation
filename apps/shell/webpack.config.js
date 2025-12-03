@@ -18,6 +18,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     publicPath: "/",
+    charset: true, // Ensure proper UTF-8 handling
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],

@@ -81,27 +81,6 @@
     },
     {
       "id": "navigation",
-      "label": "iOS Navigation",
-      "path": "",
-      "component": "IOSNavigation",
-      "sourceFile": "apps/mfe1/src/IOSNavigation.tsx",
-      "icon": "📱",
-      "description": "iOS-style bottom tab bar navigation",
-      "tags": [],
-      "permissions": [],
-      "features": [],
-      "visibility": [
-        "public"
-      ],
-      "clients": {
-        "platforms": [
-          "ios",
-          "android"
-        ]
-      }
-    },
-    {
-      "id": "navigation",
       "label": "Desktop Navigation",
       "path": "",
       "component": "DesktopNavigation",
@@ -120,6 +99,27 @@
           "windows",
           "linux",
           "web"
+        ]
+      }
+    },
+    {
+      "id": "navigation",
+      "label": "Capacitor iOS Navigation",
+      "path": "",
+      "component": "CapacitorIOSNavigation",
+      "sourceFile": "apps/mfe1/src/CapacitorIOSNavigation.tsx",
+      "icon": "📱",
+      "description": "Native iOS-style tab bar navigation with Ionic",
+      "tags": [],
+      "permissions": [],
+      "features": [],
+      "visibility": [
+        "public"
+      ],
+      "clients": {
+        "platforms": [
+          "ios",
+          "android"
         ]
       }
     }

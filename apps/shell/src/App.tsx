@@ -8,8 +8,17 @@ import { initializeRemote, loadRemoteModule } from "@portal/remote-loader";
 import { detectClient, clientMatchesConstraints } from "@portal/client-detector";
 import ShellLayout from "./ShellLayout";
 import ShellHome from "./ShellHome";
-import shellRoutes from "./shell-routes.json";
 import { MFE_REMOTES } from "./config/remotes";
+
+// Shell routes defined inline to avoid encoding issues
+const shellRoutes = [
+  {
+    path: "/",
+    component: "ShellHome",
+    label: "Home",
+    icon: "H" // Using simple letter to avoid UTF-8 issues
+  }
+];
 
 // Track which remotes have been loaded
 const loadedRemotesSet = new Set<string>();
