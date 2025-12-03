@@ -16,22 +16,51 @@
       "features": [],
       "visibility": [
         "public"
-      ]
+      ],
+      "clients": {
+        "screenSizes": [
+          "sm",
+          "md",
+          "lg",
+          "xl"
+        ]
+      }
     },
     {
-      "id": "mfe1-foo",
-      "label": "Foo Page",
+      "id": "mfe1-foo-small",
+      "label": "Foo Page (Small)",
       "path": "/mfe1/foo",
-      "component": "MFE1Foo",
+      "component": "MFE1FooSmall",
       "sourceFile": "apps/mfe1/src/MFE1Foo.tsx",
       "icon": "📄",
-      "description": "Foo feature page",
+      "description": "Foo feature page for smaller screens",
       "tags": [],
       "permissions": [],
       "features": [],
       "visibility": [
         "public"
-      ]
+      ],
+      "clients": {
+        "maxWidth": 999
+      }
+    },
+    {
+      "id": "mfe1-foo-large",
+      "label": "Foo Page (Large)",
+      "path": "/mfe1/foo",
+      "component": "MFE1FooLarge",
+      "sourceFile": "apps/mfe1/src/MFE1Foo.tsx",
+      "icon": "📄",
+      "description": "Foo feature page for larger screens",
+      "tags": [],
+      "permissions": [],
+      "features": [],
+      "visibility": [
+        "public"
+      ],
+      "clients": {
+        "minWidth": 1000
+      }
     },
     {
       "id": "mfe1-bar",
@@ -41,7 +70,9 @@
       "sourceFile": "apps/mfe1/src/MFE1Bar.tsx",
       "icon": "🎯",
       "description": "Bar feature page",
-      "tags": ["secret"],
+      "tags": [
+        "secret"
+      ],
       "permissions": [],
       "features": [],
       "visibility": [

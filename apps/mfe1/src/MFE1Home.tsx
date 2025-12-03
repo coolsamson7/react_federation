@@ -12,7 +12,8 @@ import { Feature } from "@portal/component-registry";
   features: [],
   visibility: ["public"],
   clients: {
-    screenSizes: ["sm", "md", "lg", "xl"],  // All except xs (phones portrait)
+      //minWidth: 1500,
+      screenSizes: ["sm", "md", "lg", "xl"],  // All except xs (phones portrait)
   },
 })
 class MFE1Home extends React.Component {
