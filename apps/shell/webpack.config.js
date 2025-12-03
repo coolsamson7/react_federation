@@ -31,9 +31,6 @@ module.exports = {
   plugins: [
     new ModuleFederationPlugin({
       name: "shell",
-      remotes: {
-        mfe1: "mfe1@http://localhost:3001/remoteEntry.js",
-      },
       shared: {
         react: { singleton: true, eager: true },
         "react-dom": { singleton: true, eager: true },

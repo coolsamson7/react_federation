@@ -304,4 +304,47 @@ export class FeatureMetadataScanner {
     fs.writeFileSync(outputPath, JSON.stringify(data, null, 2), "utf-8");
     console.log(`✅ Module metadata exported to ${outputPath}`);
   }
+
+  static updateWebpackConfig(
+    data: ModuleMetadata,
+    webpackConfigPath: string
+  ): void {
+    if (!fs.existsSync(webpackConfigPath)) {
+      console.warn(`⚠️  Webpack config not found: ${webpackConfigPath}`);
+      return;
+    }
+
+    // Read the webpack config file
+    let configContent = fs.readFileSync(webpackConfigPath, "utf-8");
+
+    // Build the exposes object from feature metadata
+    const exposes: Record<string, string> = {};
+    for (const feature of data.features) {
+      const componentName = feature.component;
+      const sourceFilePath = feature.sourceFile.replace(/\.tsx?$/, "");
+      exposes[`./${componentName}`] = `./${sourceFilePath}`;
+    }
+
+    // Generate the exposes section as a string
+    const exposesLines = Object.entries(exposes).map(
+      ([key, value]) => `        "${key}": "${value}",`
+    );
+    const exposesString = exposesLines.join("\n");
+
+    // Replace the exposes section in the webpack config
+    // Match: exposes: { ... } with any content inside
+    const exposesRegex = /exposes:\s*\{[^}]*\}/s;
+
+    if (exposesRegex.test(configContent)) {
+      configContent = configContent.replace(
+        exposesRegex,
+        `exposes: {\n${exposesString}\n      }`
+      );
+
+      fs.writeFileSync(webpackConfigPath, configContent, "utf-8");
+      console.log(`✅ Webpack config updated: ${webpackConfigPath}`);
+    } else {
+      console.warn(`⚠️  Could not find 'exposes' section in ${webpackConfigPath}`);
+    }
+  }
 }

@@ -39,8 +39,8 @@ module.exports = {
         "./MFE1FooSmall": "./apps/mfe1/src/MFE1FooSmall",
         "./MFE1FooLarge": "./apps/mfe1/src/MFE1FooLarge",
         "./MFE1Bar": "./apps/mfe1/src/MFE1Bar",
-        "./DesktopNavigation": "./apps/mfe1/src/DesktopNavigation",
         "./IOSNavigation": "./apps/mfe1/src/IOSNavigation",
+        "./DesktopNavigation": "./apps/mfe1/src/DesktopNavigation",
       },
       shared: {
         react: { singleton: true, eager: true },
