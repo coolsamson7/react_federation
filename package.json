@@ -12,7 +12,16 @@
     "start:mfe1": "nx serve mfe1",
     "start:mfe2": "nx serve mfe2",
     "build": "nx build shell && nx build mfe1 && nx build mfe2",
-    "graph": "nx graph"
+    "build:shell": "nx build shell",
+    "build:mfe1": "nx build mfe1",
+    "graph": "nx graph",
+    "cap:sync": "npm run build:shell && npx cap sync",
+    "cap:sync:ios": "npm run build:shell && npx cap sync ios",
+    "cap:sync:android": "npm run build:shell && npx cap sync android",
+    "cap:open:ios": "npx cap open ios",
+    "cap:open:android": "npx cap open android",
+    "cap:run:ios": "npm run cap:sync:ios && npx cap run ios",
+    "cap:run:android": "npm run cap:sync:android && npx cap run android"
   },
   "devDependencies": {
     "@module-federation/enhanced": "latest",
@@ -32,6 +41,10 @@
     "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/core": "^7.4.4",
+    "@capacitor/ios": "^7.4.4",
     "@module-federation/runtime": "latest",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",

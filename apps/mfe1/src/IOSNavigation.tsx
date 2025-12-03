@@ -14,7 +14,7 @@ import { NavigationComponentProps } from "@portal/navigation";
   features: [],
   visibility: ["public"],
   clients: {
-    maxWidth: 767, // Mobile phones only
+    platforms: ["ios", "android"], // Native mobile platforms
   },
 })
 class IOSNavigation extends React.Component<NavigationComponentProps> {

@@ -14,7 +14,7 @@ import { NavigationComponentProps } from "@portal/navigation";
   features: [],
   visibility: ["public"],
   clients: {
-    minWidth: 768, // Tablets and desktops
+    platforms: ["macos", "windows", "linux", "web"], // Desktop platforms
   },
 })
 class DesktopNavigation extends React.Component<NavigationComponentProps> {

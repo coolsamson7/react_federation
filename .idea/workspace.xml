@@ -4,14 +4,38 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="delayed rebndering of navigation">
-      <change afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1FooLarge.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1FooSmall.tsx" afterDir="false" />
+    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="webpack.confi is updated automtically">
+      <change afterPath="$PROJECT_DIR$/CAPACITOR_SETUP.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/capacitor.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App.xcodeproj/project.pbxproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/AppDelegate.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/Assets.xcassets/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/Assets.xcassets/Splash.imageset/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/Base.lproj/LaunchScreen.storyboard" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/Base.lproj/Main.storyboard" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/App/Info.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/Podfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/App/Podfile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/main.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/public/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/DesktopNavigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/DesktopNavigation.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/src/IOSNavigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/IOSNavigation.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mfe1/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/shell/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/dist/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/shell/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/client-detector.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/client-detector.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/manifest-loader.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/manifest-loader.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/metadata/src/feature-parser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tools/metadata/src/feature-parser.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -242,7 +266,7 @@
       <updated>1763714353731</updated>
       <workItem from="1764603291270" duration="11358000" />
       <workItem from="1764688527101" duration="11992000" />
-      <workItem from="1764755846039" duration="1330000" />
+      <workItem from="1764755846039" duration="7439000" />
     </task>
     <task id="LOCAL-00001" summary="INITIAL CODE">
       <option name="closed" value="true" />
@@ -372,7 +396,23 @@
       <option name="project" value="LOCAL" />
       <updated>1764756792937</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="refactor">
+      <option name="closed" value="true" />
+      <created>1764757203100</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1764757203100</updated>
+    </task>
+    <task id="LOCAL-00018" summary="webpack.confi is updated automtically">
+      <option name="closed" value="true" />
+      <created>1764757479848</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1764757479848</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -392,14 +432,16 @@
     <MESSAGE value="navigation is dynamic" />
     <MESSAGE value="fix" />
     <MESSAGE value="delayed rebndering of navigation" />
-    <option name="LAST_COMMIT_MESSAGE" value="delayed rebndering of navigation" />
+    <MESSAGE value="refactor" />
+    <MESSAGE value="webpack.confi is updated automtically" />
+    <option name="LAST_COMMIT_MESSAGE" value="webpack.confi is updated automtically" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/libs/portal/src/manifest-loader.ts</url>
-          <line>60</line>
+          <line>67</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -497,6 +539,18 @@
           <option name="totalLines" value="75796" />
           <option name="info" value="delayed rebndering of navigation" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1764757203170" />
+          <option name="linesCode" value="70801" />
+          <option name="totalLines" value="75823" />
+          <option name="info" value="refactor" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1764757479901" />
+          <option name="linesCode" value="70840" />
+          <option name="totalLines" value="75919" />
+          <option name="info" value="webpack.confi is updated automtically" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -514,9 +568,9 @@
           <option name="info" value="02.12.2025" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1764756792965" />
-          <option name="linesCode" value="70804" />
-          <option name="totalLines" value="75796" />
+          <option name="timestamp" value="1764757479901" />
+          <option name="linesCode" value="70840" />
+          <option name="totalLines" value="75919" />
           <option name="info" value="03.12.2025" />
         </TimePoint>
       </list>

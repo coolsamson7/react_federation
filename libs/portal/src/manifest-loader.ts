@@ -51,7 +51,14 @@ export class ManifestLoader {
 
 
   async loadDeployment(request: DeploymentRequest) : Promise<Deployment> {
-    const response = await fetch(`http://localhost:8000/portal/deployment`, {
+    // Determine the correct backend URL based on environment
+    // For iOS simulator/device, use Mac's IP address instead of localhost
+    const isCapacitor = !!(window as any).Capacitor;
+    const backendUrl = isCapacitor
+      ? 'http://192.168.1.16:8000/portal/deployment'  // iOS/Android uses Mac IP
+      : 'http://localhost:8000/portal/deployment';     // Web uses localhost
+
+    const response = await fetch(backendUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -94,7 +94,10 @@
         "public"
       ],
       "clients": {
-        "maxWidth": 767
+        "platforms": [
+          "ios",
+          "android"
+        ]
       }
     },
     {
@@ -112,7 +115,12 @@
         "public"
       ],
       "clients": {
-        "minWidth": 768
+        "platforms": [
+          "macos",
+          "windows",
+          "linux",
+          "web"
+        ]
       }
     }
   ],

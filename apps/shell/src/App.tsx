@@ -57,8 +57,18 @@ export default function App() {
         console.log("Deployment metadata loaded:", deployment);
 
         // Store remote URLs for lazy loading later
+        // For Capacitor (iOS/Android), replace localhost with Mac IP
+        const isCapacitor = !!(window as any).Capacitor;
         for (const module of Object.values(deployment.modules)) {
-          remoteUrlMapGlobal.set(module.name, module.uri);
+          let uri = module.uri;
+
+          // Replace localhost with Mac's IP for Capacitor
+          if (isCapacitor && uri.includes('localhost')) {
+            uri = uri.replace('localhost', '192.168.1.16');
+            console.log(`Converted ${module.name} URI from ${module.uri} to ${uri}`);
+          }
+
+          remoteUrlMapGlobal.set(module.name, uri);
         }
 
         // Convert manifests to routes and filter by client (client-side fallback)

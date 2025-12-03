@@ -16,7 +16,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    publicPath: "http://localhost:3001/",
+    publicPath: "auto", // Let webpack determine the public path dynamically
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".json"],

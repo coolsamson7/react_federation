@@ -46,8 +46,8 @@ export function detectClient(): ClientInfo {
   // Determine orientation
   const orientation: Orientation = width > height ? "landscape" : "portrait";
 
-  // Detect platform
-  const platformInfo = detectPlatform(ua, platform);
+  // Detect platform (check Capacitor first, then fallback to user agent)
+  const platformInfo = detectPlatformWithCapacitor(ua, platform);
 
   // Detect capabilities
   const capabilities = detectCapabilities();
@@ -65,6 +65,37 @@ export function detectClient(): ClientInfo {
     capabilities,
     device_type: inferDeviceType(width, platformInfo.platform),
   };
+}
+
+function detectPlatformWithCapacitor(ua: string, platform: string) {
+  // Check if running in Capacitor
+  const isCapacitor = !!(window as any).Capacitor;
+
+  if (isCapacitor) {
+    const Capacitor = (window as any).Capacitor;
+    const nativePlatform = Capacitor.getPlatform(); // 'ios', 'android', or 'web'
+
+    if (nativePlatform === 'ios') {
+      return {
+        platform: "ios" as Platform,
+        os: Capacitor.isNativePlatform() ? "iOS (Native)" : "iOS",
+        osVersion: extractIOSVersion(ua),
+        browser: "capacitor",
+      };
+    }
+
+    if (nativePlatform === 'android') {
+      return {
+        platform: "android" as Platform,
+        os: "Android (Native)",
+        osVersion: extractAndroidVersion(ua),
+        browser: "capacitor",
+      };
+    }
+  }
+
+  // Fallback to regular platform detection
+  return detectPlatform(ua, platform);
 }
 
 function getScreenSize(width: number): ScreenSize {
