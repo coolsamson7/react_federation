@@ -457,6 +457,18 @@
           <option name="totalLines" value="73954" />
           <option name="info" value="fix client info" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1764756390292" />
+          <option name="linesCode" value="70804" />
+          <option name="totalLines" value="75742" />
+          <option name="info" value="navigation is dynamic" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1764756683288" />
+          <option name="linesCode" value="70804" />
+          <option name="totalLines" value="75815" />
+          <option name="info" value="fix" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -474,9 +486,9 @@
           <option name="info" value="02.12.2025" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1764752004939" />
-          <option name="linesCode" value="70370" />
-          <option name="totalLines" value="73954" />
+          <option name="timestamp" value="1764756683288" />
+          <option name="linesCode" value="70804" />
+          <option name="totalLines" value="75815" />
           <option name="info" value="03.12.2025" />
         </TimePoint>
       </list>
