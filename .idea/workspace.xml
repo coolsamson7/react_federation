@@ -4,18 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="fix client info">
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/client-detector.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/dist/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/dist/remoteEntry.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/dist/remoteEntry.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/public/manifest.json" afterDir="false" />
+    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="navigation is dynamic">
       <change beforePath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/src/MFE1Foo.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mfe1/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/webpack.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/dist/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/shell/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/src/ShellLayout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/ShellLayout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/metadata/src/feature-parser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tools/metadata/src/feature-parser.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -246,7 +238,7 @@
       <updated>1763714353731</updated>
       <workItem from="1764603291270" duration="11358000" />
       <workItem from="1764688527101" duration="11992000" />
-      <workItem from="1764755846039" duration="317000" />
+      <workItem from="1764755846039" duration="680000" />
     </task>
     <task id="LOCAL-00001" summary="INITIAL CODE">
       <option name="closed" value="true" />
@@ -352,7 +344,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764752004870</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="navigation is dynamic">
+      <option name="closed" value="true" />
+      <created>1764756390184</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1764756390184</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -369,7 +369,8 @@
     <MESSAGE value="show load status" />
     <MESSAGE value="added client info" />
     <MESSAGE value="fix client info" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix client info" />
+    <MESSAGE value="navigation is dynamic" />
+    <option name="LAST_COMMIT_MESSAGE" value="navigation is dynamic" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

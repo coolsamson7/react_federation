@@ -56,3 +56,4 @@ class MFE1FooLarge extends React.Component {
 }
 
 export default MFE1FooSmall;
+export { MFE1FooSmall, MFE1FooLarge };

@@ -182,6 +182,19 @@ async function loadRemoteScript(url: string): Promise<void> {
   });
 }
 
+// Derive the base module name from component name
+// e.g., "MFE1FooLarge" -> "MFE1Foo", "MFE1FooSmall" -> "MFE1Foo"
+function getBaseModuleName(componentName: string): string {
+  // Remove common suffixes like "Small", "Large", "Mobile", "Desktop"
+  const suffixes = ['Small', 'Large', 'Mobile', 'Desktop', 'Tablet'];
+  for (const suffix of suffixes) {
+    if (componentName.endsWith(suffix)) {
+      return componentName.slice(0, -suffix.length);
+    }
+  }
+  return componentName;
+}
+
 // Lazy load remote on first access
 async function loadRemoteComponent(remote: string, module: string) {
   try {
@@ -212,8 +225,26 @@ async function loadRemoteComponent(remote: string, module: string) {
     }
 
     // Load the specific module from the remote
-    const moduleName = module.replace("./", "");
-    const loadedModule = await loadRemoteModule(remote, moduleName);
+    const componentName = module.replace("./", "");
+    const baseModuleName = getBaseModuleName(componentName);
+
+    // Try to load the specific component first, fall back to base module
+    let loadedModule;
+    try {
+      loadedModule = await loadRemoteModule(remote, componentName);
+    } catch (error) {
+      // If component doesn't exist, try the base module
+      console.log(`Component "${componentName}" not found, trying base module "${baseModuleName}"`);
+      loadedModule = await loadRemoteModule(remote, baseModuleName);
+    }
+
+    // Check if the loaded module has a named export matching the component name
+    // This handles cases like MFE1FooLarge being a named export from MFE1Foo
+    if (loadedModule[componentName]) {
+      console.log(`Using named export "${componentName}" from module`);
+      return { default: loadedModule[componentName] };
+    }
+
     return loadedModule;
   } catch (error) {
     console.error(`Failed to load remote component ${module} from ${remote}:`, error);
