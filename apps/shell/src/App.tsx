@@ -72,11 +72,37 @@ export default function App() {
         );
 
         console.log(`Filtered ${mfeRoutes.length} features for client:`, clientInfo.screen_size, clientInfo.platform);
+        console.log("All filtered routes:", mfeRoutes.map(r => ({ id: r.id, component: r.component, path: r.path })));
+
+        // Initialize global feature registry
+        if (!(window as any).__PORTAL_FEATURES__) {
+          (window as any).__PORTAL_FEATURES__ = {};
+        }
+
+        // Load features without paths (like navigation) and register them globally
+        const specialFeatures = mfeRoutes.filter((route) => !route.path || route.path === "");
+        console.log("Special features (no path):", specialFeatures.map(f => ({ id: f.id, component: f.component })));
+
+        for (const feature of specialFeatures) {
+          console.log(`Loading feature "${feature.id}":`, feature.component);
+          try {
+            const module = await loadRemoteComponent(feature.remote!, `./${feature.component}`);
+            (window as any).__PORTAL_FEATURES__[feature.id] = module.default;
+            console.log(`Registered feature "${feature.id}" in global registry`);
+          } catch (error) {
+            console.error(`Failed to load feature "${feature.id}":`, error);
+          }
+        }
+
+        console.log("Global feature registry:", Object.keys((window as any).__PORTAL_FEATURES__));
+
+        // Filter out features without a path (like navigation) from regular routes
+        const regularRoutes = mfeRoutes.filter((route) => route.path && route.path !== "");
 
         // Merge shell routes with MFE routes loaded from manifests
         await routeManager.mergeRoutes(
           shellRoutes as RouteMeta[],
-          mfeRoutes
+          regularRoutes
         );
 
         // Subscribe to route changes

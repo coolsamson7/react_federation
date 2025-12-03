@@ -2,7 +2,7 @@ import React from "react";
 import { Feature } from "@portal/component-registry";
 
 @Feature({
-  id: "mfe1-foo",
+  id: "mfe1-foo-small",
   label: "Foo Page (Small)",
   icon: "📄",
   description: "Foo feature page for smaller screens",
@@ -29,7 +29,7 @@ class MFE1FooSmall extends React.Component {
 }
 
 @Feature({
-  id: "mfe1-foo",
+  id: "mfe1-foo-large",
   label: "Foo Page (Large)",
   icon: "📄",
   description: "Foo feature page for larger screens",

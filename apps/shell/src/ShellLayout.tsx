@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { FeatureRenderer } from "@portal/feature-renderer";
 
 type RouteMeta = {
   path: string;
@@ -290,59 +291,26 @@ export default function ShellLayout({ routes, children, loadedRemotes, remoteUrl
       )}
 
       <div style={{ display: "flex", flex: 1 }}>
-        {/* Sidebar Navigation */}
-        <nav
-          style={{
-            width: "250px",
-            backgroundColor: "#0d0d0d",
-            padding: "20px",
-            borderRight: "1px solid #333",
-            boxShadow: "2px 0 8px rgba(0,0,0,0.3)"
-          }}
-        >
-          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {routes.map((route) => {
-              const isActive = location.pathname === route.path;
-              return (
-                <li key={route.path} style={{ marginBottom: "8px" }}>
-                  <Link
-                    to={route.path}
-                    style={{
-                      color: isActive ? "#60a5fa" : "#a0a0a0",
-                      fontWeight: isActive ? "600" : "normal",
-                      textDecoration: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      padding: "12px 16px",
-                      borderRadius: "8px",
-                      backgroundColor: isActive ? "#1e3a5f" : "transparent",
-                      transition: "all 0.2s ease",
-                      border: isActive ? "1px solid #60a5fa" : "1px solid transparent"
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isActive) {
-                        e.currentTarget.style.backgroundColor = "#1a1a1a";
-                        e.currentTarget.style.borderColor = "#404040";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive) {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.borderColor = "transparent";
-                      }
-                    }}
-                  >
-                    <span style={{ fontSize: "20px" }}>
-                      {route.icon || "📄"}
-                    </span>
-                    <span>{route.label || route.path}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+        {/* Dynamic Navigation - renders whatever "navigation" feature was sent by server */}
+        {(() => {
+          const filteredRoutes = routes
+            .filter(r => r.path && r.path !== "")
+            .map(r => ({
+              path: r.path,
+              label: r.label,
+              icon: r.icon,
+              component: r.component,
+              remote: r.remote,
+            }));
+          console.log("[ShellLayout] Routes passed to navigation:", filteredRoutes);
+          return (
+            <FeatureRenderer
+              featureId="navigation"
+              routes={filteredRoutes}
+              currentPath={location.pathname}
+            />
+          );
+        })()}
 
         {/* Main Content */}
         <main style={{
@@ -384,6 +352,7 @@ export default function ShellLayout({ routes, children, loadedRemotes, remoteUrl
           <div style={{
             flex: 1,
             padding: "32px",
+            paddingBottom: "120px", // Extra padding for iOS bottom nav
             backgroundColor: "#1a1a1a",
             overflowY: "auto"
           }}>

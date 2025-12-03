@@ -192,7 +192,7 @@ export class FeatureMetadataParser {
       if (isClass && ts.isClassDeclaration(node)) {
         decorators = ts.getDecorators(node) || [];
       }
-      
+
       // Fallback: also check node.decorators directly
       if (decorators.length === 0) {
         decorators = (node as any).decorators || [];

@@ -78,6 +78,42 @@
       "visibility": [
         "public"
       ]
+    },
+    {
+      "id": "navigation",
+      "label": "iOS Navigation",
+      "path": "",
+      "component": "IOSNavigation",
+      "sourceFile": "apps/mfe1/src/IOSNavigation.tsx",
+      "icon": "📱",
+      "description": "iOS-style bottom tab bar navigation",
+      "tags": [],
+      "permissions": [],
+      "features": [],
+      "visibility": [
+        "public"
+      ],
+      "clients": {
+        "maxWidth": 767
+      }
+    },
+    {
+      "id": "navigation",
+      "label": "Desktop Navigation",
+      "path": "",
+      "component": "DesktopNavigation",
+      "sourceFile": "apps/mfe1/src/DesktopNavigation.tsx",
+      "icon": "🖥️",
+      "description": "Desktop-style sidebar navigation",
+      "tags": [],
+      "permissions": [],
+      "features": [],
+      "visibility": [
+        "public"
+      ],
+      "clients": {
+        "minWidth": 768
+      }
     }
   ],
   "moduleName": "MFE1Module",

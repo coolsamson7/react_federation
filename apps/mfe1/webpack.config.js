@@ -38,10 +38,13 @@ module.exports = {
         "./MFE1Home": "./apps/mfe1/src/MFE1Home",
         "./MFE1Foo": "./apps/mfe1/src/MFE1Foo",
         "./MFE1Bar": "./apps/mfe1/src/MFE1Bar",
+        "./DesktopNavigation": "./apps/mfe1/src/DesktopNavigation",
+        "./IOSNavigation": "./apps/mfe1/src/IOSNavigation",
       },
       shared: {
         react: { singleton: true, eager: true },
         "react-dom": { singleton: true, eager: true },
+        "react-router-dom": { singleton: true, eager: true },
         tsyringe: { singleton: true, eager: true },
       },
     }),
