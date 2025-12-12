@@ -47,11 +47,11 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
       style={{
         display: "flex",
         alignItems: "center",
-        gap: "8px",
-        padding: "8px 16px",
+        gap: "4px",
+        padding: "6px 12px",
         backgroundColor: "#0d0d0d",
         borderTop: "1px solid #333",
-        fontSize: 12,
+        fontSize: 10,
         color: "#a0a0a0",
         overflow: "auto",
         whiteSpace: "nowrap",
@@ -68,13 +68,13 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "4px",
-                padding: "4px 8px",
+                gap: "3px",
+                padding: "3px 6px",
                 backgroundColor: isLast ? "#4A90E2" : "transparent",
-                border: isLast ? "none" : "1px solid #333",
+                border: "none",
                 borderRadius: 0,
                 color: isLast ? "#fff" : "#a0a0a0",
-                fontSize: 12,
+                fontSize: 10,
                 cursor: "pointer",
                 transition: "all 0.2s ease",
               }}
@@ -91,14 +91,14 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
                 }
               }}
             >
-              <span style={{ display: "flex", alignItems: "center", fontSize: 14 }}>
+              <span style={{ display: "flex", alignItems: "center", fontSize: 12 }}>
                 {getIcon(descriptor?.icon)}
               </span>
               <span>{descriptor?.label || "Widget"}</span>
             </button>
 
             {!isLast && (
-              <span style={{ color: "#555", fontSize: 14 }}>›</span>
+              <span style={{ color: "#555", fontSize: 12 }}>›</span>
             )}
           </React.Fragment>
         );

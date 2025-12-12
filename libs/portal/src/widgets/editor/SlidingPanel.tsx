@@ -99,6 +99,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           width: isOpen ? currentSize : 0,
           height: "100%",
           borderLeft: "none",
+          borderRight: "none",
           marginLeft: toggleBarWidth, // Account for toggle bar
         };
       case "right":
@@ -109,6 +110,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           width: isOpen ? currentSize : 0,
           height: "100%",
           borderRight: "none",
+          borderLeft: "none",
           marginRight: toggleBarWidth, // Account for toggle bar
         };
       case "bottom":
@@ -137,7 +139,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
             width: position === "bottom" ? "100%" : "8px",
             height: position === "bottom" ? "8px" : "100%",
             cursor: position === "bottom" ? "ns-resize" : "ew-resize",
-            backgroundColor: isResizing ? "#4A90E2" : "#1a1a1a",
+            backgroundColor: isResizing ? "#4A90E2" : "#2a2a2a",
             transition: "background-color 0.2s ease",
             zIndex: 102,
             display: "flex",
@@ -146,12 +148,12 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           }}
           onMouseEnter={(e) => {
             if (!isResizing) {
-              e.currentTarget.style.backgroundColor = "#2a2a2a";
+              e.currentTarget.style.backgroundColor = "#3a3a3a";
             }
           }}
           onMouseLeave={(e) => {
             if (!isResizing) {
-              e.currentTarget.style.backgroundColor = "#1a1a1a";
+              e.currentTarget.style.backgroundColor = "#2a2a2a";
             }
           }}
         >
@@ -160,7 +162,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
             style={{
               width: position === "bottom" ? "40px" : "2px",
               height: position === "bottom" ? "2px" : "40px",
-              backgroundColor: "#555",
+              backgroundColor: "#666",
               borderRadius: 1,
             }}
           />

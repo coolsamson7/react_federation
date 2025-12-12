@@ -33,6 +33,8 @@ export const WidgetEditor: React.FC = () => {
   const [renderKey, setRenderKey] = useState(0);
   const [isEditMode, setIsEditMode] = useState(true);
   const [activePanels, setActivePanels] = useState<Set<string>>(new Set(["palette", "properties"]));
+  const [canvasWidth, setCanvasWidth] = useState(1200);
+  const [isResizingCanvas, setIsResizingCanvas] = useState<"left" | "right" | null>(null);
 
   // Panel configurations with SVG icons
   const panelConfigs: PanelConfig[] = [
@@ -128,6 +130,30 @@ export const WidgetEditor: React.FC = () => {
     });
     return () => unsub();
   }, []);
+
+  useEffect(() => {
+    if (!isResizingCanvas) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isResizingCanvas === "left") {
+        setCanvasWidth((prev) => Math.max(320, Math.min(2400, prev - e.movementX * 2)));
+      } else if (isResizingCanvas === "right") {
+        setCanvasWidth((prev) => Math.max(320, Math.min(2400, prev + e.movementX * 2)));
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizingCanvas(null);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizingCanvas]);
 
   const forceUpdate = () => setRenderKey((k) => k + 1);
 
@@ -329,36 +355,126 @@ export const WidgetEditor: React.FC = () => {
             <div style={{ fontWeight: 600, marginBottom: 12, color: "#e0e0e0" }}>
               {isEditMode ? "Editor Canvas" : "Preview"}
             </div>
+            {/* Outer canvas area - lighter background */}
             <div
               style={{
-                background: "#111",
-                border: "1px solid #333",
+                background: "#1a1a1a",
                 borderRadius: 8,
-                padding: 12,
                 minHeight: 550,
                 flex: 1,
                 display: "flex",
-                flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "center",
+                padding: "20px",
+                overflow: "auto",
               }}
             >
-              <div style={{ flex: 1, overflow: "auto" }}>
-                <WidgetRenderer
-                  data={root}
-                  context={{ ...context, typeRegistry, widgetFactory }}
-                  edit={isEditMode}
-                  typeRegistry={typeRegistry}
-                  widgetFactory={widgetFactory}
-                />
+              {/* Inner edit area - centered with resize handles */}
+              <div
+                style={{
+                  position: "relative",
+                  width: isEditMode ? `${canvasWidth}px` : "100%",
+                  maxWidth: "100%",
+                  background: "#111",
+                  border: "1px solid #333",
+                  borderRadius: 4,
+                  minHeight: 500,
+                  display: "flex",
+                  flexDirection: "column",
+                  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
+                }}
+              >
+                {/* Left resize handle */}
+                {isEditMode && (
+                  <div
+                    onMouseDown={() => setIsResizingCanvas("left")}
+                    style={{
+                      position: "absolute",
+                      left: -13,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      width: 12,
+                      height: 40,
+                      cursor: "ew-resize",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: isResizingCanvas === "left" ? "#4A90E2" : "#2a2a2a",
+                      border: "1px solid #555",
+                      borderRadius: 3,
+                      transition: "background-color 0.2s ease",
+                      zIndex: 10,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isResizingCanvas) e.currentTarget.style.backgroundColor = "#4A90E2";
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isResizingCanvas) e.currentTarget.style.backgroundColor = "#2a2a2a";
+                    }}
+                  >
+                    <svg width="6" height="16" viewBox="0 0 6 16" fill="#888">
+                      <rect x="1" y="0" width="1.5" height="16" rx="0.5" />
+                      <rect x="3.5" y="0" width="1.5" height="16" rx="0.5" />
+                    </svg>
+                  </div>
+                )}
+
+                {/* Right resize handle */}
+                {isEditMode && (
+                  <div
+                    onMouseDown={() => setIsResizingCanvas("right")}
+                    style={{
+                      position: "absolute",
+                      right: -13,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      width: 12,
+                      height: 40,
+                      cursor: "ew-resize",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: isResizingCanvas === "right" ? "#4A90E2" : "#2a2a2a",
+                      border: "1px solid #555",
+                      borderRadius: 3,
+                      transition: "background-color 0.2s ease",
+                      zIndex: 10,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isResizingCanvas) e.currentTarget.style.backgroundColor = "#4A90E2";
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isResizingCanvas) e.currentTarget.style.backgroundColor = "#2a2a2a";
+                    }}
+                  >
+                    <svg width="6" height="16" viewBox="0 0 6 16" fill="#888">
+                      <rect x="1" y="0" width="1.5" height="16" rx="0.5" />
+                      <rect x="3.5" y="0" width="1.5" height="16" rx="0.5" />
+                    </svg>
+                  </div>
+                )}
+
+                {/* Canvas content */}
+                <div style={{ flex: 1, overflow: "auto", padding: 12 }}>
+                  <WidgetRenderer
+                    data={root}
+                    context={{ ...context, typeRegistry, widgetFactory }}
+                    edit={isEditMode}
+                    typeRegistry={typeRegistry}
+                    widgetFactory={widgetFactory}
+                  />
+                </div>
+
+                {/* Breadcrumb inside canvas at bottom */}
+                {isEditMode && (
+                  <Breadcrumb
+                    root={root}
+                    selectedId={selectedId}
+                    typeRegistry={typeRegistry}
+                    onSelect={handleWidgetSelect}
+                  />
+                )}
               </div>
-              {/* Breadcrumb inside canvas at bottom */}
-              {isEditMode && (
-                <Breadcrumb
-                  root={root}
-                  selectedId={selectedId}
-                  typeRegistry={typeRegistry}
-                  onSelect={handleWidgetSelect}
-                />
-              )}
             </div>
           </div>
 

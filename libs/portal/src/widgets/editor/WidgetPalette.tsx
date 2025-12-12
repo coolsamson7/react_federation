@@ -113,16 +113,16 @@ const PaletteItem: React.FC<{ name: string; label: string; icon: string; typeReg
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: 6,
+        padding: 4,
         border: "1px solid #333",
-        borderRadius: 3,
+        borderRadius: 2,
         background: isDragging ? "#2a2a2a" : "#1a1a1a",
         color: "#e0e0e0",
         cursor: isDragging ? "grabbing" : "grab",
         userSelect: "none",
         transition: "all 0.2s ease",
         aspectRatio: "1",
-        minHeight: 50,
+        minHeight: 40,
         opacity: isDragging ? 0.5 : 1,
         transform: isDragging ? "scale(0.95)" : "scale(1)",
       }}
@@ -140,8 +140,8 @@ const PaletteItem: React.FC<{ name: string; label: string; icon: string; typeReg
         }
       }}
     >
-      <div style={{ marginBottom: 3, display: "flex", alignItems: "center", justifyContent: "center", color: "#e0e0e0", fontSize: 18 }}>{getIcon(icon)}</div>
-      <div style={{ fontSize: 9, textAlign: "center", fontWeight: 500, lineHeight: 1.1 }}>
+      <div style={{ marginBottom: 2, display: "flex", alignItems: "center", justifyContent: "center", color: "#e0e0e0", fontSize: 16 }}>{getIcon(icon)}</div>
+      <div style={{ fontSize: 8, textAlign: "center", fontWeight: 500, lineHeight: 1.1 }}>
         {label}
       </div>
     </div>
