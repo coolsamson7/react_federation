@@ -152,6 +152,7 @@ export class GridWidgetEditBuilder extends WidgetBuilder<GridWidgetData> {
       <SelectionOverlay
         isSelected={isSelected}
         label={`Grid ${cols}×${rows_count} (${data.children.length} items)`}
+        widget={data}
         onClick={(e) => {
           e.stopPropagation();
           messageBus.publish({ topic: "editor", message: "select", payload: data });

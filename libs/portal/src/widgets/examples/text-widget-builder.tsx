@@ -49,6 +49,7 @@ export class TextWidgetEditBuilder extends WidgetBuilder<TextWidgetData> {
       <SelectionOverlay
         isSelected={isSelected}
         label="Text Widget"
+        widget={data}
         onClick={(e) => {
           e.stopPropagation();
           messageBus.publish({ topic: "editor", message: "select", payload: data });

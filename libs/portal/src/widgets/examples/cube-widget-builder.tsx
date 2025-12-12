@@ -178,6 +178,7 @@ export class CubeWidgetEditBuilder extends WidgetBuilder<CubeWidgetData> {
       <SelectionOverlay
         isSelected={isSelected}
         label="Cube Chart"
+        widget={data}
         onClick={(e) => {
           e.stopPropagation();
           messageBus.publish({ topic: "editor", message: "select", payload: data });

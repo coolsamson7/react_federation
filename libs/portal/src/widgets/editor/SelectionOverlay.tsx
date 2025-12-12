@@ -1,10 +1,14 @@
 import React, { ReactNode } from "react";
+import { useDrag } from "react-dnd";
+import { DND_ITEM } from "./dnd";
+import { WidgetData } from "../metadata";
 
 interface SelectionOverlayProps {
   isSelected: boolean;
   label: string;
   children: ReactNode;
   onClick?: (e: React.MouseEvent) => void;
+  widget?: WidgetData; // The widget data for drag & drop
 }
 
 /**
@@ -16,12 +20,31 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
   label,
   children,
   onClick,
+  widget,
 }) => {
+  // Make widget draggable
+  const [{ isDragging }, dragRef] = useDrag(
+    () => ({
+      type: DND_ITEM.WIDGET,
+      item: () => {
+        if (!widget) return null;
+        return { type: DND_ITEM.WIDGET, widget };
+      },
+      canDrag: () => !!widget,
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }),
+    [widget]
+  );
+
   return (
     <div
+      ref={dragRef}
       style={{
         position: "relative",
-        cursor: "pointer",
+        cursor: isDragging ? "grabbing" : "grab",
+        opacity: isDragging ? 0.5 : 1,
       }}
       onClick={onClick}
     >

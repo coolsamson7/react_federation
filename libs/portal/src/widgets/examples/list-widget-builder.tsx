@@ -74,6 +74,7 @@ export class ListWidgetEditBuilder extends WidgetBuilder<ListWidgetData> {
       <SelectionOverlay
         isSelected={isSelected}
         label={`List Widget (${data.children.length} items)`}
+        widget={data}
         onClick={(e) => {
           e.stopPropagation();
           messageBus.publish({ topic: "editor", message: "select", payload: data });
