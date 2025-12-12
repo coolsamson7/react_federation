@@ -4,6 +4,7 @@ import { WidgetData } from "../metadata";
 import { TypeRegistry } from "../type-registry";
 import { DND_ITEM } from "./dnd";
 import { messageBus } from "./message-bus";
+import { getIcon } from "../icon-registry";
 
 interface WidgetTreeProps {
   root: WidgetData;
@@ -157,8 +158,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         )}
 
         {/* Widget Icon */}
-        <span style={{ marginRight: "8px", fontSize: "14px" }}>
-          {descriptor?.icon || "📦"}
+        <span style={{ marginRight: "8px", display: "flex", alignItems: "center", color: "#e0e0e0" }}>
+          <div style={{ width: "16px", height: "16px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {getIcon(descriptor?.icon)}
+          </div>
         </span>
 
         {/* Widget Label */}

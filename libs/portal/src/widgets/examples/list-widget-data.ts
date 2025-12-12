@@ -9,9 +9,9 @@ import { AutoRegisterWidget } from "../type-registry";
  */
 @DeclareWidget({
   name: "list",
-  label: "List Widget",
+  label: "List",
   group: "layout",
-  icon: "📋",
+  icon: "list",
   // Accept any child for now
   acceptChild: () => true,
 })

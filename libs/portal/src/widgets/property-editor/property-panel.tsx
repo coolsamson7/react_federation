@@ -92,7 +92,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
             </div>
 
             {!isCollapsed && (
-              <div style={{ padding: "12px", backgroundColor: "#1a1a1a" }}>
+              <div style={{ padding: "12px 12px 0 12px", backgroundColor: "#1a1a1a" }}>
                 {Array.from(properties.values()).map((property) => {
                   const Editor = editorRegistry.getEditor(property.type);
 

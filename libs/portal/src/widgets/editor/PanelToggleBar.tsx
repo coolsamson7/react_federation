@@ -4,7 +4,7 @@ import { PanelPosition } from "./SlidingPanel";
 export interface PanelConfig {
   id: string;
   label: string;
-  icon: string;
+  icon: React.ReactNode;
   position: PanelPosition;
 }
 

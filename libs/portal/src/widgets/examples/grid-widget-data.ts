@@ -10,7 +10,7 @@ import { AutoRegisterWidget } from "../type-registry";
   name: "grid",
   label: "Grid",
   group: "layout",
-  icon: "⊞",
+  icon: "grid",
   // Accept any child widget
   acceptChild: () => true,
 })

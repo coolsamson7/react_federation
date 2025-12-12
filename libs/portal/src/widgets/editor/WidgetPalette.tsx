@@ -2,6 +2,7 @@ import React from "react";
 import { useDrag } from "react-dnd";
 import { DND_ITEM } from "./dnd";
 import { TypeRegistry } from "../type-registry";
+import { getIcon } from "../icon-registry";
 
 interface WidgetPaletteProps {
   typeRegistry: TypeRegistry;
@@ -104,9 +105,9 @@ const PaletteItem: React.FC<{ name: string; label: string; icon: string; typeReg
         }
       }}
     >
-      <div style={{ fontSize: 32, marginBottom: 8 }}>{icon}</div>
+      <div style={{ marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", color: "#e0e0e0" }}>{getIcon(icon)}</div>
       <div style={{ fontSize: 11, textAlign: "center", fontWeight: 500, lineHeight: 1.3 }}>
-        {label.replace(" Widget", "")}
+        {label}
       </div>
     </div>
   );

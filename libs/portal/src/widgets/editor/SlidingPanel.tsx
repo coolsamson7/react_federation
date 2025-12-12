@@ -80,42 +80,40 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           backgroundColor: "#0d0d0d",
           borderBottom: "1px solid #333",
           minHeight: 30,
+          flexShrink: 0,
         }}
       >
         <div style={{ fontWeight: 600, fontSize: 12, color: "#e0e0e0" }}>{title}</div>
         <button
           onClick={onClose}
           style={{
-            width: 18,
-            height: 18,
+            width: 20,
+            height: 20,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "transparent",
-            border: "1px solid #555",
-            borderRadius: 3,
-            color: "#888",
+            border: "none",
+            color: "#666",
             cursor: "pointer",
-            fontSize: 12,
             transition: "all 0.2s ease",
+            padding: 0,
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#333";
-            e.currentTarget.style.borderColor = "#666";
             e.currentTarget.style.color = "#e0e0e0";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent";
-            e.currentTarget.style.borderColor = "#555";
-            e.currentTarget.style.color = "#888";
+            e.currentTarget.style.color = "#666";
           }}
         >
-          ×
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+          </svg>
         </button>
       </div>
 
       {/* Panel Content */}
-      <div style={{ flex: 1, overflow: "auto", padding: 16 }}>{children}</div>
+      <div style={{ flex: 1, overflow: "auto", display: "flex", flexDirection: "column" }}>{children}</div>
     </div>
   );
 };

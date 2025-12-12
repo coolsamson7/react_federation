@@ -8,9 +8,9 @@ import { AutoRegisterWidget } from "../type-registry";
  */
 @DeclareWidget({
   name: "text",
-  label: "Text Widget",
+  label: "Text",
   group: "basic",
-  icon: "📝",
+  icon: "text",
 })
 @AutoRegisterWidget()
 export class TextWidgetData extends WidgetData {
