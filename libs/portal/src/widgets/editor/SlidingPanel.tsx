@@ -100,6 +100,8 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           height: "100%",
           borderLeft: "none",
           borderRight: "none",
+          borderTop: "none",
+          borderBottom: "none",
         };
       case "right":
         return {
@@ -110,6 +112,8 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           height: "100%",
           borderRight: "none",
           borderLeft: "none",
+          borderTop: "none",
+          borderBottom: "none",
         };
       case "bottom":
         return {
