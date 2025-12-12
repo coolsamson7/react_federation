@@ -10,5 +10,6 @@ import "./font-weight-editor";
 import "./text-align-editor";
 import "./padding-editor";
 import "./select-editor";
+import "./grid-template-editor";
 
 console.log("[EditorRegistry] All property editor modules loaded");

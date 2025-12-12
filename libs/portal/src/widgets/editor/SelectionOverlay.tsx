@@ -31,14 +31,14 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
         <div
           style={{
             position: "absolute",
-            top: -24,
+            top: -1,
             left: -2,
-            backgroundColor: "#4A90E2",
+            backgroundColor: "rgba(74, 144, 226, 0.85)",
             color: "#fff",
             padding: "2px 8px",
             fontSize: 11,
             fontWeight: 600,
-            borderRadius: "4px 4px 0 0",
+            borderRadius: 0,
             zIndex: 10,
             whiteSpace: "nowrap",
             fontFamily: "system-ui, -apple-system, sans-serif",
@@ -73,8 +73,8 @@ interface HandleProps {
 }
 
 const Handle: React.FC<HandleProps> = ({ position }) => {
-  const handleSize = 6;
-  const offset = -3; // Half of handle size for centering
+  const handleSize = 7;
+  const offset = -3.5; // Half of handle size for centering
 
   const baseStyle: React.CSSProperties = {
     position: "absolute",

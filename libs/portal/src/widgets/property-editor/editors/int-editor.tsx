@@ -39,7 +39,7 @@ export class IntEditor extends PropertyEditor<number> {
             padding: "8px 12px",
             backgroundColor: "#2a2a2a",
             border: "1px solid #404040",
-            borderRadius: "4px",
+            borderRadius: 0,
             color: "#e0e0e0",
             fontSize: "14px",
             fontFamily: "inherit",

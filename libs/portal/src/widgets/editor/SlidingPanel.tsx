@@ -41,19 +41,19 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
       case "left":
         return {
           ...baseStyle,
-          top: float ? 0 : undefined,
+          top: 0,
           left: float ? toggleBarWidth : undefined,
           width: isOpen ? width : 0,
-          height: float ? "100%" : "100%",
+          height: "100%",
           borderLeft: "none",
         };
       case "right":
         return {
           ...baseStyle,
-          top: float ? 0 : undefined,
+          top: 0,
           right: float ? toggleBarWidth : undefined,
           width: isOpen ? width : 0,
-          height: float ? "100%" : "100%",
+          height: "100%",
           borderRight: "none",
         };
       case "bottom":

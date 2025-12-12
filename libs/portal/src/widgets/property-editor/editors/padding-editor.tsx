@@ -83,7 +83,7 @@ export class PaddingEditor extends React.Component<PaddingEditorProps, PaddingEd
               padding: "6px 8px",
               backgroundColor: "#0d0d0d",
               border: "1px solid #333",
-              borderRadius: "4px",
+              borderRadius: 0,
               color: "#e0e0e0",
               fontSize: "12px",
             }}
@@ -93,14 +93,23 @@ export class PaddingEditor extends React.Component<PaddingEditorProps, PaddingEd
             onChange={(e) => this.handleUnitChange(e.target.value)}
             style={{
               padding: "6px 8px",
-              backgroundColor: "#0d0d0d",
-              border: "1px solid #333",
-              borderRadius: "4px",
+              backgroundColor: "#2a2a2a",
+              border: "1px solid #444",
+              borderRadius: 0,
               color: "#e0e0e0",
-              fontSize: "12px",
+              fontSize: 12,
+              fontFamily: "inherit",
               cursor: "pointer",
+              outline: "none",
+              appearance: "none",
+              WebkitAppearance: "none",
+              MozAppearance: "none",
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23888' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right 8px center",
+              paddingRight: "28px",
               minWidth: "60px",
-            }}
+            } as React.CSSProperties}
           >
             {units.map((u) => (
               <option key={u} value={u}>

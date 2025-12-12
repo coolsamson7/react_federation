@@ -35,7 +35,7 @@ export class ColorEditor extends React.Component<ColorEditorProps> {
               width: "40px",
               height: "32px",
               border: "1px solid #333",
-              borderRadius: "4px",
+              borderRadius: 0,
               backgroundColor: "transparent",
               cursor: "pointer",
             }}
@@ -50,7 +50,7 @@ export class ColorEditor extends React.Component<ColorEditorProps> {
               padding: "6px 8px",
               backgroundColor: "#0d0d0d",
               border: "1px solid #333",
-              borderRadius: "4px",
+              borderRadius: 0,
               color: "#e0e0e0",
               fontSize: "12px",
               fontFamily: "monospace",

@@ -20,7 +20,7 @@ export class GridWidgetData extends WidgetData {
   @DeclareProperty({
     label: "Columns",
     group: "grid",
-    type: "string",
+    type: "gridTemplate",
     defaultValue: "1fr 1fr",
   })
   gridTemplateColumns?: string;
@@ -28,7 +28,7 @@ export class GridWidgetData extends WidgetData {
   @DeclareProperty({
     label: "Rows",
     group: "grid",
-    type: "string",
+    type: "gridTemplate",
     defaultValue: "auto",
   })
   gridTemplateRows?: string;
