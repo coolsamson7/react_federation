@@ -61,8 +61,15 @@ export const WidgetPalette: React.FC<WidgetPaletteProps> = ({ typeRegistry }) =>
               }}
             >
               <span>{group}</span>
-              <span style={{ fontSize: 10, transition: "transform 0.2s ease", display: "inline-block" }}>
-                {isCollapsed ? "▼" : "▲"}
+              <span
+                style={{
+                  fontSize: 10,
+                  transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                  transition: "transform 0.2s ease",
+                  display: "inline-block",
+                }}
+              >
+                ›
               </span>
             </div>
 

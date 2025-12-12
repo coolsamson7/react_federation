@@ -75,8 +75,6 @@ export const PanelToggleBar: React.FC<PanelToggleBarProps> = ({
               padding: 8,
               backgroundColor: "transparent",
               border: "none",
-              borderBottom: position === "bottom" ? "none" : "1px solid #333",
-              borderRight: position === "bottom" ? "1px solid #333" : "none",
               color: isActive ? "#fff" : "#555",
               fontSize: 16,
               cursor: "pointer",

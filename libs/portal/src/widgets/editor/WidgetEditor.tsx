@@ -212,7 +212,7 @@ export const WidgetEditor: React.FC = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
         {/* Toolbar */}
         <div
           style={{
@@ -221,9 +221,7 @@ export const WidgetEditor: React.FC = () => {
             justifyContent: "flex-start",
             padding: "12px 16px",
             backgroundColor: "#1a1a1a",
-            border: "1px solid #333",
-            borderRadius: 8,
-            marginBottom: 0,
+            borderBottom: "1px solid #333",
           }}
         >
           <button
@@ -255,7 +253,7 @@ export const WidgetEditor: React.FC = () => {
         </div>
 
         {/* Main Content with Panels */}
-        <div style={{ position: "relative", minHeight: 600, display: "flex" }}>
+        <div style={{ position: "relative", flex: 1, display: "flex", overflow: "hidden" }}>
           {/* Panel Toggle Bars - only in edit mode */}
           {isEditMode && (
             <>
@@ -349,48 +347,73 @@ export const WidgetEditor: React.FC = () => {
               flex: 1,
               display: "flex",
               flexDirection: "column",
-              padding: isEditMode ? "0 52px 52px 52px" : "0 16px 16px 16px",
+              minHeight: 0,
+              overflow: "hidden",
             }}
           >
-            <div style={{ fontWeight: 600, marginBottom: 12, color: "#e0e0e0" }}>
-              {isEditMode ? "Editor Canvas" : "Preview"}
-            </div>
             {/* Outer canvas area - lighter background */}
             <div
               style={{
                 background: "#1a1a1a",
-                borderRadius: 8,
-                minHeight: 550,
                 flex: 1,
                 display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "center",
-                padding: "20px",
-                overflow: "auto",
+                flexDirection: "column",
+                minHeight: 0,
               }}
             >
-              {/* Inner edit area - centered with resize handles */}
+              {/* Top bar with device icon - fills full width */}
+              {isEditMode && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "8px",
+                    borderBottom: "1px solid #333",
+                    backgroundColor: "#0d0d0d",
+                    width: "100%",
+                    flexShrink: 0,
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style={{ color: "#888" }}>
+                    <path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13A1.5 1.5 0 0 0 0 3.5v9zM1.5 3a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5V3zm0 9a.5.5 0 0 1 .5-.5h12a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5V12z"/>
+                  </svg>
+                </div>
+              )}
+
+              {/* Canvas content area */}
               <div
                 style={{
-                  position: "relative",
-                  width: isEditMode ? `${canvasWidth}px` : "100%",
-                  maxWidth: "100%",
-                  background: "#111",
-                  border: "1px solid #333",
-                  borderRadius: 4,
-                  minHeight: 500,
+                  flex: 1,
                   display: "flex",
-                  flexDirection: "column",
-                  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
+                  justifyContent: "center",
+                  alignItems: "stretch",
+                  padding: "20px",
+                  minHeight: 0,
                 }}
               >
+                {/* Inner edit area - centered with resize handles */}
+                <div
+                  style={{
+                    position: "relative",
+                    width: isEditMode ? `${canvasWidth}px` : "100%",
+                    maxWidth: "100%",
+                    background: "#111",
+                    border: "1px solid #333",
+                    borderRadius: 4,
+                    display: "flex",
+                    flexDirection: "column",
+                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
+                    alignSelf: "stretch",
+                  }}
+                >
                 {/* Left resize handle */}
                 {isEditMode && (
                   <div
                     onMouseDown={() => setIsResizingCanvas("left")}
                     style={{
                       position: "absolute",
-                      left: -13,
+                      left: -14,
                       top: "50%",
                       transform: "translateY(-50%)",
                       width: 12,
@@ -401,15 +424,23 @@ export const WidgetEditor: React.FC = () => {
                       justifyContent: "center",
                       backgroundColor: isResizingCanvas === "left" ? "#4A90E2" : "#2a2a2a",
                       border: "1px solid #555",
-                      borderRadius: 3,
+                      borderRadius: "3px 0 0 3px",
                       transition: "background-color 0.2s ease",
                       zIndex: 10,
                     }}
                     onMouseEnter={(e) => {
-                      if (!isResizingCanvas) e.currentTarget.style.backgroundColor = "#4A90E2";
+                      if (!isResizingCanvas) {
+                        e.currentTarget.style.backgroundColor = "#4A90E2";
+                        const svg = e.currentTarget.querySelector("svg");
+                        if (svg) svg.setAttribute("fill", "#4A90E2");
+                      }
                     }}
                     onMouseLeave={(e) => {
-                      if (!isResizingCanvas) e.currentTarget.style.backgroundColor = "#2a2a2a";
+                      if (!isResizingCanvas) {
+                        e.currentTarget.style.backgroundColor = "#2a2a2a";
+                        const svg = e.currentTarget.querySelector("svg");
+                        if (svg) svg.setAttribute("fill", "#888");
+                      }
                     }}
                   >
                     <svg width="6" height="16" viewBox="0 0 6 16" fill="#888">
@@ -425,7 +456,7 @@ export const WidgetEditor: React.FC = () => {
                     onMouseDown={() => setIsResizingCanvas("right")}
                     style={{
                       position: "absolute",
-                      right: -13,
+                      right: -14,
                       top: "50%",
                       transform: "translateY(-50%)",
                       width: 12,
@@ -436,15 +467,23 @@ export const WidgetEditor: React.FC = () => {
                       justifyContent: "center",
                       backgroundColor: isResizingCanvas === "right" ? "#4A90E2" : "#2a2a2a",
                       border: "1px solid #555",
-                      borderRadius: 3,
+                      borderRadius: "0 3px 3px 0",
                       transition: "background-color 0.2s ease",
                       zIndex: 10,
                     }}
                     onMouseEnter={(e) => {
-                      if (!isResizingCanvas) e.currentTarget.style.backgroundColor = "#4A90E2";
+                      if (!isResizingCanvas) {
+                        e.currentTarget.style.backgroundColor = "#4A90E2";
+                        const svg = e.currentTarget.querySelector("svg");
+                        if (svg) svg.setAttribute("fill", "#4A90E2");
+                      }
                     }}
                     onMouseLeave={(e) => {
-                      if (!isResizingCanvas) e.currentTarget.style.backgroundColor = "#2a2a2a";
+                      if (!isResizingCanvas) {
+                        e.currentTarget.style.backgroundColor = "#2a2a2a";
+                        const svg = e.currentTarget.querySelector("svg");
+                        if (svg) svg.setAttribute("fill", "#888");
+                      }
                     }}
                   >
                     <svg width="6" height="16" viewBox="0 0 6 16" fill="#888">
@@ -464,17 +503,18 @@ export const WidgetEditor: React.FC = () => {
                     widgetFactory={widgetFactory}
                   />
                 </div>
-
-                {/* Breadcrumb inside canvas at bottom */}
-                {isEditMode && (
-                  <Breadcrumb
-                    root={root}
-                    selectedId={selectedId}
-                    typeRegistry={typeRegistry}
-                    onSelect={handleWidgetSelect}
-                  />
-                )}
               </div>
+              </div>
+
+              {/* Breadcrumb at bottom of outer canvas - fills full width */}
+              {isEditMode && (
+                <Breadcrumb
+                  root={root}
+                  selectedId={selectedId}
+                  typeRegistry={typeRegistry}
+                  onSelect={handleWidgetSelect}
+                />
+              )}
             </div>
           </div>
 

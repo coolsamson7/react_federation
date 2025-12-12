@@ -88,7 +88,16 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
               }}
             >
               <span>{groupName}</span>
-              <span style={{ fontSize: "10px" }}>{isCollapsed ? "▼" : "▲"}</span>
+              <span
+                style={{
+                  fontSize: "10px",
+                  transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                  transition: "transform 0.2s ease",
+                  display: "inline-block",
+                }}
+              >
+                ›
+              </span>
             </div>
 
             {!isCollapsed && (

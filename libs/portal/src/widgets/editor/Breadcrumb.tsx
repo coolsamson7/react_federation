@@ -32,15 +32,18 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
     return null;
   };
 
-  if (!selectedId) {
-    return null;
+  let path: WidgetData[] | null = null;
+
+  if (selectedId) {
+    path = buildPath(root, selectedId);
   }
 
-  const path = buildPath(root, selectedId);
-
+  // If no selection or path not found, show root only
   if (!path) {
-    return null;
+    path = [root];
   }
+
+  console.log("[Breadcrumb] Rendering with path:", path.map(w => w.type));
 
   return (
     <div
@@ -55,6 +58,10 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
         color: "#a0a0a0",
         overflow: "auto",
         whiteSpace: "nowrap",
+        width: "100%",
+        flexShrink: 0,
+        minHeight: "32px",
+        zIndex: 1000,
       }}
     >
       {path.map((widget, index) => {

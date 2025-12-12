@@ -10,7 +10,7 @@ import { AutoRegisterWidget } from "../type-registry";
   name: "cube",
   label: "Cube Chart",
   group: "charts",
-  icon: "📊",
+  icon: "cube",
 })
 @AutoRegisterWidget()
 export class CubeWidgetData extends WidgetData {
