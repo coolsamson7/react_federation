@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState, useRef, useEffect } from "react";
 
 export type PanelPosition = "left" | "right" | "bottom";
 
@@ -11,6 +11,7 @@ interface SlidingPanelProps {
   float?: boolean; // If true, panel floats over content; if false, pushes content
   children: ReactNode;
   onClose: () => void;
+  panelId: string; // For persisting sizes
 }
 
 export const SlidingPanel: React.FC<SlidingPanelProps> = ({
@@ -22,16 +23,68 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
   float = false,
   children,
   onClose,
+  panelId,
 }) => {
   const toggleBarWidth = 36; // Width of the toggle bar
+
+  // Load saved size from localStorage or use default
+  const getSavedSize = () => {
+    const saved = localStorage.getItem(`panel-size-${panelId}`);
+    return saved ? parseInt(saved, 10) : (position === "bottom" ? height : width);
+  };
+
+  const [currentSize, setCurrentSize] = useState(getSavedSize);
+  const [isResizing, setIsResizing] = useState(false);
+  const startPosRef = useRef(0);
+  const startSizeRef = useRef(0);
+
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (position === "left") {
+        const delta = e.clientX - startPosRef.current;
+        const newSize = Math.max(150, Math.min(800, startSizeRef.current + delta));
+        setCurrentSize(newSize);
+      } else if (position === "right") {
+        const delta = startPosRef.current - e.clientX;
+        const newSize = Math.max(150, Math.min(800, startSizeRef.current + delta));
+        setCurrentSize(newSize);
+      } else if (position === "bottom") {
+        const delta = startPosRef.current - e.clientY;
+        const newSize = Math.max(100, Math.min(600, startSizeRef.current + delta));
+        setCurrentSize(newSize);
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      localStorage.setItem(`panel-size-${panelId}`, currentSize.toString());
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing, position, currentSize, panelId]);
+
+  const handleResizeStart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizing(true);
+    startPosRef.current = position === "bottom" ? e.clientY : e.clientX;
+    startSizeRef.current = currentSize;
+  };
 
   const getStyles = (): React.CSSProperties => {
     const baseStyle: React.CSSProperties = {
       position: float ? "absolute" : "relative",
       backgroundColor: "#1a1a1a",
       border: "1px solid #333",
-      zIndex: 101,
-      transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1), height 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+      zIndex: position === "right" ? 102 : 101, // Right panels above left panels
+      transition: isResizing ? "none" : "width 0.3s cubic-bezier(0.4, 0, 0.2, 1), height 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
       overflow: "hidden",
       display: "flex",
       flexDirection: "column",
@@ -43,7 +96,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           ...baseStyle,
           top: 0,
           left: float ? toggleBarWidth : undefined,
-          width: isOpen ? width : 0,
+          width: isOpen ? currentSize : 0,
           height: "100%",
           borderLeft: "none",
         };
@@ -52,7 +105,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           ...baseStyle,
           top: 0,
           right: float ? toggleBarWidth : undefined,
-          width: isOpen ? width : 0,
+          width: isOpen ? currentSize : 0,
           height: "100%",
           borderRight: "none",
         };
@@ -62,7 +115,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           bottom: float ? toggleBarWidth : undefined,
           left: float ? toggleBarWidth : undefined,
           right: float ? toggleBarWidth : undefined,
-          height: isOpen ? height : 0,
+          height: isOpen ? currentSize : 0,
           borderBottom: "none",
         };
     }
@@ -70,6 +123,48 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
 
   return (
     <div style={getStyles()}>
+      {/* Resize Handle - Left side for right panels, right side for left panels */}
+      {isOpen && (
+        <div
+          onMouseDown={handleResizeStart}
+          style={{
+            position: "absolute",
+            [position === "left" ? "right" : position === "right" ? "left" : "top"]: 0,
+            [position === "bottom" ? "left" : "top"]: 0,
+            [position === "bottom" ? "right" : "bottom"]: 0,
+            width: position === "bottom" ? "100%" : "8px",
+            height: position === "bottom" ? "8px" : "100%",
+            cursor: position === "bottom" ? "ns-resize" : "ew-resize",
+            backgroundColor: isResizing ? "#4A90E2" : "#1a1a1a",
+            transition: "background-color 0.2s ease",
+            zIndex: 102,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onMouseEnter={(e) => {
+            if (!isResizing) {
+              e.currentTarget.style.backgroundColor = "#2a2a2a";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isResizing) {
+              e.currentTarget.style.backgroundColor = "#1a1a1a";
+            }
+          }}
+        >
+          {/* Visual indicator line */}
+          <div
+            style={{
+              width: position === "bottom" ? "40px" : "2px",
+              height: position === "bottom" ? "2px" : "40px",
+              backgroundColor: "#555",
+              borderRadius: 1,
+            }}
+          />
+        </div>
+      )}
+
       {/* Panel Header */}
       <div
         style={{
@@ -98,6 +193,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
             cursor: "pointer",
             transition: "all 0.2s ease",
             padding: 0,
+            zIndex: 103,
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.color = "#e0e0e0";

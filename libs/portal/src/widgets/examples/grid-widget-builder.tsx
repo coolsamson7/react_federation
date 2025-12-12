@@ -222,6 +222,8 @@ const GridCell: React.FC<GridCellProps> = ({
         if (context?.forceUpdate) {
           context.forceUpdate();
         }
+        // Auto-select the dropped widget
+        messageBus.publish({ topic: "editor", message: "select", payload: w });
       }}
       emptyHint=""
     >

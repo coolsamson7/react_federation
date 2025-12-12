@@ -15,6 +15,7 @@ import { messageBus } from "./message-bus";
 import { SlidingPanel } from "./SlidingPanel";
 import { PanelToggleBar, PanelConfig } from "./PanelToggleBar";
 import { WidgetTree } from "./WidgetTree";
+import { Breadcrumb } from "./Breadcrumb";
 
 // Ensure registries and builders are initialized via side-effect imports
 import "../examples/widget-registry";
@@ -129,6 +130,23 @@ export const WidgetEditor: React.FC = () => {
   }, []);
 
   const forceUpdate = () => setRenderKey((k) => k + 1);
+
+  const handleWidgetSelect = (widgetId: string) => {
+    setSelectedId(widgetId);
+    // Find the widget by ID to publish
+    const findWidget = (w: WidgetData, id: string): WidgetData | null => {
+      if (w.id === id) return w;
+      for (const child of w.children) {
+        const found = findWidget(child, id);
+        if (found) return found;
+      }
+      return null;
+    };
+    const widget = root ? findWidget(root, widgetId) : null;
+    if (widget) {
+      messageBus.publish({ topic: "editor", message: "select", payload: widget });
+    }
+  };
 
   const handleWidgetMove = (draggedWidget: WidgetData, targetWidget: WidgetData) => {
     if (!root) return;
@@ -246,6 +264,7 @@ export const WidgetEditor: React.FC = () => {
                 width={280}
                 float={false}
                 onClose={() => togglePanel("palette")}
+                panelId="palette"
               >
                 <div style={{ padding: "16px" }}>
                   <WidgetPalette typeRegistry={typeRegistry} />
@@ -259,6 +278,7 @@ export const WidgetEditor: React.FC = () => {
                 width={320}
                 float={false}
                 onClose={() => togglePanel("tree")}
+                panelId="tree"
               >
                 <WidgetTree
                   root={root}
@@ -275,6 +295,7 @@ export const WidgetEditor: React.FC = () => {
                 width={400}
                 float={false}
                 onClose={() => togglePanel("json")}
+                panelId="json"
               >
                 <pre
                   style={{
@@ -316,15 +337,28 @@ export const WidgetEditor: React.FC = () => {
                 padding: 12,
                 minHeight: 550,
                 flex: 1,
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <WidgetRenderer
-                data={root}
-                context={{ ...context, typeRegistry, widgetFactory }}
-                edit={isEditMode}
-                typeRegistry={typeRegistry}
-                widgetFactory={widgetFactory}
-              />
+              <div style={{ flex: 1, overflow: "auto" }}>
+                <WidgetRenderer
+                  data={root}
+                  context={{ ...context, typeRegistry, widgetFactory }}
+                  edit={isEditMode}
+                  typeRegistry={typeRegistry}
+                  widgetFactory={widgetFactory}
+                />
+              </div>
+              {/* Breadcrumb inside canvas at bottom */}
+              {isEditMode && (
+                <Breadcrumb
+                  root={root}
+                  selectedId={selectedId}
+                  typeRegistry={typeRegistry}
+                  onSelect={handleWidgetSelect}
+                />
+              )}
             </div>
           </div>
 
@@ -353,6 +387,7 @@ export const WidgetEditor: React.FC = () => {
               width={320}
               float={false}
               onClose={() => togglePanel("properties")}
+              panelId="properties"
             >
               <PropertiesPanelBridge
                 root={root}

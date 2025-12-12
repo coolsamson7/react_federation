@@ -21,7 +21,6 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
     <div
       style={{
         position: "relative",
-        border: isSelected ? "2px solid #4A90E2" : "1px dashed #555",
         cursor: "pointer",
       }}
       onClick={onClick}
@@ -31,9 +30,9 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
         <div
           style={{
             position: "absolute",
-            top: -1,
-            left: -2,
-            backgroundColor: "rgba(74, 144, 226, 0.85)",
+            top: -20,
+            left: 0,
+            backgroundColor: "rgba(74, 144, 226, 0.95)",
             color: "#fff",
             padding: "2px 8px",
             fontSize: 11,

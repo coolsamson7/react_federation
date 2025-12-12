@@ -91,6 +91,8 @@ export class ListWidgetEditBuilder extends WidgetBuilder<ListWidgetData> {
             if (context?.forceUpdate) {
               context.forceUpdate();
             }
+            // Auto-select the dropped widget
+            messageBus.publish({ topic: "editor", message: "select", payload: w });
           }}
           emptyHint="Drop items here"
         >
