@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 import { DND_ITEM } from "./dnd";
 import { TypeRegistry } from "../type-registry";
@@ -10,6 +10,7 @@ interface WidgetPaletteProps {
 
 export const WidgetPalette: React.FC<WidgetPaletteProps> = ({ typeRegistry }) => {
   const descriptors = typeRegistry.getAllDescriptors();
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   // Group descriptors by their group property
   const groupedDescriptors = new Map<string, typeof descriptors>();
@@ -21,40 +22,74 @@ export const WidgetPalette: React.FC<WidgetPaletteProps> = ({ typeRegistry }) =>
     groupedDescriptors.get(group)!.push(desc);
   });
 
+  const toggleGroup = (group: string) => {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(group)) {
+        next.delete(group);
+      } else {
+        next.add(group);
+      }
+      return next;
+    });
+  };
+
   return (
     <div>
-      <div style={{ fontWeight: 600, marginBottom: 16, color: "#e0e0e0", fontSize: 16 }}>Widget Palette</div>
+      {Array.from(groupedDescriptors.entries()).map(([group, items]) => {
+        const isCollapsed = collapsedGroups.has(group);
+        return (
+          <div key={group} style={{ marginBottom: 1 }}>
+            {/* Group Header */}
+            <div
+              onClick={() => toggleGroup(group)}
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                color: "#888",
+                letterSpacing: "0.5px",
+                padding: "8px 12px",
+                backgroundColor: "#0d0d0d",
+                borderBottom: "1px solid #333",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                userSelect: "none",
+                marginBottom: isCollapsed ? 0 : 0,
+              }}
+            >
+              <span>{group}</span>
+              <span style={{ fontSize: 10, transition: "transform 0.2s ease", display: "inline-block" }}>
+                {isCollapsed ? "▼" : "▲"}
+              </span>
+            </div>
 
-      {Array.from(groupedDescriptors.entries()).map(([group, items]) => (
-        <div key={group} style={{ marginBottom: 24 }}>
-          {/* Group Header */}
-          <div
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              textTransform: "uppercase",
-              color: "#888",
-              marginBottom: 12,
-              letterSpacing: "0.5px",
-            }}
-          >
-            {group}
+            {/* Grid of widgets */}
+            {!isCollapsed && (
+              <div
+                style={{
+                  padding: "8px",
+                  backgroundColor: "#1a1a1a",
+                }}
+              >
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gap: 4,
+                  }}
+                >
+                  {items.map((desc) => (
+                    <PaletteItem key={desc.name} name={desc.name} label={desc.label} icon={desc.icon} typeRegistry={typeRegistry} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-
-          {/* Grid of widgets */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 8,
-            }}
-          >
-            {items.map((desc) => (
-              <PaletteItem key={desc.name} name={desc.name} label={desc.label} icon={desc.icon} typeRegistry={typeRegistry} />
-            ))}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
@@ -78,16 +113,16 @@ const PaletteItem: React.FC<{ name: string; label: string; icon: string; typeReg
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: 12,
+        padding: 6,
         border: "1px solid #333",
-        borderRadius: 8,
+        borderRadius: 3,
         background: isDragging ? "#2a2a2a" : "#1a1a1a",
         color: "#e0e0e0",
         cursor: isDragging ? "grabbing" : "grab",
         userSelect: "none",
         transition: "all 0.2s ease",
         aspectRatio: "1",
-        minHeight: 80,
+        minHeight: 50,
         opacity: isDragging ? 0.5 : 1,
         transform: isDragging ? "scale(0.95)" : "scale(1)",
       }}
@@ -105,8 +140,8 @@ const PaletteItem: React.FC<{ name: string; label: string; icon: string; typeReg
         }
       }}
     >
-      <div style={{ marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", color: "#e0e0e0" }}>{getIcon(icon)}</div>
-      <div style={{ fontSize: 11, textAlign: "center", fontWeight: 500, lineHeight: 1.3 }}>
+      <div style={{ marginBottom: 3, display: "flex", alignItems: "center", justifyContent: "center", color: "#e0e0e0", fontSize: 18 }}>{getIcon(icon)}</div>
+      <div style={{ fontSize: 9, textAlign: "center", fontWeight: 500, lineHeight: 1.1 }}>
         {label}
       </div>
     </div>

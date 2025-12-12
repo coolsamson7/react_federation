@@ -266,7 +266,7 @@ export const WidgetEditor: React.FC = () => {
                 onClose={() => togglePanel("palette")}
                 panelId="palette"
               >
-                <div style={{ padding: "16px" }}>
+                <div style={{ padding: "8px" }}>
                   <WidgetPalette typeRegistry={typeRegistry} />
                 </div>
               </SlidingPanel>

@@ -99,6 +99,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           width: isOpen ? currentSize : 0,
           height: "100%",
           borderLeft: "none",
+          marginLeft: toggleBarWidth, // Account for toggle bar
         };
       case "right":
         return {
@@ -108,6 +109,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           width: isOpen ? currentSize : 0,
           height: "100%",
           borderRight: "none",
+          marginRight: toggleBarWidth, // Account for toggle bar
         };
       case "bottom":
         return {
