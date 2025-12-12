@@ -51,13 +51,14 @@ export class GridWidgetData extends WidgetData {
   })
   rowGap?: string;
 
-  // Alignment - Cell Content Alignment
+  // Alignment - Cell Content Alignment (hidden, use per-column/row alignment instead)
   @DeclareProperty({
     label: "Justify Items",
     group: "grid",
     type: "select",
     options: ["start", "end", "center", "stretch"],
     defaultValue: "stretch",
+    hide: true,
   })
   justifyItems?: string;
 
@@ -67,6 +68,7 @@ export class GridWidgetData extends WidgetData {
     type: "select",
     options: ["start", "end", "center", "stretch"],
     defaultValue: "stretch",
+    hide: true,
   })
   alignItems?: string;
 
@@ -91,13 +93,14 @@ export class GridWidgetData extends WidgetData {
   })
   alignContent?: string;
 
-  // Auto Flow
+  // Auto Flow (hidden - advanced feature)
   @DeclareProperty({
     label: "Auto Flow",
     group: "grid",
     type: "select",
     options: ["row", "column", "row dense", "column dense"],
     defaultValue: "row",
+    hide: true,
   })
   gridAutoFlow?: string;
 
