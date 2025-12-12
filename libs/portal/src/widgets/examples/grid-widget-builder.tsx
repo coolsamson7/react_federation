@@ -61,13 +61,6 @@ export class GridWidgetBuilder extends WidgetBuilder<GridWidgetData> {
               }
             : {};
 
-          if (child.cell?.rowSpan && child.cell.rowSpan > 1) {
-            console.log('[GridWidgetBuilder Runtime] Widget with rowSpan:', {
-              rowSpan: child.cell.rowSpan,
-              cellStyle,
-            });
-          }
-
           return (
             <div key={`${child.id}-${version}`} style={cellStyle}>
               <WidgetRenderer
@@ -151,7 +144,6 @@ export class GridWidgetEditBuilder extends WidgetBuilder<GridWidgetData> {
 
         // If covered by a spanning widget but not the starting cell, skip rendering
         if (coveringWidget && !widgetInCell) {
-          console.log(`[GridCell] Skipping cell [${row},${col}] - covered by widget at [${coveringWidget.cell?.row},${coveringWidget.cell?.col}] with span [${coveringWidget.cell?.rowSpan},${coveringWidget.cell?.colSpan}]`);
           continue;
         }
 
@@ -221,18 +213,6 @@ const GridCell: React.FC<GridCellProps> = ({
           : widget.cell.row + 1,
       }
     : {};
-
-  // Debug logging
-  if (widget?.cell && (widget.cell.colSpan || widget.cell.rowSpan)) {
-    console.log('[GridCell] Widget with span:', {
-      row: widget.cell.row,
-      col: widget.cell.col,
-      rowSpan: widget.cell.rowSpan,
-      colSpan: widget.cell.colSpan,
-      gridColumn: cellStyle.gridColumn,
-      gridRow: cellStyle.gridRow,
-    });
-  }
 
   return (
     <DropContainer

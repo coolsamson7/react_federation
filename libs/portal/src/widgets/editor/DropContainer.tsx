@@ -56,13 +56,6 @@ export const DropContainer: React.FC<DropContainerProps> = ({ parent, typeRegist
     ...customStyle,
   };
 
-  if (customStyle?.gridRow || customStyle?.gridColumn) {
-    console.log('[DropContainer] Applying grid styles:', {
-      gridRow: finalStyle.gridRow,
-      gridColumn: finalStyle.gridColumn,
-    });
-  }
-
   return (
     <div
       ref={dropRef}

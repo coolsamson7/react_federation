@@ -61,9 +61,6 @@ export abstract class WidgetData {
   set gridRowSpan(value: number) {
     if (this.cell) {
       this.cell.rowSpan = value > 1 ? value : undefined;
-      console.log('[WidgetData] Set gridRowSpan:', value, 'cell:', this.cell);
-    } else {
-      console.warn('[WidgetData] Cannot set gridRowSpan - no cell property');
     }
   }
 }

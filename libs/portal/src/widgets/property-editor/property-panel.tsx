@@ -70,58 +70,33 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
       propertiesByGroup.set(gridGroup, new Map());
     }
 
-    // Create synthetic property descriptors for grid span
+    // Create synthetic property descriptor for grid span (combined col+row)
     const gridProps = propertiesByGroup.get(gridGroup)!;
 
-    // Column span property
-    const colSpanProperty = {
-      name: "gridColumnSpan",
-      type: "number",
-      label: "Column Span",
+    const spanProperty = {
+      name: "gridSpan",
+      type: "span",
+      label: "Span",
       group: gridGroup,
       metadata: {
-        name: "gridColumnSpan",
-        label: "Column Span",
+        name: "gridSpan",
+        label: "Span",
         group: gridGroup,
-        type: "number",
-        defaultValue: 1,
+        type: "span",
+        defaultValue: { colSpan: 1, rowSpan: 1 },
         hide: false,
       },
-      getValue: (instance: WidgetData) => instance.gridColumnSpan,
-      setValue: (instance: WidgetData, value: number) => {
-        instance.gridColumnSpan = value;
+      getValue: (instance: WidgetData) => ({
+        colSpan: instance.gridColumnSpan,
+        rowSpan: instance.gridRowSpan,
+      }),
+      setValue: (instance: WidgetData, value: { colSpan: number; rowSpan: number }) => {
+        instance.gridColumnSpan = value.colSpan;
+        instance.gridRowSpan = value.rowSpan;
       },
     };
 
-    // Row span property
-    const rowSpanProperty = {
-      name: "gridRowSpan",
-      type: "number",
-      label: "Row Span",
-      group: gridGroup,
-      metadata: {
-        name: "gridRowSpan",
-        label: "Row Span",
-        group: gridGroup,
-        type: "number",
-        defaultValue: 1,
-        hide: false,
-      },
-      getValue: (instance: WidgetData) => {
-        const val = instance.gridRowSpan;
-        console.log('[PropertyPanel] Getting gridRowSpan:', val, 'cell:', JSON.stringify(instance.cell));
-        return val;
-      },
-      setValue: (instance: WidgetData, value: number) => {
-        console.log('[PropertyPanel] Setting gridRowSpan to:', value, 'cell before:', instance.cell);
-        instance.gridRowSpan = value;
-        console.log('[PropertyPanel] Cell after:', instance.cell);
-        console.log('[PropertyPanel] Calling onChange to trigger re-render');
-      },
-    };
-
-    gridProps.set("gridColumnSpan", colSpanProperty as any);
-    gridProps.set("gridRowSpan", rowSpanProperty as any);
+    gridProps.set("gridSpan", spanProperty as any);
   }
 
   return (
