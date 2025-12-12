@@ -11,5 +11,6 @@ import "./text-align-editor";
 import "./padding-editor";
 import "./select-editor";
 import "./grid-template-editor";
+import "../grid-items-editor";
 
 console.log("[EditorRegistry] All property editor modules loaded");

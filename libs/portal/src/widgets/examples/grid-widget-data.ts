@@ -1,6 +1,7 @@
 import { WidgetData } from "../metadata";
 import { DeclareWidget, DeclareProperty } from "../decorators";
 import { AutoRegisterWidget } from "../type-registry";
+import { GridItem, GridSizeMode } from "./grid-item";
 
 /**
  * Data class for a grid widget with rows and columns
@@ -20,18 +21,18 @@ export class GridWidgetData extends WidgetData {
   @DeclareProperty({
     label: "Columns",
     group: "grid",
-    type: "gridTemplate",
-    defaultValue: "1fr 1fr",
+    type: "gridItems",
+    defaultValue: [new GridItem(GridSizeMode.fr, 1), new GridItem(GridSizeMode.fr, 1)],
   })
-  gridTemplateColumns?: string;
+  columns?: GridItem[];
 
   @DeclareProperty({
     label: "Rows",
     group: "grid",
-    type: "gridTemplate",
-    defaultValue: "auto",
+    type: "gridItems",
+    defaultValue: [new GridItem(GridSizeMode.auto, 0)],
   })
-  gridTemplateRows?: string;
+  rows?: GridItem[];
 
   // Gap Properties
   @DeclareProperty({
@@ -50,10 +51,10 @@ export class GridWidgetData extends WidgetData {
   })
   rowGap?: string;
 
-  // Alignment Properties
+  // Alignment - Cell Content Alignment
   @DeclareProperty({
     label: "Justify Items",
-    group: "alignment",
+    group: "grid",
     type: "select",
     options: ["start", "end", "center", "stretch"],
     defaultValue: "stretch",
@@ -62,28 +63,31 @@ export class GridWidgetData extends WidgetData {
 
   @DeclareProperty({
     label: "Align Items",
-    group: "alignment",
+    group: "grid",
     type: "select",
-    options: ["start", "end", "center", "stretch", "baseline"],
+    options: ["start", "end", "center", "stretch"],
     defaultValue: "stretch",
   })
   alignItems?: string;
 
+  // Advanced: Grid Track Alignment (usually not needed)
   @DeclareProperty({
     label: "Justify Content",
-    group: "alignment",
+    group: "grid",
     type: "select",
     options: ["start", "end", "center", "stretch", "space-between", "space-around", "space-evenly"],
     defaultValue: "start",
+    hide: true,
   })
   justifyContent?: string;
 
   @DeclareProperty({
     label: "Align Content",
-    group: "alignment",
+    group: "grid",
     type: "select",
     options: ["start", "end", "center", "stretch", "space-between", "space-around", "space-evenly"],
     defaultValue: "start",
+    hide: true,
   })
   alignContent?: string;
 
@@ -102,6 +106,7 @@ export class GridWidgetData extends WidgetData {
     group: "grid",
     type: "string",
     defaultValue: "auto",
+    hide: true,
   })
   gridAutoColumns?: string;
 
@@ -110,6 +115,7 @@ export class GridWidgetData extends WidgetData {
     group: "grid",
     type: "string",
     defaultValue: "auto",
+    hide: true,
   })
   gridAutoRows?: string;
 

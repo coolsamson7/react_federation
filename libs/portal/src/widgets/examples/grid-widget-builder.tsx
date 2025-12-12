@@ -1,6 +1,7 @@
 import React from "react";
 import { WidgetBuilder, RegisterBuilder } from "../widget-factory";
 import { GridWidgetData } from "./grid-widget-data";
+import { GridItem, GridSizeMode } from "./grid-item";
 import { WidgetRenderer } from "../widget-renderer";
 import { TypeRegistry } from "../type-registry";
 import { WidgetFactory } from "../widget-factory";
@@ -21,10 +22,16 @@ export class GridWidgetBuilder extends WidgetBuilder<GridWidgetData> {
     const typeRegistry = container.resolve(TypeRegistry);
     const widgetFactory = container.resolve(WidgetFactory);
 
+    // Convert GridItem arrays to CSS values
+    const columns = data.columns || [new GridItem(GridSizeMode.fr, 1), new GridItem(GridSizeMode.fr, 1)];
+    const rows = data.rows || [new GridItem(GridSizeMode.auto, 0)];
+    const gridTemplateColumns = columns.map(c => c.toCSSValue()).join(" ");
+    const gridTemplateRows = rows.map(r => r.toCSSValue()).join(" ");
+
     const style: React.CSSProperties = {
       display: "grid",
-      gridTemplateColumns: data.gridTemplateColumns || "1fr 1fr",
-      gridTemplateRows: data.gridTemplateRows || "auto",
+      gridTemplateColumns,
+      gridTemplateRows,
       columnGap: data.columnGap || "16px",
       rowGap: data.rowGap || "16px",
       justifyItems: data.justifyItems as any || "stretch",
@@ -76,25 +83,6 @@ export class GridWidgetBuilder extends WidgetBuilder<GridWidgetData> {
  */
 @RegisterBuilder("grid", true)
 export class GridWidgetEditBuilder extends WidgetBuilder<GridWidgetData> {
-  // Parse grid template to determine number of columns and rows
-  private parseGridTemplate(template: string): number {
-    if (!template) return 1;
-    // Count space-separated values (fr, px, auto, repeat(), etc.)
-    const parts = template.match(/\S+/g) || [];
-
-    // Handle repeat() function
-    let count = 0;
-    for (const part of parts) {
-      const repeatMatch = part.match(/repeat\((\d+),/);
-      if (repeatMatch) {
-        count += parseInt(repeatMatch[1], 10);
-      } else {
-        count++;
-      }
-    }
-    return count || 1;
-  }
-
   render() {
     const { data, context } = this.props;
     const typeRegistry = container.resolve(TypeRegistry);
@@ -102,14 +90,20 @@ export class GridWidgetEditBuilder extends WidgetBuilder<GridWidgetData> {
 
     const isSelected = context?.selectedId === data.id;
 
+    // Convert GridItem arrays to CSS values
+    const columns = data.columns || [new GridItem(GridSizeMode.fr, 1), new GridItem(GridSizeMode.fr, 1)];
+    const rows = data.rows || [new GridItem(GridSizeMode.auto, 0)];
+    const gridTemplateColumns = columns.map(c => c.toCSSValue()).join(" ");
+    const gridTemplateRows = rows.map(r => r.toCSSValue()).join(" ");
+
     // Determine grid dimensions
-    const cols = this.parseGridTemplate(data.gridTemplateColumns || "1fr 1fr");
-    const rows = this.parseGridTemplate(data.gridTemplateRows || "auto");
+    const cols = columns.length;
+    const rows_count = rows.length;
 
     const style: React.CSSProperties = {
       display: "grid",
-      gridTemplateColumns: data.gridTemplateColumns || "1fr 1fr",
-      gridTemplateRows: data.gridTemplateRows || "auto",
+      gridTemplateColumns,
+      gridTemplateRows,
       columnGap: data.columnGap || "16px",
       rowGap: data.rowGap || "16px",
       justifyItems: data.justifyItems as any || "stretch",
@@ -130,7 +124,7 @@ export class GridWidgetEditBuilder extends WidgetBuilder<GridWidgetData> {
 
     // Create grid cells
     const cells: JSX.Element[] = [];
-    for (let row = 0; row < rows; row++) {
+    for (let row = 0; row < rows_count; row++) {
       for (let col = 0; col < cols; col++) {
         const cellKey = `${row}-${col}`;
 
@@ -157,7 +151,7 @@ export class GridWidgetEditBuilder extends WidgetBuilder<GridWidgetData> {
     return (
       <SelectionOverlay
         isSelected={isSelected}
-        label={`Grid ${cols}×${rows} (${data.children.length} items)`}
+        label={`Grid ${cols}×${rows_count} (${data.children.length} items)`}
         onClick={(e) => {
           e.stopPropagation();
           messageBus.publish({ topic: "editor", message: "select", payload: data });
