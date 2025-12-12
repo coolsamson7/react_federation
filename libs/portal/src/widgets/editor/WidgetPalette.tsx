@@ -88,7 +88,7 @@ export const WidgetPalette: React.FC<WidgetPaletteProps> = ({ typeRegistry }) =>
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(70px, 1fr))",
                     gap: 4,
                   }}
                 >
@@ -132,8 +132,7 @@ const PaletteItem: React.FC<{ name: string; label: string; icon: string; typeReg
         cursor: isDragging ? "grabbing" : "grab",
         userSelect: "none",
         transition: "all 0.2s ease",
-        aspectRatio: "1",
-        minHeight: 40,
+        height: 60,
         opacity: isDragging ? 0.5 : 1,
         transform: isDragging ? "scale(0.95)" : "scale(1)",
       }}
