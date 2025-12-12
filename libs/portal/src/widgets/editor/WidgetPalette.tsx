@@ -102,15 +102,15 @@ export const WidgetPalette: React.FC<WidgetPaletteProps> = ({ typeRegistry }) =>
 };
 
 const PaletteItem: React.FC<{ name: string; label: string; icon: string; typeRegistry: TypeRegistry }> = ({ name, label, icon, typeRegistry }) => {
-  const [{ isDragging }, dragRef] = useDrag(() => {
-    // Create widget once and reuse it during drag
-    const widget = typeRegistry.create(name);
-    return {
-      type: DND_ITEM.WIDGET,
-      item: { type: DND_ITEM.WIDGET, widget },
-      collect: (monitor) => ({ isDragging: monitor.isDragging() }),
-    };
-  }, [name, typeRegistry]);
+  const [{ isDragging }, dragRef] = useDrag(() => ({
+    type: DND_ITEM.WIDGET,
+    item: () => {
+      // Create a NEW widget instance for each drag operation
+      const widget = typeRegistry.create(name);
+      return { type: DND_ITEM.WIDGET, widget };
+    },
+    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+  }), [name, typeRegistry]);
 
   return (
     <div
