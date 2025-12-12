@@ -1,4 +1,5 @@
 import React from "react";
+import { PropertyMetadata } from "../metadata";
 
 /**
  * Props for property editor components
@@ -8,6 +9,7 @@ export interface PropertyEditorProps<T = any> {
   onChange: (value: T) => void;
   label?: string;
   propertyName: string;
+  propertyMetadata?: PropertyMetadata;
 }
 
 /**

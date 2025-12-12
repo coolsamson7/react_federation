@@ -74,7 +74,7 @@ export const WidgetRenderer: React.FC<WidgetRendererProps> = ({
   const version = context?.widgetVersions?.get(widget.id) || 0;
 
   return React.createElement(BuilderComponent, {
-    key: version, // Force re-render when version changes
+    key: `${widget.id}-${version}`, // Force re-render when version changes
     data: widget,
     context,
     edit,

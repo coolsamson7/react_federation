@@ -1,6 +1,7 @@
 import React from "react";
 import { WidgetBuilder, RegisterBuilder } from "../widget-factory";
 import {CubeWidgetData} from "./cube-widget-data";
+import { SelectionOverlay } from "../editor/SelectionOverlay";
 
 
 // TODO not here
@@ -16,6 +17,7 @@ export const cubejsApi = cubejs(
 
 import { QueryRenderer } from "@cubejs-client/react";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { messageBus } from "../editor/message-bus";
 
 //
 
@@ -104,11 +106,22 @@ export class CubeWidgetBuilder extends WidgetBuilder<CubeWidgetData> {
 @RegisterBuilder("cube", true)
 export class CubeWidgetEditBuilder extends WidgetBuilder<CubeWidgetData> {
   render() {
-    const { data } = this.props;
+    const { data, context } = this.props;
+    const isSelected = context?.selectedId === data.id;
 
     return (
-      <div style={{ color: "black" }}>CUBE
-      </div>
+      <SelectionOverlay
+        isSelected={isSelected}
+        label="Cube Chart"
+        onClick={(e) => {
+          e.stopPropagation();
+          messageBus.publish({ topic: "editor", message: "select", payload: data });
+        }}
+      >
+        <div style={{ color: "black", padding: 8, backgroundColor: "#2a2a2a" }}>
+          📊 Cube Chart
+        </div>
+      </SelectionOverlay>
     );
   }
 }

@@ -5,6 +5,10 @@ import { WidgetRenderer } from "../widget-renderer";
 import { TypeRegistry } from "../type-registry";
 import { WidgetFactory } from "../widget-factory";
 import { container } from "tsyringe";
+import { DropContainer } from "../editor/DropContainer";
+import { insertChild, bumpVersion } from "../editor/tree-utils";
+import { messageBus } from "../editor/message-bus";
+import { SelectionOverlay } from "../editor/SelectionOverlay";
 
 /**
  * Runtime builder for ListWidget
@@ -20,22 +24,26 @@ export class ListWidgetBuilder extends WidgetBuilder<ListWidgetData> {
     const style: React.CSSProperties = {
       display: "flex",
       flexDirection: "column",
-      gap: data.gap,
-      padding: data.padding,
+      gap: data.gap || "8px",
+      padding: data.padding || "8px",
       backgroundColor: data.backgroundColor,
     };
 
     return (
       <div style={style}>
-        {data.children.map((child, index) => (
-          <WidgetRenderer
-            key={child.id || index}
-            data={child}
-            context={context}
-            typeRegistry={typeRegistry}
-            widgetFactory={widgetFactory}
-          />
-        ))}
+        {data.children.map((child) => {
+          const version = context?.widgetVersions?.get(child.id) || 0;
+          return (
+            <WidgetRenderer
+              key={`${child.id}-${version}`}
+              data={child}
+              context={context}
+              edit={false}
+              typeRegistry={typeRegistry}
+              widgetFactory={widgetFactory}
+            />
+          );
+        })}
       </div>
     );
   }
@@ -51,48 +59,63 @@ export class ListWidgetEditBuilder extends WidgetBuilder<ListWidgetData> {
     const typeRegistry = container.resolve(TypeRegistry);
     const widgetFactory = container.resolve(WidgetFactory);
 
+    const isSelected = context?.selectedId === data.id;
+
     const style: React.CSSProperties = {
       display: "flex",
       flexDirection: "column",
-      gap: data.gap,
-      padding: data.padding,
-      backgroundColor: data.backgroundColor,
-      border: "2px dashed #ccc",
-      position: "relative",
+      gap: data.gap || "8px",
+      padding: data.padding || "8px",
+      backgroundColor: data.backgroundColor || "#1a1a1a",
       minHeight: data.children.length === 0 ? "100px" : "auto",
     };
 
     return (
-      <div style={style}>
-        <div
-          style={{
-            position: "absolute",
-            top: "-20px",
-            left: 0,
-            fontSize: "10px",
-            //color: "#666",
-            fontFamily: "monospace",
+      <SelectionOverlay
+        isSelected={isSelected}
+        label={`List Widget (${data.children.length} items)`}
+        onClick={(e) => {
+          e.stopPropagation();
+          messageBus.publish({ topic: "editor", message: "select", payload: data });
+        }}
+      >
+        <div style={style}>
+        <DropContainer
+          parent={data}
+          typeRegistry={typeRegistry}
+          onDropWidget={(w) => {
+            insertChild(data, w);
+            if (context?.widgetVersions) {
+              bumpVersion(context.widgetVersions, data.id);
+            }
+            if (context?.forceUpdate) {
+              context.forceUpdate();
+            }
           }}
+          emptyHint="Drop items here"
         >
-          List Widget ({data.children.length} items)
+          {data.children.length === 0 ? (
+            <div style={{ color: "#999", textAlign: "center", padding: "32px" }}>
+              Empty list - drop items here
+            </div>
+          ) : (
+            data.children.map((child) => {
+              const version = context?.widgetVersions?.get(child.id) || 0;
+              return (
+                <WidgetRenderer
+                  key={`${child.id}-${version}`}
+                  data={child}
+                  context={context}
+                  edit={true}
+                  typeRegistry={typeRegistry}
+                  widgetFactory={widgetFactory}
+                />
+              );
+            })
+          )}
+        </DropContainer>
         </div>
-        {data.children.length === 0 ? (
-          <div style={{ color: "#999", textAlign: "center", padding: "32px" }}>
-            Empty list - drop items here
-          </div>
-        ) : (
-          data.children.map((child, index) => (
-            <WidgetRenderer
-              key={child.id || index}
-              data={child}
-              context={context}
-              edit={true}
-              typeRegistry={typeRegistry}
-              widgetFactory={widgetFactory}
-            />
-          ))
-        )}
-      </div>
+      </SelectionOverlay>
     );
   }
 }

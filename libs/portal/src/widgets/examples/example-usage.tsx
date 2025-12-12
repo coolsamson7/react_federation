@@ -50,6 +50,9 @@ export const WidgetSystemExample: React.FC = () => {
           {
             type: "cube",
             query: "foo",
+          }, {
+            type: "cube",
+            query: "foo",
           },
           {
             type: "text",

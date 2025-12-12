@@ -8,9 +8,9 @@ import { AutoRegisterWidget } from "../type-registry";
  */
 @DeclareWidget({
   name: "cube",
-  label: "Cube Widget",
-  group: "basic",
-  icon: "📝",
+  label: "Cube Chart",
+  group: "charts",
+  icon: "📊",
 })
 @AutoRegisterWidget()
 export class CubeWidgetData extends WidgetData {
@@ -25,7 +25,6 @@ export class CubeWidgetData extends WidgetData {
 
   constructor(type: string = "cube") {
     super(type);
-
-    this.query = ""; // DOO
+    this.query = "?";
   }
 }

@@ -6,6 +6,7 @@ import {
   setPropertyMetadata,
   getPropertyMetadata,
 } from "./metadata";
+import { WidgetData } from "./metadata";
 
 /**
  * Options for @DeclareWidget decorator
@@ -15,6 +16,7 @@ export interface DeclareWidgetOptions {
   label?: string;
   group?: string;
   icon?: string;
+  acceptChild?: (parent: WidgetData, child: WidgetData) => boolean;
 }
 
 /**
@@ -29,6 +31,7 @@ export interface DeclarePropertyOptions {
   editor?: string;
   validator?: string;
   required?: boolean;
+  options?: string[];
 }
 
 /**
@@ -46,6 +49,7 @@ export function DeclareWidget(options: DeclareWidgetOptions) {
       group: options.group,
       icon: options.icon,
       properties,
+      acceptChild: options.acceptChild,
     };
 
     // Store metadata on the class
@@ -75,6 +79,7 @@ export function DeclareProperty(options: DeclarePropertyOptions = {}) {
       editor: options.editor,
       validator: options.validator,
       required: options.required,
+      options: options.options,
     };
 
     setPropertyMetadata(target, propertyKey, metadata);

@@ -1,6 +1,8 @@
 import React from "react";
 import { WidgetBuilder, RegisterBuilder } from "../widget-factory";
 import { TextWidgetData } from "./text-widget-data";
+import { messageBus } from "../editor/message-bus";
+import { SelectionOverlay } from "../editor/SelectionOverlay";
 
 /**
  * Runtime builder for TextWidget
@@ -12,12 +14,12 @@ export class TextWidgetBuilder extends WidgetBuilder<TextWidgetData> {
     const { data } = this.props;
 
     const style: React.CSSProperties = {
-      fontSize: data.fontSize ? `${data.fontSize}px` : undefined,
-      fontWeight: data.fontWeight,
-      color: data.color,
+      fontSize: data.fontSize ? `${data.fontSize}px` : "16px",
+      fontWeight: data.fontWeight || "normal",
+      color: data.color || "#e0e0e0",
       backgroundColor: data.backgroundColor,
-      textAlign: data.textAlign,
-      padding: data.padding,
+      textAlign: data.textAlign || "left",
+      padding: data.padding || "8px",
     };
 
     return <div style={style}>{data.text}</div>;
@@ -31,36 +33,29 @@ export class TextWidgetBuilder extends WidgetBuilder<TextWidgetData> {
 @RegisterBuilder("text", true)
 export class TextWidgetEditBuilder extends WidgetBuilder<TextWidgetData> {
   render() {
-    const { data } = this.props;
+    const { data, context } = this.props;
+    const isSelected = context?.selectedId === data.id;
 
     const style: React.CSSProperties = {
       fontSize: data.fontSize ? `${data.fontSize}px` : undefined,
       fontWeight: data.fontWeight,
-      color: data.color,
-      backgroundColor: data.backgroundColor,
+      color: data.color || "#e0e0e0",
+      backgroundColor: data.backgroundColor || "#2a2a2a",
       textAlign: data.textAlign,
-      padding: data.padding,
-      border: "1px dashed #ccc",
-      cursor: "pointer",
-      position: "relative",
+      padding: data.padding || "8px",
     };
 
     return (
-      <div style={style}>
-        <div
-          style={{
-            position: "absolute",
-            top: "-20px",
-            left: 0,
-            fontSize: "10px",
-            color: "#666",
-            fontFamily: "monospace",
-          }}
-        >
-          Text Widget
-        </div>
-        {data.text}
-      </div>
+      <SelectionOverlay
+        isSelected={isSelected}
+        label="Text Widget"
+        onClick={(e) => {
+          e.stopPropagation();
+          messageBus.publish({ topic: "editor", message: "select", payload: data });
+        }}
+      >
+        <div style={style}>{data.text}</div>
+      </SelectionOverlay>
     );
   }
 }

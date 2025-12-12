@@ -1,3 +1,4 @@
+
 import { WidgetData } from "../metadata";
 import { DeclareWidget, DeclareProperty } from "../decorators";
 import { AutoRegisterWidget } from "../type-registry";
@@ -11,13 +12,15 @@ import { AutoRegisterWidget } from "../type-registry";
   label: "List Widget",
   group: "layout",
   icon: "📋",
+  // Accept any child for now
+  acceptChild: () => true,
 })
 @AutoRegisterWidget()
 export class ListWidgetData extends WidgetData {
   @DeclareProperty({
     label: "Gap Between Items",
     group: "layout",
-    type: "string",
+    type: "padding",
     defaultValue: "8px",
   })
   gap?: string;
@@ -25,7 +28,7 @@ export class ListWidgetData extends WidgetData {
   @DeclareProperty({
     label: "Padding",
     group: "layout",
-    type: "string",
+    type: "padding",
     defaultValue: "0",
   })
   padding?: string;
@@ -33,7 +36,7 @@ export class ListWidgetData extends WidgetData {
   @DeclareProperty({
     label: "Background Color",
     group: "style",
-    type: "string",
+    type: "color",
   })
   backgroundColor?: string;
 

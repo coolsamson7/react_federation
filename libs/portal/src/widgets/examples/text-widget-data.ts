@@ -34,7 +34,7 @@ export class TextWidgetData extends WidgetData {
   @DeclareProperty({
     label: "Font Weight",
     group: "style",
-    type: "string",
+    type: "fontWeight",
     defaultValue: "normal",
   })
   fontWeight?: string;
@@ -42,7 +42,7 @@ export class TextWidgetData extends WidgetData {
   @DeclareProperty({
     label: "Color",
     group: "style",
-    type: "string",
+    type: "color",
     defaultValue: "#000000",
   })
   color?: string;
@@ -50,14 +50,14 @@ export class TextWidgetData extends WidgetData {
   @DeclareProperty({
     label: "Background Color",
     group: "style",
-    type: "string",
+    type: "color",
   })
   backgroundColor?: string;
 
   @DeclareProperty({
     label: "Text Align",
     group: "layout",
-    type: "string",
+    type: "textAlign",
     defaultValue: "left",
   })
   textAlign?: "left" | "center" | "right" | "justify";
@@ -65,13 +65,13 @@ export class TextWidgetData extends WidgetData {
   @DeclareProperty({
     label: "Padding",
     group: "layout",
-    type: "string",
+    type: "padding",
     defaultValue: "8px",
   })
   padding?: string;
 
   constructor(type: string = "text") {
     super(type);
-    this.text = "";
+    this.text = "Hello World";
   }
 }

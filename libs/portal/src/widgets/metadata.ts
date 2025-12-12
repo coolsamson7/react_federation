@@ -13,6 +13,7 @@ export interface PropertyMetadata {
   editor?: string; // Name of custom editor component
   validator?: string; // Name of validator
   required?: boolean;
+  options?: string[]; // For select/enum properties
 }
 
 /**
@@ -24,6 +25,8 @@ export interface WidgetMetadata {
   group?: string;
   icon?: string;
   properties: Map<string, PropertyMetadata>;
+  // Optional rule to decide if a parent can accept a child drop
+  acceptChild?: (parent: WidgetData, child: WidgetData) => boolean;
 }
 
 /**
@@ -34,6 +37,7 @@ export abstract class WidgetData {
   readonly type: string; // REQUIRED for widget selection
   children: WidgetData[];
   id: string;
+  cell?: { row: number; col: number }; // Grid positioning
 
   constructor(type: string) {
     this.type = type;
@@ -135,6 +139,22 @@ export class WidgetDescriptor {
 
   get icon(): string {
     return this.metadata.icon || "📦";
+  }
+
+  /**
+   * Returns true if the parent can accept the given child according to metadata rule.
+   * Default: false when no rule is provided.
+   */
+  canAcceptChild(parent: WidgetData, child: WidgetData): boolean {
+    if (typeof this.metadata.acceptChild === "function") {
+      try {
+        return !!this.metadata.acceptChild(parent, child);
+      } catch (e) {
+        console.warn(`[WidgetDescriptor] acceptChild threw for ${this.name}:`, e);
+        return false;
+      }
+    }
+    return false;
   }
 
   getProperty(name: string): PropertyDescriptor | undefined {
