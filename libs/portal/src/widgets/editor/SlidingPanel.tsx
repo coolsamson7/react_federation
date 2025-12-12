@@ -95,7 +95,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
         return {
           ...baseStyle,
           top: 0,
-          left: float ? toggleBarWidth : undefined,
+          left: toggleBarWidth,
           width: isOpen ? currentSize : 0,
           height: "100%",
           borderLeft: "none",
@@ -105,7 +105,7 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
         return {
           ...baseStyle,
           top: 0,
-          right: float ? toggleBarWidth : undefined,
+          right: toggleBarWidth,
           width: isOpen ? currentSize : 0,
           height: "100%",
           borderRight: "none",

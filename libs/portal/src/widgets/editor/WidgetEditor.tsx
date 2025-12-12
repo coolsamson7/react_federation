@@ -349,6 +349,7 @@ export const WidgetEditor: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               minHeight: 0,
+              overflow: "hidden",
             }}
           >
             {/* Outer canvas area - lighter background */}
@@ -506,20 +507,20 @@ export const WidgetEditor: React.FC = () => {
                 </div>
               </div>
               </div>
-
-              {/* Breadcrumb at bottom of outer canvas - fills full width */}
-              {(() => {
-                console.log("[WidgetEditor] isEditMode:", isEditMode, "root:", root?.type);
-                return isEditMode && (
-                  <Breadcrumb
-                    root={root}
-                    selectedId={selectedId}
-                    typeRegistry={typeRegistry}
-                    onSelect={handleWidgetSelect}
-                  />
-                );
-              })()}
             </div>
+
+            {/* Breadcrumb at bottom - outside outer canvas, inside canvas container */}
+            {(() => {
+              console.log("[WidgetEditor] isEditMode:", isEditMode, "root:", root?.type);
+              return isEditMode && (
+                <Breadcrumb
+                  root={root}
+                  selectedId={selectedId}
+                  typeRegistry={typeRegistry}
+                  onSelect={handleWidgetSelect}
+                />
+              );
+            })()}
           </div>
 
           {/* Right Panel - Properties */}
