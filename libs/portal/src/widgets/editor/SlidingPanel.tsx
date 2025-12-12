@@ -138,8 +138,8 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
             [position === "left" ? "right" : position === "right" ? "left" : "top"]: 0,
             [position === "bottom" ? "left" : "top"]: 0,
             [position === "bottom" ? "right" : "bottom"]: 0,
-            width: position === "bottom" ? "100%" : "8px",
-            height: position === "bottom" ? "8px" : "100%",
+            width: position === "bottom" ? "100%" : "4px",
+            height: position === "bottom" ? "4px" : "100%",
             cursor: position === "bottom" ? "ns-resize" : "ew-resize",
             backgroundColor: isResizing ? "#4A90E2" : "#2a2a2a",
             transition: "background-color 0.2s ease",
@@ -162,8 +162,8 @@ export const SlidingPanel: React.FC<SlidingPanelProps> = ({
           {/* Visual indicator line */}
           <div
             style={{
-              width: position === "bottom" ? "40px" : "2px",
-              height: position === "bottom" ? "2px" : "40px",
+              width: position === "bottom" ? "30px" : "1px",
+              height: position === "bottom" ? "1px" : "30px",
               backgroundColor: "#666",
               borderRadius: 1,
             }}
