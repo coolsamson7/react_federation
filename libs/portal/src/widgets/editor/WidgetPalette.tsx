@@ -55,22 +55,26 @@ export const WidgetPalette: React.FC<WidgetPaletteProps> = ({ typeRegistry }) =>
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
+                gap: "8px",
                 userSelect: "none",
                 marginBottom: isCollapsed ? 0 : 0,
+                marginLeft: -8,
+                marginRight: -8,
+                paddingLeft: 20,
+                paddingRight: 20,
               }}
             >
-              <span>{group}</span>
               <span
                 style={{
                   fontSize: 24,
-                  transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                  transform: isCollapsed ? "rotate(0deg)" : "rotate(90deg)",
                   transition: "transform 0.2s ease",
                   display: "inline-block",
                 }}
               >
                 ›
               </span>
+              <span>{group}</span>
             </div>
 
             {/* Grid of widgets */}

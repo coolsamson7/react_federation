@@ -83,21 +83,22 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
+                gap: "8px",
                 userSelect: "none",
+                paddingLeft: "16px",
               }}
             >
-              <span>{groupName}</span>
               <span
                 style={{
                   fontSize: "24px",
-                  transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                  transform: isCollapsed ? "rotate(0deg)" : "rotate(90deg)",
                   transition: "transform 0.2s ease",
                   display: "inline-block",
                 }}
               >
                 ›
               </span>
+              <span>{groupName}</span>
             </div>
 
             {!isCollapsed && (

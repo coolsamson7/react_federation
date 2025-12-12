@@ -46,7 +46,7 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   console.log("[Breadcrumb] Rendering with path:", path.map(w => w.type));
 
   return (
-    <div
+    <div id="breadcrumb"
       style={{
         display: "flex",
         alignItems: "center",
@@ -62,7 +62,10 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
         flexShrink: 0,
         minHeight: "40px",
         zIndex: 10000,
-        position: "relative",
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
       }}
     >
       {path.map((widget, index) => {

@@ -254,7 +254,9 @@ export const WidgetEditor: React.FC = () => {
         </div>
 
         {/* Main Content with Panels */}
-        <div style={{ position: "relative", flex: 1, display: "flex", overflow: "hidden" }}>
+        <div style={{ position: "relative", flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          {/* Panels and Canvas Row */}
+          <div style={{ position: "relative", flex: 1, display: "flex", minHeight: 0 }}>
           {/* Panel Toggle Bars - only in edit mode */}
           {isEditMode && (
             <>
@@ -350,6 +352,8 @@ export const WidgetEditor: React.FC = () => {
               flexDirection: "column",
               minHeight: 0,
               overflow: "hidden",
+              position: "relative", // establish containing block for absolute breadcrumb
+              paddingBottom: 40, // reserve space so content isn't covered by breadcrumb
             }}
           >
             {/* Outer canvas area - lighter background */}
@@ -508,19 +512,6 @@ export const WidgetEditor: React.FC = () => {
               </div>
               </div>
             </div>
-
-            {/* Breadcrumb at bottom - outside outer canvas, inside canvas container */}
-            {(() => {
-              console.log("[WidgetEditor] isEditMode:", isEditMode, "root:", root?.type);
-              return isEditMode && (
-                <Breadcrumb
-                  root={root}
-                  selectedId={selectedId}
-                  typeRegistry={typeRegistry}
-                  onSelect={handleWidgetSelect}
-                />
-              );
-            })()}
           </div>
 
           {/* Right Panel - Properties */}
@@ -564,6 +555,20 @@ export const WidgetEditor: React.FC = () => {
               />
             </SlidingPanel>
           )}
+          </div>
+
+          {/* Breadcrumb at bottom - outside panels/canvas row */}
+          {(() => {
+            console.log("[WidgetEditor] isEditMode:", isEditMode, "root:", root?.type);
+            return isEditMode && (
+              <Breadcrumb
+                root={root}
+                selectedId={selectedId}
+                typeRegistry={typeRegistry}
+                onSelect={handleWidgetSelect}
+              />
+            );
+          })()}
         </div>
       </div>
     </DndProvider>
