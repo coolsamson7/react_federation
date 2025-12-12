@@ -90,7 +90,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
               <span>{groupName}</span>
               <span
                 style={{
-                  fontSize: "10px",
+                  fontSize: "24px",
                   transform: isCollapsed ? "rotate(-90deg)" : "rotate(0deg)",
                   transition: "transform 0.2s ease",
                   display: "inline-block",
