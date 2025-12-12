@@ -63,6 +63,67 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
     propertiesByGroup.get(group)!.set(name, property);
   }
 
+  // Add grid span properties if widget has a cell property (is inside a grid)
+  if (widget.cell) {
+    const gridGroup = "grid";
+    if (!propertiesByGroup.has(gridGroup)) {
+      propertiesByGroup.set(gridGroup, new Map());
+    }
+
+    // Create synthetic property descriptors for grid span
+    const gridProps = propertiesByGroup.get(gridGroup)!;
+
+    // Column span property
+    const colSpanProperty = {
+      name: "gridColumnSpan",
+      type: "number",
+      label: "Column Span",
+      group: gridGroup,
+      metadata: {
+        name: "gridColumnSpan",
+        label: "Column Span",
+        group: gridGroup,
+        type: "number",
+        defaultValue: 1,
+        hide: false,
+      },
+      getValue: (instance: WidgetData) => instance.gridColumnSpan,
+      setValue: (instance: WidgetData, value: number) => {
+        instance.gridColumnSpan = value;
+      },
+    };
+
+    // Row span property
+    const rowSpanProperty = {
+      name: "gridRowSpan",
+      type: "number",
+      label: "Row Span",
+      group: gridGroup,
+      metadata: {
+        name: "gridRowSpan",
+        label: "Row Span",
+        group: gridGroup,
+        type: "number",
+        defaultValue: 1,
+        hide: false,
+      },
+      getValue: (instance: WidgetData) => {
+        const val = instance.gridRowSpan;
+        console.log('[PropertyPanel] Getting gridRowSpan:', val, 'cell:', JSON.stringify(instance.cell));
+        return val;
+      },
+      setValue: (instance: WidgetData, value: number) => {
+        console.log('[PropertyPanel] Setting gridRowSpan to:', value, 'cell before:', instance.cell);
+        instance.gridRowSpan = value;
+        console.log('[PropertyPanel] Cell after:', instance.cell);
+        console.log('[PropertyPanel] Calling onChange to trigger re-render');
+      },
+    };
+
+    gridProps.set("gridColumnSpan", colSpanProperty as any);
+    gridProps.set("gridRowSpan", rowSpanProperty as any);
+  }
+
   return (
     <div style={{ flex: 1, overflowY: "auto" }}>
       {Array.from(propertiesByGroup.entries()).map(([groupName, properties]) => {
@@ -132,7 +193,10 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
                     propertyName: property.name,
                     label: property.label,
                     value,
-                    onChange: (newValue: any) => handlePropertyChange(property.name, newValue),
+                    onChange: (newValue: any) => {
+                      property.setValue(widget, newValue);
+                      onChange(widget);
+                    },
                     propertyMetadata: property.metadata,
                   });
                 })}

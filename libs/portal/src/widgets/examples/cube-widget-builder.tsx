@@ -47,6 +47,8 @@ export class CubeWidgetBuilder extends WidgetBuilder<CubeWidgetData> {
           flexDirection: "column",
           gap: "12px",
           minHeight: "120px",
+          height: "100%",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4)",
         }}
       >
         {/* Header with icon and title */}
@@ -194,6 +196,8 @@ export class CubeWidgetEditBuilder extends WidgetBuilder<CubeWidgetData> {
             flexDirection: "column",
             gap: "12px",
             minHeight: "120px",
+            height: "100%",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4)",
           }}
         >
           {/* Header with icon and title */}

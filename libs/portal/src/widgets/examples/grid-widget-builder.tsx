@@ -34,13 +34,6 @@ export class GridWidgetBuilder extends WidgetBuilder<GridWidgetData> {
       gridTemplateRows,
       columnGap: data.columnGap || "16px",
       rowGap: data.rowGap || "16px",
-      justifyItems: data.justifyItems as any || "stretch",
-      alignItems: data.alignItems as any || "stretch",
-      justifyContent: data.justifyContent as any || "start",
-      alignContent: data.alignContent as any || "start",
-      gridAutoFlow: data.gridAutoFlow as any || "row",
-      gridAutoColumns: data.gridAutoColumns || "auto",
-      gridAutoRows: data.gridAutoRows || "auto",
       width: data.width || "100%",
       height: data.height || "auto",
       minWidth: data.minWidth,
@@ -56,10 +49,24 @@ export class GridWidgetBuilder extends WidgetBuilder<GridWidgetData> {
           const version = context?.widgetVersions?.get(child.id) || 0;
           const cellStyle: React.CSSProperties = child.cell
             ? {
-                gridColumn: child.cell.col + 1,
-                gridRow: child.cell.row + 1,
+                gridColumn: child.cell.colSpan
+                  ? `${child.cell.col + 1} / span ${child.cell.colSpan}`
+                  : child.cell.col + 1,
+                gridRow: child.cell.rowSpan
+                  ? `${child.cell.row + 1} / span ${child.cell.rowSpan}`
+                  : child.cell.row + 1,
+                minHeight: child.cell.rowSpan && child.cell.rowSpan > 1
+                  ? `${child.cell.rowSpan * 120}px`
+                  : undefined,
               }
             : {};
+
+          if (child.cell?.rowSpan && child.cell.rowSpan > 1) {
+            console.log('[GridWidgetBuilder Runtime] Widget with rowSpan:', {
+              rowSpan: child.cell.rowSpan,
+              cellStyle,
+            });
+          }
 
           return (
             <div key={`${child.id}-${version}`} style={cellStyle}>
@@ -106,13 +113,6 @@ export class GridWidgetEditBuilder extends WidgetBuilder<GridWidgetData> {
       gridTemplateRows,
       columnGap: data.columnGap || "16px",
       rowGap: data.rowGap || "16px",
-      justifyItems: data.justifyItems as any || "stretch",
-      alignItems: data.alignItems as any || "stretch",
-      justifyContent: data.justifyContent as any || "start",
-      alignContent: data.alignContent as any || "start",
-      gridAutoFlow: data.gridAutoFlow as any || "row",
-      gridAutoColumns: data.gridAutoColumns || "auto",
-      gridAutoRows: data.gridAutoRows || "auto",
       width: data.width || "100%",
       height: data.height || "auto",
       minWidth: data.minWidth,
@@ -128,10 +128,32 @@ export class GridWidgetEditBuilder extends WidgetBuilder<GridWidgetData> {
       for (let col = 0; col < cols; col++) {
         const cellKey = `${row}-${col}`;
 
-        // Find widget in this cell
+        // Check if this cell is covered by a spanning widget
+        const coveringWidget = data.children.find((child) => {
+          if (!child.cell) return false;
+          const startRow = child.cell.row;
+          const startCol = child.cell.col;
+          const rowSpan = child.cell.rowSpan || 1;
+          const colSpan = child.cell.colSpan || 1;
+
+          return (
+            row >= startRow &&
+            row < startRow + rowSpan &&
+            col >= startCol &&
+            col < startCol + colSpan
+          );
+        });
+
+        // Find widget that starts in this cell
         const widgetInCell = data.children.find(
           (child) => child.cell?.row === row && child.cell?.col === col
         );
+
+        // If covered by a spanning widget but not the starting cell, skip rendering
+        if (coveringWidget && !widgetInCell) {
+          console.log(`[GridCell] Skipping cell [${row},${col}] - covered by widget at [${coveringWidget.cell?.row},${coveringWidget.cell?.col}] with span [${coveringWidget.cell?.rowSpan},${coveringWidget.cell?.colSpan}]`);
+          continue;
+        }
 
         cells.push(
           <GridCell
@@ -188,10 +210,35 @@ const GridCell: React.FC<GridCellProps> = ({
   typeRegistry,
   widgetFactory,
 }) => {
+  // Calculate grid span for this cell
+  const cellStyle: React.CSSProperties = widget?.cell
+    ? {
+        gridColumn: widget.cell.colSpan
+          ? `${widget.cell.col + 1} / span ${widget.cell.colSpan}`
+          : widget.cell.col + 1,
+        gridRow: widget.cell.rowSpan
+          ? `${widget.cell.row + 1} / span ${widget.cell.rowSpan}`
+          : widget.cell.row + 1,
+      }
+    : {};
+
+  // Debug logging
+  if (widget?.cell && (widget.cell.colSpan || widget.cell.rowSpan)) {
+    console.log('[GridCell] Widget with span:', {
+      row: widget.cell.row,
+      col: widget.cell.col,
+      rowSpan: widget.cell.rowSpan,
+      colSpan: widget.cell.colSpan,
+      gridColumn: cellStyle.gridColumn,
+      gridRow: cellStyle.gridRow,
+    });
+  }
+
   return (
     <DropContainer
       parent={parent}
       typeRegistry={typeRegistry}
+      style={cellStyle}
       onDropWidget={(w) => {
         console.log(`[GridCell] Dropping widget into cell (${row}, ${col}):`, w);
 
@@ -226,6 +273,7 @@ const GridCell: React.FC<GridCellProps> = ({
         style={{
           position: "relative",
           minHeight: "80px",
+          height: "100%",
           border: "2px dotted #444",
           borderRadius: "4px",
           backgroundColor: widget ? "transparent" : "#0d0d0d",
@@ -233,14 +281,16 @@ const GridCell: React.FC<GridCellProps> = ({
         }}
       >
         {widget ? (
-          <WidgetRenderer
-            key={`${widget.id}-${context?.widgetVersions?.get(widget.id) || 0}`}
-            data={widget}
-            context={context}
-            edit={true}
-            typeRegistry={typeRegistry}
-            widgetFactory={widgetFactory}
-          />
+          <div style={{ width: "100%", height: "100%" }}>
+            <WidgetRenderer
+              key={`${widget.id}-${context?.widgetVersions?.get(widget.id) || 0}`}
+              data={widget}
+              context={context}
+              edit={true}
+              typeRegistry={typeRegistry}
+              widgetFactory={widgetFactory}
+            />
+          </div>
         ) : (
           <div
             style={{

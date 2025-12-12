@@ -37,12 +37,34 @@ export abstract class WidgetData {
   readonly type: string; // REQUIRED for widget selection
   children: WidgetData[];
   id: string;
-  cell?: { row: number; col: number }; // Grid positioning
+  cell?: { row: number; col: number; colSpan?: number; rowSpan?: number }; // Grid positioning with span
 
   constructor(type: string) {
     this.type = type;
     this.children = [];
     this.id = crypto.randomUUID();
+  }
+
+  // Grid span getters/setters for property panel
+  get gridColumnSpan(): number {
+    return this.cell?.colSpan || 1;
+  }
+  set gridColumnSpan(value: number) {
+    if (this.cell) {
+      this.cell.colSpan = value > 1 ? value : undefined;
+    }
+  }
+
+  get gridRowSpan(): number {
+    return this.cell?.rowSpan || 1;
+  }
+  set gridRowSpan(value: number) {
+    if (this.cell) {
+      this.cell.rowSpan = value > 1 ? value : undefined;
+      console.log('[WidgetData] Set gridRowSpan:', value, 'cell:', this.cell);
+    } else {
+      console.warn('[WidgetData] Cannot set gridRowSpan - no cell property');
+    }
   }
 }
 

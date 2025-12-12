@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { useDrag } from "react-dnd";
 import { DND_ITEM } from "./dnd";
 import { WidgetData } from "../metadata";
+import { messageBus } from "./message-bus";
 
 interface SelectionOverlayProps {
   isSelected: boolean;
@@ -9,6 +10,7 @@ interface SelectionOverlayProps {
   children: ReactNode;
   onClick?: (e: React.MouseEvent) => void;
   widget?: WidgetData; // The widget data for drag & drop
+  onDelete?: () => void;
 }
 
 /**
@@ -21,6 +23,7 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
   children,
   onClick,
   widget,
+  onDelete,
 }) => {
   // Make widget draggable
   const [{ isDragging }, dragRef] = useDrag(
@@ -45,10 +48,12 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
         position: "relative",
         cursor: isDragging ? "grabbing" : "grab",
         opacity: isDragging ? 0.5 : 1,
+        outline: isSelected ? "2px solid #4A90E2" : "none",
+        outlineOffset: "-2px",
       }}
       onClick={onClick}
     >
-      {/* Label box at top left */}
+      {/* Label box at top left with delete button */}
       {isSelected && (
         <div
           style={{
@@ -64,9 +69,35 @@ export const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
             zIndex: 10,
             whiteSpace: "nowrap",
             fontFamily: "system-ui, -apple-system, sans-serif",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
           }}
         >
-          {label}
+          <span>{label}</span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onDelete) {
+                onDelete();
+              } else if (widget) {
+                messageBus.publish({ topic: "editor", message: "delete", payload: widget });
+              }
+            }}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#fff",
+              cursor: "pointer",
+              padding: "0 4px",
+              fontSize: 14,
+              fontWeight: "bold",
+              lineHeight: 1,
+            }}
+            title="Delete widget"
+          >
+            ×
+          </button>
         </div>
       )}
 
@@ -95,16 +126,18 @@ interface HandleProps {
 }
 
 const Handle: React.FC<HandleProps> = ({ position }) => {
-  const handleSize = 7;
-  const offset = -3.5; // Half of handle size for centering
+  const handleSize = 8;
+  const offset = -4; // Half of handle size for centering
 
   const baseStyle: React.CSSProperties = {
     position: "absolute",
-    backgroundColor: "#4A90E2",
+    backgroundColor: "#fff",
+    border: "2px solid #4A90E2",
     width: handleSize,
     height: handleSize,
     borderRadius: 1,
     zIndex: 20,
+    pointerEvents: "auto",
   };
 
   const positionStyles: Record<string, React.CSSProperties> = {

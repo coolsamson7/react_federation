@@ -44,30 +44,26 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   }
 
   console.log("[Breadcrumb] Rendering with path:", path.map(w => w.type));
+  console.log("[Breadcrumb] path.length:", path.length);
 
   return (
     <div id="breadcrumb"
       style={{
         display: "flex",
         alignItems: "center",
-        gap: "4px",
+        gap: "8px",
         padding: "8px 12px",
-        backgroundColor: "#ff0000",
-        borderTop: "2px solid #00ff00",
+        backgroundColor: "#00ff00",
+        borderTop: "3px solid #ff0000",
         fontSize: 11,
-        color: "#ffffff",
-        overflow: "auto",
+        color: "#000000",
         whiteSpace: "nowrap",
-        width: "100%",
+        height: "40px",
         flexShrink: 0,
-        minHeight: "40px",
-        zIndex: 10000,
-        position: "absolute",
-        left: 0,
-        right: 0,
-        bottom: 0,
+        zIndex: 999999,
       }}
     >
+      <span style={{ color: "#ff0000", fontSize: 20, fontWeight: "bold" }}>BREADCRUMB TEST</span>
       {path.map((widget, index) => {
         const descriptor = typeRegistry.getDescriptorForInstance(widget);
         const isLast = index === path.length - 1;

@@ -127,10 +127,34 @@ export const WidgetEditor: React.FC = () => {
       if (msg.message === "select") {
         const w = msg.payload as WidgetData;
         setSelectedId(w?.id || null);
+      } else if (msg.message === "delete") {
+        const w = msg.payload as WidgetData;
+        if (root) {
+          // Find and remove the widget from its parent
+          const removeWidget = (parent: WidgetData, targetId: string): boolean => {
+            const index = parent.children.findIndex(c => c.id === targetId);
+            if (index >= 0) {
+              parent.children.splice(index, 1);
+              bumpVersion(widgetVersions, parent.id);
+              return true;
+            }
+            for (const child of parent.children) {
+              if (removeWidget(child, targetId)) return true;
+            }
+            return false;
+          };
+
+          if (removeWidget(root, w.id)) {
+            if (selectedId === w.id) {
+              setSelectedId(null);
+            }
+            forceUpdate();
+          }
+        }
       }
     });
     return () => unsub();
-  }, []);
+  }, [root, selectedId, widgetVersions]);
 
   useEffect(() => {
     if (!isResizingCanvas) return;
@@ -254,9 +278,9 @@ export const WidgetEditor: React.FC = () => {
         </div>
 
         {/* Main Content with Panels */}
-        <div style={{ position: "relative", flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ position: "relative", flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minHeight: 0 }}>
           {/* Panels and Canvas Row */}
-          <div style={{ position: "relative", flex: 1, display: "flex", minHeight: 0 }}>
+          <div style={{ position: "relative", flex: "1 1 0", display: "flex", minHeight: 0, overflow: "hidden" }}>
           {/* Panel Toggle Bars - only in edit mode */}
           {isEditMode && (
             <>
@@ -351,19 +375,17 @@ export const WidgetEditor: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               minHeight: 0,
-              overflow: "hidden",
-              position: "relative", // establish containing block for absolute breadcrumb
-              paddingBottom: 40, // reserve space so content isn't covered by breadcrumb
             }}
           >
             {/* Outer canvas area - lighter background */}
             <div
               style={{
                 background: "#1a1a1a",
-                flex: 1,
+                flex: "1 1 0",
                 display: "flex",
                 flexDirection: "column",
                 minHeight: 0,
+                overflow: "hidden",
               }}
             >
               {/* Top bar with device icon - fills full width */}
@@ -419,7 +441,7 @@ export const WidgetEditor: React.FC = () => {
                     onMouseDown={() => setIsResizingCanvas("left")}
                     style={{
                       position: "absolute",
-                      left: -14,
+                      left: 4,
                       top: "50%",
                       transform: "translateY(-50%)",
                       width: 12,
@@ -430,9 +452,9 @@ export const WidgetEditor: React.FC = () => {
                       justifyContent: "center",
                       backgroundColor: isResizingCanvas === "left" ? "#4A90E2" : "#2a2a2a",
                       border: "1px solid #555",
-                      borderRadius: "3px 0 0 3px",
+                      borderRadius: "3px",
                       transition: "background-color 0.2s ease",
-                      zIndex: 10,
+                      zIndex: 1000,
                     }}
                     onMouseEnter={(e) => {
                       if (!isResizingCanvas) {
@@ -462,7 +484,7 @@ export const WidgetEditor: React.FC = () => {
                     onMouseDown={() => setIsResizingCanvas("right")}
                     style={{
                       position: "absolute",
-                      right: -14,
+                      right: 4,
                       top: "50%",
                       transform: "translateY(-50%)",
                       width: 12,
@@ -473,9 +495,9 @@ export const WidgetEditor: React.FC = () => {
                       justifyContent: "center",
                       backgroundColor: isResizingCanvas === "right" ? "#4A90E2" : "#2a2a2a",
                       border: "1px solid #555",
-                      borderRadius: "0 3px 3px 0",
+                      borderRadius: "3px",
                       transition: "background-color 0.2s ease",
-                      zIndex: 10,
+                      zIndex: 1000,
                     }}
                     onMouseEnter={(e) => {
                       if (!isResizingCanvas) {
@@ -512,6 +534,19 @@ export const WidgetEditor: React.FC = () => {
               </div>
               </div>
             </div>
+
+            {/* Breadcrumb at bottom of canvas */}
+            {(() => {
+              console.log("[WidgetEditor] isEditMode:", isEditMode, "root:", root?.type);
+              return isEditMode && (
+                <Breadcrumb
+                  root={root}
+                  selectedId={selectedId}
+                  typeRegistry={typeRegistry}
+                  onSelect={handleWidgetSelect}
+                />
+              );
+            })()}
           </div>
 
           {/* Right Panel - Properties */}
@@ -556,19 +591,6 @@ export const WidgetEditor: React.FC = () => {
             </SlidingPanel>
           )}
           </div>
-
-          {/* Breadcrumb at bottom - outside panels/canvas row */}
-          {(() => {
-            console.log("[WidgetEditor] isEditMode:", isEditMode, "root:", root?.type);
-            return isEditMode && (
-              <Breadcrumb
-                root={root}
-                selectedId={selectedId}
-                typeRegistry={typeRegistry}
-                onSelect={handleWidgetSelect}
-              />
-            );
-          })()}
         </div>
       </div>
     </DndProvider>

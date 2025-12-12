@@ -48,6 +48,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   onMove,
 }) => {
   const [collapsed, setCollapsed] = React.useState(false);
+  const [isHovered, setIsHovered] = React.useState(false);
   const descriptor = typeRegistry.getDescriptorForInstance(widget);
   const isSelected = widget.id === selectedId;
 
@@ -125,11 +126,13 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           transition: "all 0.15s ease",
         }}
         onMouseEnter={(e) => {
+          setIsHovered(true);
           if (!isSelected) {
             e.currentTarget.style.backgroundColor = "#1a1a1a";
           }
         }}
         onMouseLeave={(e) => {
+          setIsHovered(false);
           if (!isSelected) {
             e.currentTarget.style.backgroundColor = "transparent";
           }
@@ -190,6 +193,36 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           >
             [{widget.cell.row},{widget.cell.col}]
           </span>
+        )}
+
+        {/* Delete Button - shown on hover */}
+        {isHovered && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              messageBus.publish({ topic: "editor", message: "delete", payload: widget });
+            }}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#888",
+              cursor: "pointer",
+              padding: "0 4px",
+              fontSize: 16,
+              fontWeight: "bold",
+              lineHeight: 1,
+              marginLeft: "8px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#ff4444";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "#888";
+            }}
+            title="Delete widget"
+          >
+            ×
+          </button>
         )}
       </div>
 

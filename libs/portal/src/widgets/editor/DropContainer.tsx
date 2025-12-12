@@ -10,9 +10,10 @@ interface DropContainerProps {
   onDropWidget: (widget: WidgetData) => void;
   children?: React.ReactNode;
   emptyHint?: string;
+  style?: React.CSSProperties;
 }
 
-export const DropContainer: React.FC<DropContainerProps> = ({ parent, typeRegistry, onDropWidget, children, emptyHint }) => {
+export const DropContainer: React.FC<DropContainerProps> = ({ parent, typeRegistry, onDropWidget, children, emptyHint, style: customStyle }) => {
   const descriptor = typeRegistry.getDescriptorForInstance(parent);
 
   const [{ isOver, canDrop }, dropRef] = useDrop(
@@ -46,16 +47,26 @@ export const DropContainer: React.FC<DropContainerProps> = ({ parent, typeRegist
     [parent, descriptor, onDropWidget]
   );
 
+  const finalStyle: React.CSSProperties = {
+    position: "relative",
+    outline: isOver && canDrop ? "2px solid #4caf50" : "none",
+    minHeight: emptyHint ? 100 : undefined,
+    width: "100%",
+    height: "100%",
+    ...customStyle,
+  };
+
+  if (customStyle?.gridRow || customStyle?.gridColumn) {
+    console.log('[DropContainer] Applying grid styles:', {
+      gridRow: finalStyle.gridRow,
+      gridColumn: finalStyle.gridColumn,
+    });
+  }
+
   return (
     <div
       ref={dropRef}
-      style={{
-        position: "relative",
-        outline: isOver && canDrop ? "2px solid #4caf50" : "none",
-        minHeight: emptyHint ? 100 : undefined,
-        width: "100%",
-        height: "100%",
-      }}
+      style={finalStyle}
     >
       {children}
       {emptyHint && (!children || (Array.isArray(children) && children.length === 0)) && (
