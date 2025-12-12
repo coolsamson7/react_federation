@@ -16,6 +16,7 @@ import { SlidingPanel } from "./SlidingPanel";
 import { PanelToggleBar, PanelConfig } from "./PanelToggleBar";
 import { WidgetTree } from "./WidgetTree";
 import { Breadcrumb } from "./Breadcrumb";
+import { getIcon } from "../icon-registry";
 
 // Ensure registries and builders are initialized via side-effect imports
 import "../examples/widget-registry";
@@ -348,7 +349,6 @@ export const WidgetEditor: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               minHeight: 0,
-              overflow: "hidden",
             }}
           >
             {/* Outer canvas area - lighter background */}
@@ -390,6 +390,7 @@ export const WidgetEditor: React.FC = () => {
                   alignItems: "stretch",
                   padding: "20px",
                   minHeight: 0,
+                  overflow: "hidden",
                 }}
               >
                 {/* Inner edit area - centered with resize handles */}
@@ -507,14 +508,17 @@ export const WidgetEditor: React.FC = () => {
               </div>
 
               {/* Breadcrumb at bottom of outer canvas - fills full width */}
-              {isEditMode && (
-                <Breadcrumb
-                  root={root}
-                  selectedId={selectedId}
-                  typeRegistry={typeRegistry}
-                  onSelect={handleWidgetSelect}
-                />
-              )}
+              {(() => {
+                console.log("[WidgetEditor] isEditMode:", isEditMode, "root:", root?.type);
+                return isEditMode && (
+                  <Breadcrumb
+                    root={root}
+                    selectedId={selectedId}
+                    typeRegistry={typeRegistry}
+                    onSelect={handleWidgetSelect}
+                  />
+                );
+              })()}
             </div>
           </div>
 
@@ -536,7 +540,12 @@ export const WidgetEditor: React.FC = () => {
                       };
                       const widget = findWidget(root);
                       const descriptor = widget ? typeRegistry.getDescriptorForInstance(widget) : null;
-                      return descriptor ? `${descriptor.icon} ${descriptor.label}` : "Properties";
+                      return descriptor ? (
+                        <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          {getIcon(descriptor.icon)}
+                          <span>{descriptor.label}</span>
+                        </span>
+                      ) : "Properties";
                     })()
                   : "Properties"
               }

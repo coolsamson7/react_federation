@@ -5,7 +5,7 @@ export type PanelPosition = "left" | "right" | "bottom";
 interface SlidingPanelProps {
   position: PanelPosition;
   isOpen: boolean;
-  title: string;
+  title: ReactNode;
   width?: number;
   height?: number;
   float?: boolean; // If true, panel floats over content; if false, pushes content
