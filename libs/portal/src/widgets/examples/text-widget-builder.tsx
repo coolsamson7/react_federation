@@ -13,6 +13,9 @@ export class TextWidgetBuilder extends WidgetBuilder<TextWidgetData> {
   render() {
     const { data } = this.props;
 
+    // Use bound data if available, otherwise use text property
+    const displayText = data.getBoundValue() ?? data.text;
+
     const style: React.CSSProperties = {
       fontSize: data.fontSize ? `${data.fontSize}px` : "16px",
       fontWeight: data.fontWeight || "normal",
@@ -22,7 +25,7 @@ export class TextWidgetBuilder extends WidgetBuilder<TextWidgetData> {
       padding: data.padding || "8px",
     };
 
-    return <div style={style}>{data.text}</div>;
+    return <div style={style}>{displayText}</div>;
   }
 }
 
@@ -35,6 +38,9 @@ export class TextWidgetEditBuilder extends WidgetBuilder<TextWidgetData> {
   render() {
     const { data, context } = this.props;
     const isSelected = context?.selectedId === data.id;
+
+    // Use bound data if available, otherwise use text property
+    const displayText = data.getBoundValue() ?? data.text;
 
     const style: React.CSSProperties = {
       fontSize: data.fontSize ? `${data.fontSize}px` : undefined,
@@ -55,7 +61,7 @@ export class TextWidgetEditBuilder extends WidgetBuilder<TextWidgetData> {
           messageBus.publish({ topic: "editor", message: "select", payload: data });
         }}
       >
-        <div style={style}>{data.text}</div>
+        <div style={style}>{displayText}</div>
       </SelectionOverlay>
     );
   }

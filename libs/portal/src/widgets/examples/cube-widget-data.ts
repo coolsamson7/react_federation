@@ -3,7 +3,24 @@ import { DeclareWidget, DeclareProperty } from "../decorators";
 import { AutoRegisterWidget } from "../type-registry";
 
 /**
- * Data class for a text widget
+ * Cube widget configuration type
+ */
+export interface CubeWidgetConfiguration {
+  cubeName: string;
+  measures: string[];
+  dimensions: string[];
+  filters: Array<{
+    dimension: string;
+    operator: string;
+    value: string | number | boolean;
+  }>;
+  renderingComponent: "linechart" | "barchart" | "table";
+  xAxisField: string;
+  yAxisField: string;
+}
+
+/**
+ * Data class for a cube widget
  * MUST be a class to support decorators
  */
 @DeclareWidget({
@@ -71,13 +88,13 @@ export class CubeWidgetData extends WidgetData {
   })
   borderRadius?: number;
 
+  // Cube.js Query Configuration
   @DeclareProperty({
-    label: "Query",
+    label: "Chart Configuration",
     group: "data",
-    type: "string",
-    defaultValue: "?",
+    type: "cubeWidgetConfiguration",
   })
-  query?: string;
+  configuration?: CubeWidgetConfiguration;
 
   constructor(type: string = "cube") {
     super(type);
@@ -88,6 +105,14 @@ export class CubeWidgetData extends WidgetData {
     this.unit = "MS";
     this.backgroundColor = "#1e2a35";
     this.borderRadius = 8;
-    this.query = "?";
+    this.configuration = {
+      cubeName: "Orders",
+      measures: ["Orders.count"],
+      dimensions: ["Customers.name"],
+      filters: [],
+      renderingComponent: "linechart",
+      xAxisField: "Customers.name",
+      yAxisField: "Orders.count",
+    };
   }
 }

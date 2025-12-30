@@ -53,17 +53,15 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
         alignItems: "center",
         gap: "8px",
         padding: "8px 12px",
-        backgroundColor: "#00ff00",
-        borderTop: "3px solid #ff0000",
+        backgroundColor: "#0d0d0d",
+        borderTop: "1px solid #333",
         fontSize: 11,
-        color: "#000000",
+        color: "#e0e0e0",
         whiteSpace: "nowrap",
         height: "40px",
         flexShrink: 0,
-        zIndex: 999999,
       }}
     >
-      <span style={{ color: "#ff0000", fontSize: 20, fontWeight: "bold" }}>BREADCRUMB TEST</span>
       {path.map((widget, index) => {
         const descriptor = typeRegistry.getDescriptorForInstance(widget);
         const isLast = index === path.length - 1;

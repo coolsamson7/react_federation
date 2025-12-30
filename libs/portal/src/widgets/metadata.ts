@@ -39,10 +39,36 @@ export abstract class WidgetData {
   id: string;
   cell?: { row: number; col: number; colSpan?: number; rowSpan?: number }; // Grid positioning with span
 
+  // Data binding support
+  dataBinding?: {
+    source?: any; // Data source object
+    path?: string; // Path to bind to (e.g., "customer.name")
+    transform?: (value: any) => any; // Optional transform function
+  };
+
   constructor(type: string) {
     this.type = type;
     this.children = [];
     this.id = crypto.randomUUID();
+  }
+
+  /**
+   * Get bound data value
+   */
+  getBoundValue(): any {
+    if (!this.dataBinding?.source || !this.dataBinding?.path) {
+      return undefined;
+    }
+
+    const parts = this.dataBinding.path.split('.');
+    let value = this.dataBinding.source;
+
+    for (const part of parts) {
+      if (value == null) return undefined;
+      value = value[part];
+    }
+
+    return this.dataBinding.transform ? this.dataBinding.transform(value) : value;
   }
 
   // Grid span getters/setters for property panel

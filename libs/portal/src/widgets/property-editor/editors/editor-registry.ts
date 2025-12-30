@@ -12,6 +12,8 @@ import "./padding-editor";
 import "./select-editor";
 import "./grid-template-editor";
 import "./span-editor";
+import "./query-model-editor";
+import "./cube-widget-configuration-editor";
 import "../grid-items-editor";
 
 console.log("[EditorRegistry] All property editor modules loaded");

@@ -111,15 +111,19 @@ export const WidgetEditor: React.FC = () => {
   };
 
   useEffect(() => {
-    initializeWidgetTypes(typeRegistry);
-    initializeWidgetBuilders(widgetFactory);
-    initializePropertyEditors(editorRegistry);
+    try {
+      initializeWidgetTypes(typeRegistry);
+      initializeWidgetBuilders(widgetFactory);
+      initializePropertyEditors(editorRegistry);
 
-    // Root canvas is a list widget
-    const r = typeRegistry.create<WidgetData>("list");
-    setRoot(r);
-
-    setInitialized(true);
+      // Root canvas is a list widget
+      const r = typeRegistry.create<WidgetData>("list");
+      setRoot(r);
+    } catch (e) {
+      console.error("[WidgetEditor] Initialization failed:", e);
+    } finally {
+      setInitialized(true);
+    }
   }, [typeRegistry, widgetFactory, editorRegistry]);
 
   useEffect(() => {
@@ -233,7 +237,51 @@ export const WidgetEditor: React.FC = () => {
     [widgetVersions, selectedId, renderKey]
   );
 
-  if (!initialized || !root) return null;
+  if (!initialized || !root) {
+    return (
+      <DndProvider backend={HTML5Backend}>
+        <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
+          {/* Toolbar (disabled while loading) */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              padding: "12px 16px",
+              backgroundColor: "#1a1a1a",
+              borderBottom: "1px solid #333",
+            }}
+          >
+            <button
+              disabled
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "6px 12px",
+                backgroundColor: "#222",
+                border: "1px solid #333",
+                borderRadius: 4,
+                color: "#777",
+                fontWeight: 600,
+                fontSize: 13,
+                cursor: "not-allowed",
+                opacity: 0.6,
+              }}
+            >
+              <span style={{ fontSize: 14 }}>⏳</span>
+              <span>Loading…</span>
+            </button>
+          </div>
+
+          {/* Loading placeholder */}
+          <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", background: "#0d0d0d" }}>
+            <div style={{ color: "#aaa", fontSize: 14 }}>Initializing editor…</div>
+          </div>
+        </div>
+      </DndProvider>
+    );
+  }
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -375,6 +423,8 @@ export const WidgetEditor: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               minHeight: 0,
+              marginLeft: isEditMode ? "36px" : 0,
+              marginRight: isEditMode ? "36px" : 0,
             }}
           >
             {/* Outer canvas area - lighter background */}
