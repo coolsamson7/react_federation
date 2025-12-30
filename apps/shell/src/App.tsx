@@ -8,6 +8,7 @@ import { initializeRemote, loadRemoteModule } from "@portal/remote-loader";
 import { detectClient, clientMatchesConstraints } from "@portal/client-detector";
 import ShellLayout from "./ShellLayout";
 import ShellHome from "./ShellHome";
+import QuerySearchSample from "./QuerySearchSample";
 import { MFE_REMOTES } from "./config/remotes";
 
 // Shell routes defined inline to avoid encoding issues
@@ -17,6 +18,12 @@ const shellRoutes = [
     component: "ShellHome",
     label: "Home",
     icon: "H" // Using simple letter to avoid UTF-8 issues
+  },
+  {
+    path: "/query-search",
+    component: "QuerySearchSample",
+    label: "Query Search",
+    icon: "Q" // Using simple letter to avoid UTF-8 issues
   }
 ];
 
@@ -45,9 +52,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Register ShellHome component
+    // Register ShellHome and QuerySearchSample components
     DI.resolve(DefaultComponentRegistry).register("ShellHome", () =>
       Promise.resolve({ default: ShellHome })
+    );
+    DI.resolve(DefaultComponentRegistry).register("QuerySearchSample", () =>
+      Promise.resolve({ default: QuerySearchSample })
     );
 
     // Initialize app - load metadata only, not remote scripts

@@ -35,7 +35,9 @@ export default function ShellLayout({ routes, children, loadedRemotes, remoteUrl
     <div style={{
       display: "flex",
       flexDirection: "column",
-      minHeight: "100vh",
+      height: "100%",
+      minHeight: 0,
+      overflow: "hidden",
       backgroundColor: "#1a1a1a",
       color: "#e0e0e0",
       fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif"
@@ -290,7 +292,7 @@ export default function ShellLayout({ routes, children, loadedRemotes, remoteUrl
         </>
       )}
 
-      <div style={{ display: "flex", flex: 1 }}>
+      <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
         {/* Dynamic Navigation - renders whatever "navigation" feature was sent by server */}
         {(() => {
           const filteredRoutes = routes
@@ -304,11 +306,13 @@ export default function ShellLayout({ routes, children, loadedRemotes, remoteUrl
             }));
           console.log("[ShellLayout] Routes passed to navigation:", filteredRoutes);
           return (
-            <FeatureRenderer
-              featureId="navigation"
-              routes={filteredRoutes}
-              currentPath={location.pathname}
-            />
+            <div style={{ flexShrink: 0, minWidth: 0, minHeight: 0, overflow: "auto" }}>
+              <FeatureRenderer
+                featureId="navigation"
+                routes={filteredRoutes}
+                currentPath={location.pathname}
+              />
+            </div>
           );
         })()}
 
@@ -316,45 +320,17 @@ export default function ShellLayout({ routes, children, loadedRemotes, remoteUrl
         <main style={{
           flex: 1,
           display: "flex",
-          flexDirection: "column"
+          flexDirection: "column",
+          minHeight: 0,
+          overflow: "hidden"
         }}>
-          {/* Feature Header */}
-          {currentRoute && (
-            <div style={{
-              backgroundColor: "#0d0d0d",
-              borderBottom: "1px solid #333",
-              padding: "20px 32px",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.2)"
-            }}>
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "16px"
-              }}>
-                <span style={{ fontSize: "32px" }}>
-                  {currentRoute.icon || "📄"}
-                </span>
-                <div>
-                  <h1 style={{
-                    margin: 0,
-                    fontSize: "24px",
-                    fontWeight: "600",
-                    color: "#fff"
-                  }}>
-                    {currentRoute.label || currentRoute.path}
-                  </h1>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Content Area */}
           <div style={{
             flex: 1,
-            padding: "32px",
-            paddingBottom: "120px", // Extra padding for iOS bottom nav
             backgroundColor: "#1a1a1a",
-            overflowY: "auto"
+            minHeight: 0,
+            position: "relative",
+            overflow: "auto"
           }}>
             {children}
           </div>

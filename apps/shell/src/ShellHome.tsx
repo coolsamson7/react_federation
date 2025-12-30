@@ -1,15 +1,24 @@
 import React from "react";
+import { WidgetEditor } from "../../../libs/portal/src/widgets/editor/WidgetEditor";
+import { ChatPanel } from "./ChatPanel";
+import MetadataWidget from "./MetadataPanel";
 
 export default function ShellHome() {
   return (
-    <div>
-      <h2 style={{ color: "#fff", marginBottom: "16px" }}>Welcome to the Portal</h2>
-      <p style={{ color: "#a0a0a0", lineHeight: "1.6", marginBottom: "12px" }}>
-        This is the shell application home page.
-      </p>
-      <p style={{ color: "#a0a0a0", lineHeight: "1.6" }}>
-        Navigate using the sidebar to explore the available micro-frontends.
-      </p>
+    <div style={{ display: "flex", flex: 1, minHeight: 0, height: "100%", overflow: "hidden" }}>
+      { /*Widget Editor - Left Side */}
+
+        { /*   <div style={{ flex: 1, minWidth: 0, minHeight: 0, overflow: "auto" }}>
+          <MetadataWidget />
+        </div> */
+            }
+
+      <div style={{ flex: 1, minWidth: 0, minHeight: 0, overflow: "auto" }}>
+        <WidgetEditor />
+      </div>
+
+      {/* Chat Panel - Right Side   <ChatPanel />*/}
+
     </div>
   );
 }
