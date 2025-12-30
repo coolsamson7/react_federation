@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Type } from "@portal/validation";
 import { SearchCriterion, SearchOperator, QueryExpression } from "../query-model";
 import { ConstraintChip, ConstraintDefinition } from "./constraint-chip";
+import { extractConstraintMethods } from "./constraint-panel";
 
 /**
  * Represents a search constraint in the chip format
@@ -40,6 +41,91 @@ export function ChipSearchPanel({
     null
   );
   const [selectedCriterion, setSelectedCriterion] = useState<string>("");
+  const [criterionInput, setCriterionInput] = useState<string>("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Autocomplete logic for criterion selection
+  const criterionNames = useMemo(() => {
+    return criteria.map((c) => c.name);
+  }, [criteria]);
+
+  const criterionSuggestions = useMemo(() => {
+    if (!criterionInput.trim()) return criterionNames;
+    const input = criterionInput.toLowerCase();
+    return criterionNames.filter((name: string) =>
+      name.toLowerCase().startsWith(input)
+    );
+  }, [criterionInput, criterionNames]);
+
+  const shadowText = useMemo(() => {
+    if (!criterionInput.trim() || criterionSuggestions.length === 0) return "";
+    const first = criterionSuggestions[0];
+    if (first.toLowerCase().startsWith(criterionInput.toLowerCase())) {
+      return criterionInput + first.slice(criterionInput.length);
+    }
+    return "";
+  }, [criterionInput, criterionSuggestions]);
+
+  const handleCriterionInputChange = (value: string) => {
+    setCriterionInput(value);
+    setSelectedCriterion("");
+    setShowSuggestions(true);
+  };
+
+  const handleCriterionKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Tab") {
+      e.preventDefault();
+      // Auto-select first suggestion
+      if (criterionSuggestions.length > 0) {
+        const selectedName = criterionSuggestions[0];
+        setCriterionInput(selectedName);
+        setSelectedCriterion(selectedName);
+        setShowSuggestions(false);
+        // Auto-add constraint after selection
+        setTimeout(() => {
+          const criterion = criteria.find((c) => c.name === selectedName);
+          if (criterion) {
+            const newConstraint: SearchConstraint = {
+              id: `constraint-${Date.now()}`,
+              criterionName: selectedName,
+              operator: criterion.operators[0]?.name || "equals",
+              operandValues: new Array(criterion.operators[0]?.operandCount || 1).fill(null),
+              mandatory: false,
+              constraints: [],
+            };
+            onConstraintsChange([...constraints, newConstraint]);
+            setCriterionInput("");
+            setSelectedCriterion("");
+          }
+        }, 0);
+      }
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (criterionSuggestions.length > 0) {
+        const selectedName = criterionSuggestions[0];
+        setCriterionInput(selectedName);
+        setSelectedCriterion(selectedName);
+        setShowSuggestions(false);
+        // Auto-add constraint after selection
+        setTimeout(() => {
+          const criterion = criteria.find((c) => c.name === selectedName);
+          if (criterion) {
+            const newConstraint: SearchConstraint = {
+              id: `constraint-${Date.now()}`,
+              criterionName: selectedName,
+              operator: criterion.operators[0]?.name || "equals",
+              operandValues: new Array(criterion.operators[0]?.operandCount || 1).fill(null),
+              mandatory: false,
+              constraints: [],
+            };
+            onConstraintsChange([...constraints, newConstraint]);
+            setCriterionInput("");
+            setSelectedCriterion("");
+          }
+        }, 0);
+      }
+    }
+  };
 
   // Build constraints from queryExpression when it changes
   React.useEffect(() => {
@@ -97,27 +183,6 @@ export function ChipSearchPanel({
     }
   }, [queryExpression, criteria]);
 
-  const handleAddConstraint = () => {
-    if (!selectedCriterion) return;
-
-    const criterion = criteria.find((c) => c.name === selectedCriterion);
-    if (!criterion) return;
-
-    const newConstraint: SearchConstraint = {
-      id: `constraint-${Date.now()}`,
-      criterionName: selectedCriterion,
-      operator: criterion.operators[0]?.name || "equals",
-      operandValues: new Array(criterion.operators[0]?.operandCount || 1).fill(
-        null
-      ),
-      mandatory: false,
-      constraints: [],
-    };
-
-    onConstraintsChange([...constraints, newConstraint]);
-    setSelectedCriterion("");
-  };
-
   const handleRemoveConstraint = (id: string) => {
     const constraint = constraints.find((c) => c.id === id);
     if (constraint?.mandatory) return;
@@ -167,43 +232,117 @@ export function ChipSearchPanel({
           borderBottom: "1px solid #333",
         }}
       >
-        <select
-          value={selectedCriterion}
-          onChange={(e) => setSelectedCriterion(e.target.value)}
-          style={{
-            flex: 1,
-            padding: "8px",
-            backgroundColor: "#2a2a2a",
-            border: "1px solid #404040",
-            borderRadius: "4px",
-            color: "#e0e0e0",
-            fontSize: "12px",
-            cursor: "pointer",
-          }}
-        >
-          <option value="">Select criterion to add...</option>
-          {criteria.map((criterion) => (
-            <option key={criterion.name} value={criterion.name}>
-              {criterion.label}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={handleAddConstraint}
-          disabled={!selectedCriterion}
-          style={{
-            padding: "8px 16px",
-            backgroundColor: selectedCriterion ? "#1e6b34" : "#3a3a3a",
-            border: "1px solid #2a7a42",
-            borderRadius: "4px",
-            color: selectedCriterion ? "#e0e0e0" : "#606060",
-            cursor: selectedCriterion ? "pointer" : "not-allowed",
-            fontSize: "12px",
-            fontWeight: "600",
-          }}
-        >
-          + Add
-        </button>
+        <div style={{ flex: 1, position: "relative" }}>
+          <div
+            style={{
+              position: "relative",
+              display: "inline-block",
+              width: "100%",
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Type criterion (e.g., name, id) - Tab to autocomplete"
+              value={criterionInput}
+              onChange={(e) => handleCriterionInputChange(e.target.value)}
+              onKeyDown={handleCriterionKeyDown}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+              style={{
+                width: "100%",
+                padding: "8px",
+                backgroundColor: "#2a2a2a",
+                border: "1px solid #404040",
+                borderRadius: "4px",
+                color: "#e0e0e0",
+                fontSize: "12px",
+              }}
+            />
+
+            {/* Shadow text for autocomplete preview */}
+            {shadowText && (
+              <span
+                style={{
+                  position: "absolute",
+                  left: "8px",
+                  top: "8px",
+                  color: "#606060",
+                  fontSize: "12px",
+                  pointerEvents: "none",
+                  fontFamily: "monospace",
+                }}
+              >
+                {criterionInput}
+                <span style={{ color: "#404040" }}>{shadowText.slice(criterionInput.length)}</span>
+              </span>
+            )}
+          </div>
+
+          {/* Autocomplete Suggestions Dropdown */}
+          {showSuggestions && criterionSuggestions.length > 0 && (
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                marginTop: "2px",
+                backgroundColor: "#1a1a1a",
+                border: "1px solid #404040",
+                borderRadius: "4px",
+                maxHeight: "150px",
+                overflowY: "auto",
+                zIndex: 100,
+                width: "100%",
+              }}
+            >
+              {criterionSuggestions.map((suggestion: string) => (
+                <div
+                  key={suggestion}
+                  onClick={() => {
+                    setCriterionInput(suggestion);
+                    setSelectedCriterion(suggestion);
+                    setShowSuggestions(false);
+                    // Auto-add constraint after selection
+                    setTimeout(() => {
+                      const criterion = criteria.find((c) => c.name === suggestion);
+                      if (criterion) {
+                        const newConstraint: SearchConstraint = {
+                          id: `constraint-${Date.now()}`,
+                          criterionName: suggestion,
+                          operator: criterion.operators[0]?.name || "equals",
+                          operandValues: new Array(criterion.operators[0]?.operandCount || 1).fill(null),
+                          mandatory: false,
+                          constraints: [],
+                        };
+                        onConstraintsChange([...constraints, newConstraint]);
+                        setCriterionInput("");
+                        setSelectedCriterion("");
+                      }
+                    }, 0);
+                  }}
+                  style={{
+                    padding: "8px",
+                    cursor: "pointer",
+                    backgroundColor: selectedCriterion === suggestion ? "#2a4a5a" : "transparent",
+                    color: "#e0e0e0",
+                    fontSize: "12px",
+                    borderBottom: "1px solid #333",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.backgroundColor = "#2a4a5a";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (selectedCriterion !== suggestion) {
+                      (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                    }
+                  }}
+                >
+                  {suggestion}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Constraints as Chips */}
