@@ -56,11 +56,13 @@ export class CubeWidgetBuilder extends WidgetBuilder<CubeWidgetData> {
     const query = {
       measures: config.measures || [],
       dimensions: config.dimensions || [],
-      filters: config.filters?.map((f: any) => ({
-        member: f.dimension,
-        operator: f.operator,
-        values: [f.value],
-      })) || [],
+      filters: (config.filters || [])
+        .filter((f: any) => f.dimension && f.operator && f.value !== "" && f.value !== null)
+        .map((f: any) => ({
+          member: f.dimension,
+          operator: f.operator,
+          values: Array.isArray(f.value) ? f.value : [f.value],
+        })) || [],
       limit: 20,
     };
 
