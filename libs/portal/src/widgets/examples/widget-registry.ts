@@ -8,13 +8,11 @@ import "./text-widget-data";
 import "./list-widget-data";
 import "./cube-widget-data";
 import "./grid-widget-data";
-import "./search-panel-widget-data";
 
 // Import widget builders (triggers @RegisterBuilder)
 import "./text-widget-builder";
 import "./list-widget-builder";
 import "./cube-widget-builder";
 import "./grid-widget-builder";
-import "./search-panel-widget-builder";
 
 console.log("[WidgetRegistry] All widget modules loaded");

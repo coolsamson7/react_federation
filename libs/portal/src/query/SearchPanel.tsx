@@ -12,6 +12,7 @@ import {
 } from "./query-model";
 import { inputEditorRegistry, initializeInputEditors } from "./input-editor/input-editor-registry";
 import "./input-editor/editors/editor-registry";
+import {string, Type} from "@portal/validation";
 
 /**
  * Represents a single row in the search panel
@@ -43,7 +44,7 @@ function DynamicInput({
   onChange,
   operandIndex,
 }: {
-  type: TypeDescriptor;
+  type: Type<any>
   value: any;
   onChange: (value: any) => void;
   operandIndex: number;
@@ -54,7 +55,7 @@ function DynamicInput({
     console.warn(`[DynamicInput] No editor found for type: ${type}`);
     return (
       <div style={{ flex: 1, padding: "8px", color: "#ff6b6b", fontSize: "12px" }}>
-        No editor for type: {type}
+        No editor for type: {type.name}
       </div>
     );
   }
@@ -86,14 +87,14 @@ function SearchRowComponent({
   onAdd: () => void;
   canDelete: boolean;
 }) {
-  const criteria: SearchCriterion[] = queryModel?.searchCriteria || [];
+  const criteria: SearchCriterion[] = queryModel?.criteria || [];
   const selectedCriterion = criteria.find((c) => c.name === row.criterionName);
-  const operators = selectedCriterion?.operators || getDefaultOperatorsForType(selectedCriterion?.type || "string");
+  const operators = selectedCriterion?.operators || getDefaultOperatorsForType(selectedCriterion?.type || string());
   const selectedOperator = operators.find((op) => op.name === row.operatorName);
 
   const handleCriterionChange = (criterionName: string) => {
     const criterion = criteria.find((c) => c.name === criterionName);
-    const newOperators = criterion?.operators || getDefaultOperatorsForType(criterion?.type || "string");
+    const newOperators = criterion?.operators || getDefaultOperatorsForType(criterion?.type || string());
     onChange({
       ...row,
       criterionName,
@@ -186,7 +187,7 @@ function SearchRowComponent({
           {Array.from({ length: selectedOperator.operandCount }).map((_, index) => (
             <DynamicInput
               key={index}
-              type={selectedCriterion?.type || "string"}
+              type={selectedCriterion?.type || string()}
               value={row.operandValues[index]}
               onChange={(value) => handleOperandChange(index, value)}
               operandIndex={index}

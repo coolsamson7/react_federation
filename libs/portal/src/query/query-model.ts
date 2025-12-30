@@ -2,6 +2,7 @@
  * TypeScript implementation of Query Model and Expression structures
  * Based on the Java query framework
  */
+import {Type} from "@portal/validation";
 
 // ============================================================================
 // Type Descriptors
@@ -27,15 +28,15 @@ export interface QueryExpression {
 export interface LiteralQueryExpression extends QueryExpression {
   type: "literal";
   criterionName: string;
-  operatorName: string;
-  operandValues: any[];
+  operator: string;
+  values: any[];
 }
 
 /**
  * Logical query expression that combines multiple expressions
  */
 export interface LogicalQueryExpression extends QueryExpression {
-  subExpressions: QueryExpression[];
+  values: QueryExpression[];
 }
 
 /**
@@ -57,7 +58,7 @@ export interface OrQueryExpression extends LogicalQueryExpression {
  */
 export interface NotQueryExpression extends QueryExpression {
   type: "not";
-  subExpression: QueryExpression;
+  value: QueryExpression;
 }
 
 // ============================================================================
@@ -102,10 +103,13 @@ export interface SearchCriterion {
   path: string;
 
   /** Business data type of this criterion */
-  type: TypeDescriptor;
+  type: Type<any>;
 
   /** Whether this criterion is mandatory */
   mandatory: boolean;
+
+  /** where it is possible to add this search criterion, or if present visible **/
+  visible?: boolean;
 
   /** Whether this criterion is the default */
   default: boolean;
@@ -126,7 +130,7 @@ export interface ResultColumn {
   label: string;
 
   /** Data type of this column */
-  type: TypeDescriptor;
+  type: Type<any>;
 
   /** Whether this column is visible by default */
   visible: boolean;
@@ -149,17 +153,19 @@ export interface GroupingColumn {
 // Query Model
 // ============================================================================
 
-/**
- * A QueryModel encapsulates all information about searchable criteria,
- * result columns, and query configuration
- */
-export interface QueryModel {
+export interface SearchModel {
   /** Name/identifier of this query model */
   name: string;
 
   /** Possible search criteria */
-  searchCriteria: SearchCriterion[];
+  criteria: SearchCriterion[];
+}
 
+/**
+ * A QueryModel encapsulates all information about searchable criteria,
+ * result columns, and query configuration
+ */
+export interface QueryModel extends SearchModel {
   /** Columns in the query result */
   resultColumns: ResultColumn[];
 
@@ -188,8 +194,8 @@ export function createLiteralExpression(
   return {
     type: "literal",
     criterionName,
-    operatorName,
-    operandValues,
+    operator: operatorName,
+    values: operandValues,
   };
 }
 
@@ -201,7 +207,7 @@ export function createAndExpression(
 ): AndQueryExpression {
   return {
     type: "and",
-    subExpressions,
+    values: subExpressions,
   };
 }
 
@@ -213,7 +219,7 @@ export function createOrExpression(
 ): OrQueryExpression {
   return {
     type: "or",
-    subExpressions,
+    values: subExpressions,
   };
 }
 
@@ -225,7 +231,7 @@ export function createNotExpression(
 ): NotQueryExpression {
   return {
     type: "not",
-    subExpression,
+    value: subExpression,
   };
 }
 
@@ -236,19 +242,19 @@ export function expressionToString(expr: QueryExpression): string {
   switch (expr.type) {
     case "literal": {
       const lit = expr as LiteralQueryExpression;
-      return `${lit.criterionName} ${lit.operatorName} ${lit.operandValues.join(", ")}`;
+      return `${lit.criterionName} ${lit.operator} ${lit.values.join(", ")}`;
     }
     case "and": {
       const and = expr as AndQueryExpression;
-      return `(${and.subExpressions.map(expressionToString).join(" AND ")})`;
+      return `(${and.values.map(expressionToString).join(" AND ")})`;
     }
     case "or": {
       const or = expr as OrQueryExpression;
-      return `(${or.subExpressions.map(expressionToString).join(" OR ")})`;
+      return `(${or.values.map(expressionToString).join(" OR ")})`;
     }
     case "not": {
       const not = expr as NotQueryExpression;
-      return `NOT (${expressionToString(not.subExpression)})`;
+      return `NOT (${expressionToString(not.value)})`;
     }
   }
 }
@@ -282,8 +288,8 @@ export const CommonOperators = {
 /**
  * Get default operators for a given type
  */
-export function getDefaultOperatorsForType(type: TypeDescriptor): SearchOperator[] {
-  switch (type) {
+export function getDefaultOperatorsForType(type: Type<any>): SearchOperator[] {
+  switch (type.baseType) {
     case "string":
       return [
         CommonOperators.EQUALS,
