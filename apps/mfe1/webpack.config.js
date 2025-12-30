@@ -16,7 +16,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    publicPath: "auto", // Let webpack determine the public path dynamically
+    publicPath: "http://localhost:3001/",
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".json"],
@@ -28,7 +28,6 @@ module.exports = {
     rules: [
       { test: /\.tsx?$/, loader: "ts-loader" },
       { test: /\.json$/, type: "json" },
-      { test: /\.css$/, use: ["style-loader", "css-loader"] },
     ],
   },
   plugins: [
@@ -37,16 +36,12 @@ module.exports = {
       filename: "remoteEntry.js",
       exposes: {
         "./MFE1Home": "./apps/mfe1/src/MFE1Home",
-        "./MFE1FooSmall": "./apps/mfe1/src/MFE1FooSmall",
-        "./MFE1FooLarge": "./apps/mfe1/src/MFE1FooLarge",
+        "./MFE1Foo": "./apps/mfe1/src/MFE1Foo",
         "./MFE1Bar": "./apps/mfe1/src/MFE1Bar",
-        "./DesktopNavigation": "./apps/mfe1/src/DesktopNavigation",
-        "./CapacitorIOSNavigation": "./apps/mfe1/src/CapacitorIOSNavigation",
       },
       shared: {
         react: { singleton: true, eager: true },
         "react-dom": { singleton: true, eager: true },
-        "react-router-dom": { singleton: true, eager: true },
         tsyringe: { singleton: true, eager: true },
       },
     }),

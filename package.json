@@ -47,12 +47,18 @@
     "@capacitor/cli": "^7.4.4",
     "@capacitor/core": "^7.4.4",
     "@capacitor/ios": "^7.4.4",
+    "@cubejs-client/core": "^1.5.12",
+    "@cubejs-client/react": "^1.5.12",
     "@ionic/react": "^8.7.11",
     "@module-federation/runtime": "latest",
     "ionicons": "^8.0.13",
+    "lucide-react": "^0.562.0",
     "react": "^18.3.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.3.0",
     "react-router-dom": "^7.9.6",
+    "recharts": "^2.13.3",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.8.0"
   }
