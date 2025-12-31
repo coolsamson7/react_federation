@@ -18,6 +18,12 @@ export * from "./property-editor/editors/int-editor";
 
 // Examples
 export * from "./examples/text-widget-data";
+export * from "./examples/list-widget-data";
+export * from "./examples/cube-widget-data";
+export * from "./examples/grid-widget-data";
+
+// SearchPanel Widget
+export * from "./search-panel";
 export * from "./examples/text-widget-builder";
 export * from "./examples/list-widget-data";
 export * from "./examples/list-widget-builder";

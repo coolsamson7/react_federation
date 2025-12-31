@@ -15,4 +15,8 @@ import "./list-widget-builder";
 import "./cube-widget-builder";
 import "./grid-widget-builder";
 
+// SearchPanel widget
+import "../search-panel/search-panel-widget-data";
+import "../search-panel/search-panel-widget-builder";
+
 console.log("[WidgetRegistry] All widget modules loaded");

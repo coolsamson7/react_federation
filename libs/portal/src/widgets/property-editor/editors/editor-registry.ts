@@ -5,6 +5,7 @@
 
 import "./string-editor";
 import "./int-editor";
+import "./boolean-editor";
 import "./color-editor";
 import "./font-weight-editor";
 import "./text-align-editor";
@@ -13,7 +14,9 @@ import "./select-editor";
 import "./grid-template-editor";
 import "./span-editor";
 import "./query-model-editor";
+import "./query-expression-editor";
 import "./cube-widget-configuration-editor";
 import "../grid-items-editor";
+import "../../search-panel/search-panel-property-editor";
 
 console.log("[EditorRegistry] All property editor modules loaded");

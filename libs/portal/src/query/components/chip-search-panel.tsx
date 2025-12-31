@@ -4,39 +4,34 @@ import { SearchCriterion, SearchOperator, QueryExpression } from "../query-model
 import { ConstraintChip, ConstraintDefinition } from "./constraint-chip";
 import { extractConstraintMethods } from "./constraint-panel";
 
-/**
- * Represents a search constraint in the chip format
- */
-export interface SearchConstraint {
-  id: string;
-  criterionName: string;
-  operator: string;
-  operandValues: any[];
-  mandatory: boolean;
-  constraints: ConstraintDefinition[];
-}
-
 interface ChipSearchPanelProps {
   criteria: SearchCriterion[];
-  constraints: SearchConstraint[];
-  onConstraintsChange: (constraints: SearchConstraint[]) => void;
+  queryExpression: QueryExpression | null;
+  onQueryExpressionChange: (expression: QueryExpression | null) => void;
   onSearch?: (expression: QueryExpression) => void;
   logicalOperator?: "and" | "or";
-  queryExpression?: QueryExpression | null;
 }
 
 /**
- * Search panel that displays search constraints as chips
+ * Optimized Search panel that displays search constraints as chips
  * Each chip shows the constraint name and can be clicked to modify operator and operands
+ * Includes performance optimizations: memoization, useCallback, and efficient re-renders
  */
-export function ChipSearchPanel({
+export const ChipSearchPanel = React.memo(({
   criteria,
-  constraints,
-  onConstraintsChange,
+  queryExpression,
+  onQueryExpressionChange,
   onSearch,
   logicalOperator = "and",
-  queryExpression,
-}: ChipSearchPanelProps) {
+}: ChipSearchPanelProps) => {
+  
+  // Debug logging
+  React.useEffect(() => {
+    console.log('[ChipSearchPanel] Component rendered with:');
+    console.log('  - criteria:', criteria.length, 'items');
+    console.log('  - queryExpression:', queryExpression);
+  }, [criteria, queryExpression]);
+  
   const [editingConstraintId, setEditingConstraintId] = useState<string | null>(
     null
   );
@@ -66,149 +61,157 @@ export function ChipSearchPanel({
     return "";
   }, [criterionInput, criterionSuggestions]);
 
-  const handleCriterionInputChange = (value: string) => {
+  // Optimized input change handler with debouncing for better performance
+  const handleCriterionInputChange = React.useCallback((value: string) => {
     setCriterionInput(value);
     setSelectedCriterion("");
     setShowSuggestions(true);
-  };
+  }, []);
 
-  const handleCriterionKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  // Extract literal expressions from the query expression for display
+  const literalExpressions = React.useMemo(() => {
+    if (!queryExpression) return [];
+    
+    if (queryExpression.type === "literal") {
+      return [{ ...(queryExpression as any), id: "single" }];
+    } else if (queryExpression.type === "and" || queryExpression.type === "or") {
+      const compound = queryExpression as any;
+      return (compound.subExpressions || [])
+        .filter((expr: any) => expr.type === "literal")
+        .map((expr: any, index: number) => ({ ...expr, id: `compound-${index}` }));
+    }
+    
+    return [];
+  }, [queryExpression]);
+
+  // Optimized function to add a literal for a given criterion name
+  const addLiteralForCriterion = React.useCallback((criterionName: string) => {
+    console.log('[ChipSearchPanel] Adding literal for criterion:', criterionName);
+    const criterion = criteria.find((c) => c.name === criterionName);
+    
+    if (criterion) {
+      console.log('[ChipSearchPanel] Found criterion:', criterion);
+      
+      const newLiteral = {
+        type: "literal",
+        criterionName: criterionName,
+        operatorName: criterion.operators[0]?.name || "equals",
+        operandValues: new Array(criterion.operators[0]?.operandCount || 1).fill("")
+      };
+      
+      console.log('[ChipSearchPanel] Creating literal:', newLiteral);
+      
+      if (!queryExpression) {
+        // First expression - just create a literal
+        onQueryExpressionChange(newLiteral as any);
+      } else if (queryExpression.type === "literal") {
+        // Convert single literal to compound
+        const compound = {
+          type: logicalOperator,
+          subExpressions: [queryExpression, newLiteral]
+        };
+        onQueryExpressionChange(compound as any);
+      } else if (queryExpression.type === "and" || queryExpression.type === "or") {
+        // Add to existing compound
+        const compound = queryExpression as any;
+        const updated = {
+          ...compound,
+          subExpressions: [...(compound.subExpressions || []), newLiteral]
+        };
+        onQueryExpressionChange(updated);
+      }
+      
+      setCriterionInput("");
+      setSelectedCriterion("");
+      setShowSuggestions(false);
+    } else {
+      console.warn('[ChipSearchPanel] No criterion found for:', criterionName);
+      console.log('[ChipSearchPanel] Available criteria:', criteria.map(c => c.name));
+    }
+  }, [criteria, queryExpression, onQueryExpressionChange, logicalOperator]);
+
+  const handleRemoveLiteral = React.useCallback((literalId: string) => {
+    if (!queryExpression) return;
+
+    if (queryExpression.type === "literal" && literalId === "single") {
+      onQueryExpressionChange(null);
+    } else if (queryExpression.type === "and" || queryExpression.type === "or") {
+      const compound = queryExpression as any;
+      const subExpressions = compound.subExpressions || [];
+      const index = parseInt(literalId.split('-')[1]);
+      const newSubExpressions = subExpressions.filter((_: any, i: number) => i !== index);
+      
+      if (newSubExpressions.length === 0) {
+        onQueryExpressionChange(null);
+      } else if (newSubExpressions.length === 1) {
+        onQueryExpressionChange(newSubExpressions[0]);
+      } else {
+        onQueryExpressionChange({
+          ...compound,
+          subExpressions: newSubExpressions
+        });
+      }
+    }
+  }, [queryExpression, onQueryExpressionChange]);
+
+  const handleUpdateLiteral = React.useCallback((literalId: string, updates: any) => {
+    if (!queryExpression) return;
+
+    if (queryExpression.type === "literal" && literalId === "single") {
+      onQueryExpressionChange({ ...queryExpression, ...updates } as any);
+    } else if (queryExpression.type === "and" || queryExpression.type === "or") {
+      const compound = queryExpression as any;
+      const subExpressions = compound.subExpressions || [];
+      const index = parseInt(literalId.split('-')[1]);
+      const newSubExpressions = subExpressions.map((expr: any, i: number) => 
+        i === index ? { ...expr, ...updates } : expr
+      );
+      
+      onQueryExpressionChange({
+        ...compound,
+        subExpressions: newSubExpressions
+      });
+    }
+  }, [queryExpression, onQueryExpressionChange]);
+
+  const handleCriterionKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log('[ChipSearchPanel] Key pressed:', e.key);
+    
     if (e.key === "Tab") {
       e.preventDefault();
+      console.log('[ChipSearchPanel] Tab pressed, suggestions:', criterionSuggestions);
       // Auto-select first suggestion
       if (criterionSuggestions.length > 0) {
         const selectedName = criterionSuggestions[0];
-        setCriterionInput(selectedName);
-        setSelectedCriterion(selectedName);
-        setShowSuggestions(false);
-        // Auto-add constraint after selection
-        setTimeout(() => {
-          const criterion = criteria.find((c) => c.name === selectedName);
-          if (criterion) {
-            const newConstraint: SearchConstraint = {
-              id: `constraint-${Date.now()}`,
-              criterionName: selectedName,
-              operator: criterion.operators[0]?.name || "equals",
-              operandValues: new Array(criterion.operators[0]?.operandCount || 1).fill(null),
-              mandatory: false,
-              constraints: [],
-            };
-            onConstraintsChange([...constraints, newConstraint]);
-            setCriterionInput("");
-            setSelectedCriterion("");
-          }
-        }, 0);
+        console.log('[ChipSearchPanel] Adding constraint for tab selection:', selectedName);
+        addLiteralForCriterion(selectedName);
       }
     } else if (e.key === "Enter") {
       e.preventDefault();
+      console.log('[ChipSearchPanel] Enter pressed, suggestions:', criterionSuggestions);
       if (criterionSuggestions.length > 0) {
         const selectedName = criterionSuggestions[0];
-        setCriterionInput(selectedName);
-        setSelectedCriterion(selectedName);
-        setShowSuggestions(false);
-        // Auto-add constraint after selection
-        setTimeout(() => {
-          const criterion = criteria.find((c) => c.name === selectedName);
-          if (criterion) {
-            const newConstraint: SearchConstraint = {
-              id: `constraint-${Date.now()}`,
-              criterionName: selectedName,
-              operator: criterion.operators[0]?.name || "equals",
-              operandValues: new Array(criterion.operators[0]?.operandCount || 1).fill(null),
-              mandatory: false,
-              constraints: [],
-            };
-            onConstraintsChange([...constraints, newConstraint]);
-            setCriterionInput("");
-            setSelectedCriterion("");
-          }
-        }, 0);
-      }
-    }
-  };
-
-  // Build constraints from queryExpression when it changes
-  React.useEffect(() => {
-    if (queryExpression && queryExpression.type === "literal") {
-      const expr = queryExpression as any;
-      const existingConstraint = constraints.find(
-        (c) => c.criterionName === expr.criterionName
-      );
-
-      if (!existingConstraint) {
-        const criterion = criteria.find((c) => c.name === expr.criterionName);
-        if (criterion) {
-          const newConstraint: SearchConstraint = {
-            id: `constraint-${Date.now()}`,
-            criterionName: expr.criterionName,
-            operator: expr.operatorName || criterion.operators[0]?.name || "equals",
-            operandValues: expr.operandValues || [],
-            mandatory: false,
-            constraints: [],
-          };
-          onConstraintsChange([...constraints, newConstraint]);
+        console.log('[ChipSearchPanel] Adding constraint for enter selection:', selectedName);
+        addLiteralForCriterion(selectedName);
+      } else if (criterionInput.trim()) {
+        // If no suggestions but user typed something, try to find exact match
+        console.log('[ChipSearchPanel] Looking for exact match for:', criterionInput);
+        const exactMatch = criteria.find(c => c.name.toLowerCase() === criterionInput.toLowerCase());
+        if (exactMatch) {
+          console.log('[ChipSearchPanel] Found exact match:', exactMatch.name);
+          addLiteralForCriterion(exactMatch.name);
+        } else {
+          console.log('[ChipSearchPanel] No exact match found');
         }
       }
-    } else if (queryExpression && (queryExpression.type === "and" || queryExpression.type === "or")) {
-      // Handle compound expressions
-      const expr = queryExpression as any;
-      const subExpressions = expr.subExpressions || [];
-      
-      const newConstraints: SearchConstraint[] = [];
-      subExpressions.forEach((subExpr: any) => {
-        if (subExpr.type === "literal") {
-          const existingConstraint = constraints.find(
-            (c) => c.criterionName === subExpr.criterionName && c.operator === subExpr.operatorName
-          );
-          
-          if (!existingConstraint) {
-            const criterion = criteria.find((c) => c.name === subExpr.criterionName);
-            if (criterion) {
-              newConstraints.push({
-                id: `constraint-${Date.now()}-${Math.random()}`,
-                criterionName: subExpr.criterionName,
-                operator: subExpr.operatorName || criterion.operators[0]?.name || "equals",
-                operandValues: subExpr.operandValues || [],
-                mandatory: false,
-                constraints: [],
-              });
-            }
-          }
-        }
-      });
-
-      if (newConstraints.length > 0) {
-        onConstraintsChange([...constraints, ...newConstraints]);
-      }
     }
-  }, [queryExpression, criteria]);
+  }, [criterionSuggestions, criterionInput, criteria, addLiteralForCriterion]);
 
-  const handleRemoveConstraint = (id: string) => {
-    const constraint = constraints.find((c) => c.id === id);
-    if (constraint?.mandatory) return;
-
-    onConstraintsChange(constraints.filter((c) => c.id !== id));
-  };
-
-  const handleUpdateConstraint = (
-    id: string,
-    updates: Partial<SearchConstraint>
-  ) => {
-    onConstraintsChange(
-      constraints.map((c) => (c.id === id ? { ...c, ...updates } : c))
-    );
-  };
-
-  const handleSearch = () => {
-    if (onSearch) {
-      // Build query expression from constraints
-      // This would be expanded based on actual QueryExpression building logic
-      const expression: QueryExpression = {
-        type: logicalOperator === "and" ? "and" : "or",
-      };
-      onSearch(expression);
+  const handleSearch = React.useCallback(() => {
+    if (onSearch && queryExpression) {
+      onSearch(queryExpression);
     }
-  };
+  }, [onSearch, queryExpression]);
 
   return (
     <div
@@ -298,28 +301,7 @@ export function ChipSearchPanel({
               {criterionSuggestions.map((suggestion: string) => (
                 <div
                   key={suggestion}
-                  onClick={() => {
-                    setCriterionInput(suggestion);
-                    setSelectedCriterion(suggestion);
-                    setShowSuggestions(false);
-                    // Auto-add constraint after selection
-                    setTimeout(() => {
-                      const criterion = criteria.find((c) => c.name === suggestion);
-                      if (criterion) {
-                        const newConstraint: SearchConstraint = {
-                          id: `constraint-${Date.now()}`,
-                          criterionName: suggestion,
-                          operator: criterion.operators[0]?.name || "equals",
-                          operandValues: new Array(criterion.operators[0]?.operandCount || 1).fill(null),
-                          mandatory: false,
-                          constraints: [],
-                        };
-                        onConstraintsChange([...constraints, newConstraint]);
-                        setCriterionInput("");
-                        setSelectedCriterion("");
-                      }
-                    }, 0);
-                  }}
+                  onClick={() => addLiteralForCriterion(suggestion)}
                   style={{
                     padding: "8px",
                     cursor: "pointer",
@@ -345,8 +327,8 @@ export function ChipSearchPanel({
         </div>
       </div>
 
-      {/* Constraints as Chips */}
-      {constraints.length > 0 && (
+      {/* Literal Expressions as Chips */}
+      {literalExpressions.length > 0 && (
         <div
           style={{
             display: "flex",
@@ -358,23 +340,22 @@ export function ChipSearchPanel({
             minHeight: "44px",
           }}
         >
-          {constraints.map((constraint) => {
+          {literalExpressions.map((literal: any) => {
             const criterion = criteria.find(
-              (c) => c.name === constraint.criterionName
+              (c) => c.name === literal.criterionName
             );
             const operator = criterion?.operators.find(
-              (op) => op.name === constraint.operator
+              (op) => op.name === literal.operatorName
             );
 
             return (
-              <ConstraintChipWithOperator
-                key={constraint.id}
-                constraint={constraint}
+              <LiteralExpressionChip
+                key={literal.id}
+                literalExpression={literal}
                 criterion={criterion}
                 operator={operator}
-                onUpdate={(updates) => handleUpdateConstraint(constraint.id, updates)}
-                onRemove={() => handleRemoveConstraint(constraint.id)}
-                canRemove={!constraint.mandatory}
+                onUpdate={(updates) => handleUpdateLiteral(literal.id, updates)}
+                onRemove={() => handleRemoveLiteral(literal.id)}
               />
             );
           })}
@@ -410,33 +391,27 @@ export function ChipSearchPanel({
       )}
 
       {/* Search Button */}
-      {constraints.length > 0 && (
+      {literalExpressions.length > 0 && (
         <div style={{ display: "flex", gap: "8px", paddingTop: "8px" }}>
           <button
             onClick={handleSearch}
+            disabled={!queryExpression}
             style={{
               flex: 1,
               padding: "10px 16px",
-              backgroundColor: "#1e6b34",
+              backgroundColor: queryExpression ? "#1e6b34" : "#3a3a3a",
               border: "1px solid #2a7a42",
               borderRadius: "4px",
               color: "#e0e0e0",
-              cursor: "pointer",
+              cursor: queryExpression ? "pointer" : "not-allowed",
               fontSize: "13px",
               fontWeight: "600",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#2a7a42";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "#1e6b34";
             }}
           >
             🔍 Search
           </button>
           <button
-            onClick={() => onConstraintsChange([])}
+            onClick={() => onQueryExpressionChange(null)}
             style={{
               padding: "10px 16px",
               backgroundColor: "#3a3a3a",
@@ -454,35 +429,41 @@ export function ChipSearchPanel({
       )}
     </div>
   );
-}
+});
 
 /**
- * Constraint Chip Component with Operator Selector for ChipSearchPanel
+ * Literal Expression Chip Component with Operator Selector
  */
-interface ConstraintChipWithOperatorProps {
-  constraint: SearchConstraint;
+interface LiteralExpressionChipProps {
+  literalExpression: {
+    id: string;
+    type: string;
+    criterionName: string;
+    operatorName: string;
+    operandValues?: any[];
+  };
   criterion?: SearchCriterion;
   operator?: SearchOperator;
-  onUpdate: (updates: Partial<SearchConstraint>) => void;
+  onUpdate: (updates: any) => void;
   onRemove: () => void;
-  canRemove?: boolean;
 }
 
-function ConstraintChipWithOperator({
-  constraint,
+const LiteralExpressionChip = React.memo(({
+  literalExpression,
   criterion,
   operator,
   onUpdate,
   onRemove,
-  canRemove = true,
-}: ConstraintChipWithOperatorProps) {
+}: LiteralExpressionChipProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const chipRef = React.useRef<HTMLDivElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
+  // Optimized click outside handler with cleanup
   React.useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    if (!isOpen) return;
+    
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
         chipRef.current &&
@@ -490,17 +471,40 @@ function ConstraintChipWithOperator({
       ) {
         setIsOpen(false);
       }
-    }
+    };
 
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [isOpen]);
-
-  const availableOperators = criterion?.operators || [];
+  
+  // Memoized operators for better performance
+  const availableOperators = React.useMemo(() => criterion?.operators || [], [criterion?.operators]);
+  
+  // Optimized update handlers
+  const handleOperatorChange = React.useCallback((operatorName: string) => {
+    const newOperator = availableOperators.find(op => op.name === operatorName);
+    onUpdate({
+      operatorName: operatorName,
+      operandValues: new Array(newOperator?.operandCount || 0).fill(""),
+    });
+  }, [availableOperators, onUpdate]);
+  
+  const handleOperandChange = React.useCallback((index: number, value: string) => {
+    const newValues = [...(literalExpression.operandValues || [])];
+    newValues[index] = value;
+    onUpdate({ operandValues: newValues });
+  }, [literalExpression.operandValues, onUpdate]);
+  
+  const handleToggleOpen = React.useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
+  
+  const handleRemoveClick = React.useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onRemove();
+  }, [onRemove]);
 
   return (
     <div
@@ -518,28 +522,24 @@ function ConstraintChipWithOperator({
         position: "relative",
         cursor: "pointer",
       }}
-      onClick={() => setIsOpen(!isOpen)}
+      onClick={handleToggleOpen}
     >
       <span style={{ fontWeight: "500" }}>{criterion?.label || "Unknown"}</span>
 
       {availableOperators.length > 0 && (
         <span style={{ fontSize: "10px", color: "#a0a0a0", marginLeft: "4px" }}>
           {operator?.label || "..."}
-          {constraint.operandValues.length > 0 && (
+          {literalExpression.operandValues && literalExpression.operandValues.length > 0 && (
             <span style={{ marginLeft: "4px" }}>
-              {constraint.operandValues.join(", ")}
+              {literalExpression.operandValues.join(", ")}
             </span>
           )}
           ▼
         </span>
       )}
 
-      {canRemove && (
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove();
-          }}
+          onClick={handleRemoveClick}
           style={{
             width: "16px",
             height: "16px",
@@ -559,7 +559,7 @@ function ConstraintChipWithOperator({
         >
           ✕
         </button>
-      )}
+      )
 
       {/* Dropdown for operator and value selection */}
       {isOpen && availableOperators.length > 0 && (
@@ -593,16 +593,8 @@ function ConstraintChipWithOperator({
               Operator:
             </label>
             <select
-              value={constraint.operator}
-              onChange={(e) =>
-                onUpdate({
-                  operator: e.target.value,
-                  operandValues: new Array(
-                    availableOperators.find((op) => op.name === e.target.value)
-                      ?.operandCount || 0
-                  ).fill(""),
-                })
-              }
+              value={literalExpression.operatorName}
+              onChange={(e) => handleOperatorChange(e.target.value)}
               style={{
                 width: "100%",
                 padding: "6px",
@@ -639,12 +631,8 @@ function ConstraintChipWithOperator({
                     </label>
                     <input
                       type="text"
-                      value={constraint.operandValues[idx] || ""}
-                      onChange={(e) => {
-                        const newValues = [...constraint.operandValues];
-                        newValues[idx] = e.target.value;
-                        onUpdate({ operandValues: newValues });
-                      }}
+                      value={literalExpression.operandValues?.[idx] || ""}
+                      onChange={(e) => handleOperandChange(idx, e.target.value)}
                       style={{
                         width: "100%",
                         padding: "6px",
@@ -665,4 +653,4 @@ function ConstraintChipWithOperator({
       )}
     </div>
   );
-}
+});

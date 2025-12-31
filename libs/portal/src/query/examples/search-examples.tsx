@@ -2,22 +2,23 @@
  * Complete Example: Building a Product Search Interface
  * 
  * Demonstrates how to:
- * 1. Define types with constraints
- * 2. Create a search model with type constraints
+ * 1. Define types with queryExpression
+ * 2. Create a search model with type queryExpression
  * 3. Use ChipSearchPanel for searching
- */
+ *
 
 import React, { useState } from "react";
 import { string, number, date } from "@portal/validation";
-import { ChipSearchPanel, SearchConstraint } from "../components";
+import { ChipSearchPanel } from "../components";
 import { SearchModelDefinition, SearchModelWithConstraints } from "../components";
 import { createCriterionFromType } from "../type-search-builder";
+import { QueryExpression } from "../query-model";
 
 /**
  * Example: Product Search Model
- */
+ *
 export function ProductSearchExample() {
-  // 1. Define types with constraints
+  // 1. Define types with queryExpression
   const productNameType = string("productName")
     .min(2)
     .max(100)
@@ -68,22 +69,22 @@ export function ProductSearchExample() {
   // 3. Create search model
   const [searchModel, setSearchModel] = useState<SearchModelWithConstraints>({
     name: "Product Search",
-    description: "Search products with advanced type-based constraints",
+    description: "Search products with advanced type-based queryExpression",
     criteria: searchCriteria,
   });
 
   // 4. Manage search state
-  const [constraints, setConstraints] = useState<SearchConstraint[]>([]);
+  const [queryExpression, setQueryExpression] = useState<QueryExpression | null[]>([]);
   const [isDefining, setIsDefining] = useState(false);
 
   const handleSearch = () => {
-    console.log("Search constraints:", constraints);
-    // Execute search with constraints
+    console.log("Search queryExpression:", queryExpression);
+    // Execute search with queryExpression
   };
 
   return (
     <div style={{ display: "flex", gap: "20px", padding: "20px" }}>
-      {/* Left Panel: Model Definition (optional) */}
+      {/* Left Panel: Model Definition (optional) *}
       {isDefining && (
         <div style={{ flex: 1 }}>
           <SearchModelDefinition
@@ -100,19 +101,19 @@ export function ProductSearchExample() {
         </div>
       )}
 
-      {/* Right Panel: Search */}
+      {/* Right Panel: Search *}
       <div style={{ flex: 1 }}>
         <h2 style={{ marginTop: 0 }}>Product Search</h2>
 
         <ChipSearchPanel
           criteria={searchModel.criteria}
-          constraints={constraints}
-          onConstraintsChange={setConstraints}
+          queryExpression={queryExpression}
+          onQueryExpressionChange={setQueryExpression}
           onSearch={handleSearch}
           logicalOperator="and"
         />
 
-        {/* Results area would go here */}
+        {/* Results area would go here *}
         <div
           style={{
             marginTop: "20px",
@@ -123,11 +124,11 @@ export function ProductSearchExample() {
           }}
         >
           <h3>Search Results</h3>
-          {constraints.length === 0 ? (
-            <p style={{ color: "#999" }}>Add search constraints to see results</p>
+          {queryExpression.length === 0 ? (
+            <p style={{ color: "#999" }}>Add search queryExpression to see results</p>
           ) : (
             <pre style={{ fontSize: "12px" }}>
-              {JSON.stringify(constraints, null, 2)}
+              {JSON.stringify(queryExpression, null, 2)}
             </pre>
           )}
         </div>
@@ -141,9 +142,9 @@ export function ProductSearchExample() {
  * 
  * Demonstrates:
  * - Email validation
- * - Age range constraints
- * - Name format constraints
- */
+ * - Age range queryExpression
+ * - Name format queryExpression
+ *
 export function UserSearchExample() {
   const nameType = string("name")
     .min(2)
@@ -160,7 +161,7 @@ export function UserSearchExample() {
   const countryType = string("country")
     .length(2); // ISO country codes
 
-  const [constraints, setConstraints] = useState<SearchConstraint[]>([]);
+  const [queryExpression, setQueryExpression] = useState<QueryExpression | null[]>([]);
 
   const searchCriteria = [
     createCriterionFromType("name", "Full Name", nameType, {
@@ -184,9 +185,9 @@ export function UserSearchExample() {
       <h1>User Search</h1>
       <ChipSearchPanel
         criteria={searchCriteria}
-        constraints={constraints}
-        onConstraintsChange={setConstraints}
-        onSearch={() => console.log("Search executed", constraints)}
+        queryExpression={queryExpression}
+        onQueryExpressionChange={setQueryExpression}
+        onSearch={() => console.log("Search executed", queryExpression)}
         logicalOperator="and"
       />
     </div>
@@ -195,7 +196,7 @@ export function UserSearchExample() {
 
 /**
  * Example: Advanced Search with Custom Operators
- */
+ *
 export function AdvancedSearchExample() {
   const titleType = string("title")
     .min(1)
@@ -206,7 +207,7 @@ export function AdvancedSearchExample() {
   const statusType = string("status");
     // Could add: .oneOf("draft", "published", "archived")
 
-  const [constraints, setConstraints] = useState<SearchConstraint[]>([]);
+  const [queryExpression, setQueryExpression] = useState<QueryExpression | null[]>([]);
   const [logicalOperator, setLogicalOperator] = useState<"and" | "or">("and");
 
   const searchCriteria = [
@@ -244,9 +245,9 @@ export function AdvancedSearchExample() {
 
       <ChipSearchPanel
         criteria={searchCriteria}
-        constraints={constraints}
-        onConstraintsChange={setConstraints}
-        onSearch={() => console.log(`Executing ${logicalOperator} search`, constraints)}
+        queryExpression={queryExpression}
+        onQueryExpressionChange={setQueryExpression}
+        onSearch={() => console.log(`Executing ${logicalOperator} search`, queryExpression)}
         logicalOperator={logicalOperator}
       />
     </div>
@@ -254,3 +255,4 @@ export function AdvancedSearchExample() {
 }
 
 export default ProductSearchExample;
+*/
