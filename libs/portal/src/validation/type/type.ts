@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { get, set } from "../../lang/index";
 import { StringBuilder } from "../../util/index";
 import { Test } from "../test"
@@ -7,6 +9,13 @@ import { ValidationError } from "../validation-error"
 export interface ConstraintInfo {
     message?: string
 }
+
+export const Constraint = (): MethodDecorator => {
+    return (target, propertyKey, descriptor) => {
+        // Mark the method with metadata
+        Reflect.defineMetadata("isFluentConstraint", true, target, propertyKey);
+    };
+};
 
 class Patch {
   // data
@@ -32,15 +41,49 @@ class Patch {
   }
 }
 
+export type TypeFactory = () => Type<any>;
+
 export class Type<T> {
     // static data
 
     static cache: { } = {}
+    private static factories = new Map<string, TypeFactory>();
     private static patches: Patch[] = [];
     private static timeout = false
 
     // static methods
 
+    static registerFactory(typeName: string, factory: TypeFactory) {
+        this.factories.set(typeName, factory);
+    }
+
+    static create(typeName: string, constraints?: Record<string, any>): Type<any> {
+        const factory = this.factories.get(typeName);
+        if (!factory) {
+            throw new Error(`Unknown type: ${typeName}`);
+        }
+
+        let instance = factory();
+
+        if ( constraints ) {
+            for (const [constraint, value] of Object.entries(constraints)) {
+                // @ts-ignore
+                if (typeof instance[constraint] !== "function") {
+                    throw new Error(`Unknown constraint: ${constraint}`);
+                }
+
+                if (value === true) {
+                    // @ts-ignore
+                    instance[constraint]();
+                } else {
+                    // @ts-ignore
+                    instance[constraint](value);
+                }
+            } // for
+        }
+
+        return instance;
+    }
 
     static register(constraint: Type<any>) {
         set(this.cache, constraint.name!, constraint)
@@ -116,8 +159,31 @@ export class Type<T> {
         })
     }
 
-
     // public
+
+    toJSON(): Record<string, any> {
+        const constraints: Record<string, any> = {};
+
+        for (const test of this.tests) {
+            // skip the literal type check
+            if (test.name === "type") continue;
+
+            if (!test.params || Object.keys(test.params).length === 0) {
+                constraints[test.name] = true;
+            } else if (Object.keys(test.params).length === 1) {
+                // unwrap single param (length → 1, in → ["12"])
+                constraints[test.name] = Object.values(test.params)[0];
+            } else {
+                // fallback: keep full params object
+                constraints[test.name] = test.params;
+            }
+        }
+
+        return {
+            [this.baseType]: constraints
+        };
+    }
+
 
     validate(object: T) {
         const context = new ValidationContext()
@@ -148,6 +214,7 @@ export class Type<T> {
         return this
     }
 
+    @Constraint()
     required(): Type<T> {
         const typeTest = this.tests[0]
 
@@ -156,6 +223,7 @@ export class Type<T> {
         return this
     }
 
+    @Constraint()
     optional(): Type<T> {
         const typeTest = this.tests[0]
 
@@ -164,6 +232,7 @@ export class Type<T> {
         return this
     }
 
+    @Constraint()
     nullable(): Type<T> {
         const typeTest = this.tests[0]
 

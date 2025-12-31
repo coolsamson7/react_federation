@@ -1,6 +1,6 @@
 import { ValidationContext } from "../validation-context"
 
-import { Type, ConstraintInfo } from "./type"
+import {Type, ConstraintInfo, Constraint} from "./type"
 
 /**
  * this constraint class adds specific checks for arrays.
@@ -26,6 +26,7 @@ export class ArrayConstraint<T extends Array<any>> extends Type<T> {
 
     // fluent
 
+    @Constraint()
     min(min: number, info?: ConstraintInfo): ArrayConstraint<T> {
         this.test({
             type: "array",
@@ -42,6 +43,7 @@ export class ArrayConstraint<T extends Array<any>> extends Type<T> {
         return this
     }
 
+    @Constraint()
     max(max: number, info?: ConstraintInfo): ArrayConstraint<T> {
         this.test({
             type: "array",

@@ -1,5 +1,5 @@
 import "reflect-metadata"
-import { array, boolean, date, enumeration, number, object, reference, string } from "./type/index"
+import {array, boolean, date, enumeration, number, object, reference, string, Type} from "./type/index"
 //import {describe, it} from "node:test";
 
 enum Color {
@@ -15,6 +15,31 @@ enum StringColor {
 }
 
 describe("validation", () => {
+    it("should produce json", async () => {
+        const constraint = number().min(0).max(10)
+
+        let json = constraint.toJSON();
+
+        console.log(json)
+
+        //expect(constraint.isValid(-1)).toBe(false)
+    })
+
+    it("should parse json", async () => {
+        const constraint = number().min(0).max(10)
+
+        let json = constraint.toJSON();
+
+        console.log(json)
+
+        let instance = Type.create("number", json["number"]);
+
+
+        console.log(instance)
+
+        //expect(constraint.isValid(-1)).toBe(false)
+    })
+
     it("should validate numbers", async () => {
         const constraint = number().min(0).max(10)
 

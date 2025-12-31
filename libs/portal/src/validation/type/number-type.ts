@@ -1,9 +1,15 @@
-import { Type, ConstraintInfo } from "./type"
+import {Type, ConstraintInfo, Constraint} from "./type"
 
 /**
  * this constraint class adds specific checks for numbers.
  */
 export class NumberType extends Type<number> {
+     // static block
+
+    static {
+        Type.registerFactory("number", () => new NumberType());
+    }
+
     // constructor
 
     constructor(name?: string) {
@@ -14,6 +20,7 @@ export class NumberType extends Type<number> {
 
     // fluent api
 
+    @Constraint()
     min(min: number, info?: ConstraintInfo): NumberType {
         this.test({
             type: "number",
@@ -30,6 +37,7 @@ export class NumberType extends Type<number> {
         return this
     }
 
+    @Constraint()
     max(max: number, info?: ConstraintInfo): NumberType {
         this.test({
             type: "number",
@@ -46,6 +54,7 @@ export class NumberType extends Type<number> {
         return this
     }
 
+    @Constraint()
     lessThan(number: number, info?: ConstraintInfo): NumberType {
         this.test({
             type: "number",
@@ -62,6 +71,7 @@ export class NumberType extends Type<number> {
         return this
     }
 
+    @Constraint()
     lessThanEquals(number: number, info?: ConstraintInfo): NumberType {
         this.test({
             type: "number",
@@ -78,6 +88,7 @@ export class NumberType extends Type<number> {
         return this
     }
 
+    @Constraint()
     greaterThan(number: number, info?: ConstraintInfo): NumberType {
         this.test({
             type: "number",
@@ -94,6 +105,7 @@ export class NumberType extends Type<number> {
         return this
     }
 
+    @Constraint()
     greaterThanEquals(number: number, info?: ConstraintInfo): NumberType {
         this.test({
             type: "number",
@@ -110,6 +122,7 @@ export class NumberType extends Type<number> {
         return this
     }
 
+    @Constraint()
     format(format: string, info?: ConstraintInfo): NumberType {
         this.test({
             type: "number",
@@ -126,6 +139,7 @@ export class NumberType extends Type<number> {
         return this
     }
 
+    @Constraint()
     precision(precision: number, info?: ConstraintInfo): NumberType {
         this.test({
             type: "number",
@@ -142,6 +156,7 @@ export class NumberType extends Type<number> {
         return this
     }
 
+    @Constraint()
     scale(scale: number, info?: ConstraintInfo): NumberType {
         this.test({
             type: "number",
@@ -180,6 +195,12 @@ export class NumberType extends Type<number> {
 // more
 
 export class ShortType extends NumberType {
+    // static block
+
+    static {
+        Type.registerFactory("short", () => new ShortType());
+    }
+
     // constructor
 
     constructor(name?: string) {
@@ -188,6 +209,12 @@ export class ShortType extends NumberType {
 }
 
 export class IntegerType extends NumberType {
+    // static block
+
+    static {
+        Type.registerFactory("integer", () => new IntegerType());
+    }
+
     // constructor
 
     constructor(name?: string) {
@@ -196,6 +223,12 @@ export class IntegerType extends NumberType {
 }
 
 export class LongType extends NumberType {
+    // static block
+
+    static {
+        Type.registerFactory("long", () => new LongType());
+    }
+
     // constructor
 
     constructor(name?: string) {
@@ -204,6 +237,12 @@ export class LongType extends NumberType {
 }
 
 export class FloatType extends NumberType {
+    // static block
+
+    static {
+        Type.registerFactory("float", () => new FloatType());
+    }
+
     // constructor
 
     constructor(name?: string) {
@@ -212,6 +251,12 @@ export class FloatType extends NumberType {
 }
 
 export class DoubleType extends NumberType {
+    // static block
+
+    static {
+        Type.registerFactory("double", () => new DoubleType());
+    }
+
     // constructor
 
     constructor(name?: string) {
