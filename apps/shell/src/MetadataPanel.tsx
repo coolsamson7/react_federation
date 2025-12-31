@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Plus, Search, Database, Layers, Filter, Link, BarChart3, Calendar, ChevronRight, ChevronDown, X, Edit2, Save, Trash2 } from "lucide-react";
-import {CubeDescriptor, DimensionDescriptor, JoinDescriptor, MeasureDescriptor} from "@portal/metadata/cube_metadata";
+import { Plus, Search, Database, Layers, Filter, Link, BarChart3, X, Edit2, Save, Trash2, ChevronRight, ChevronDown, Tag } from "lucide-react";
 
-/* Types
+// Type definitions
 type MeasureType = "count" | "countDistinct" | "sum" | "avg" | "min" | "max";
 type DimensionType = "string" | "number" | "time" | "boolean";
 type JoinRelationship = "belongsTo" | "hasMany" | "hasOne";
+type TimeGranularity = "second" | "minute" | "hour" | "day" | "week" | "month" | "quarter" | "year";
 
 interface MeasureDescriptor {
   name: string;
@@ -14,6 +14,7 @@ interface MeasureDescriptor {
   expression?: string;
   title?: string;
   description?: string;
+  filters?: Record<string, string | number | boolean>;
 }
 
 interface DimensionDescriptor {
@@ -21,6 +22,14 @@ interface DimensionDescriptor {
   column: string;
   type: DimensionType;
   primaryKey?: boolean;
+  granularities?: TimeGranularity[];
+  title?: string;
+  description?: string;
+}
+
+interface SegmentDescriptor {
+  name: string;
+  expression: string;
   title?: string;
   description?: string;
 }
@@ -29,6 +38,7 @@ interface JoinDescriptor {
   name: string;
   relationship: JoinRelationship;
   on: string;
+  relationMappingId?: string;
 }
 
 interface CubeDescriptor {
@@ -37,10 +47,11 @@ interface CubeDescriptor {
   sql?: string;
   measures?: MeasureDescriptor[];
   dimensions?: DimensionDescriptor[];
+  segments?: SegmentDescriptor[];
   joins?: JoinDescriptor[];
   title?: string;
   description?: string;
-}*/
+}
 
 export default function CubeConfigurator() {
   const [cubes, setCubes] = useState<CubeDescriptor[]>([
@@ -61,6 +72,9 @@ export default function CubeConfigurator() {
       joins: [
         { name: "customers", relationship: "belongsTo", on: "orders.customer_id = customers.id" },
       ],
+      segments: [
+        { name: "completed", expression: "status = 'completed'", title: "Completed Orders" },
+      ],
     },
   ]);
 
@@ -70,13 +84,19 @@ export default function CubeConfigurator() {
     measures: true,
     dimensions: true,
     joins: false,
+    segments: false,
   });
+  const [editingItem, setEditingItem] = useState<{ type: string; index: number } | null>(null);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
   const cube = cubes.find(c => c.name === selectedCube);
+
+  const updateCube = (updates: Partial<CubeDescriptor>) => {
+    setCubes(cubes.map(c => c.name === selectedCube ? { ...c, ...updates } : c));
+  };
 
   const addMeasure = () => {
     if (!cube) return;
@@ -85,11 +105,22 @@ export default function CubeConfigurator() {
       type: "count",
       title: "New Measure",
     };
-    setCubes(cubes.map(c =>
-      c.name === selectedCube
-        ? { ...c, measures: [...(c.measures || []), newMeasure] }
-        : c
-    ));
+    updateCube({ measures: [...(cube.measures || []), newMeasure] });
+  };
+
+  const updateMeasure = (index: number, updates: Partial<MeasureDescriptor>) => {
+    if (!cube) return;
+    const measures = [...(cube.measures || [])];
+    measures[index] = { ...measures[index], ...updates };
+    updateCube({ measures });
+  };
+
+  const deleteMeasure = (index: number) => {
+    if (!cube) return;
+    const measures = [...(cube.measures || [])];
+    measures.splice(index, 1);
+    updateCube({ measures });
+    setEditingItem(null);
   };
 
   const addDimension = () => {
@@ -100,11 +131,22 @@ export default function CubeConfigurator() {
       type: "string",
       title: "New Dimension",
     };
-    setCubes(cubes.map(c =>
-      c.name === selectedCube
-        ? { ...c, dimensions: [...(c.dimensions || []), newDimension] }
-        : c
-    ));
+    updateCube({ dimensions: [...(cube.dimensions || []), newDimension] });
+  };
+
+  const updateDimension = (index: number, updates: Partial<DimensionDescriptor>) => {
+    if (!cube) return;
+    const dimensions = [...(cube.dimensions || [])];
+    dimensions[index] = { ...dimensions[index], ...updates };
+    updateCube({ dimensions });
+  };
+
+  const deleteDimension = (index: number) => {
+    if (!cube) return;
+    const dimensions = [...(cube.dimensions || [])];
+    dimensions.splice(index, 1);
+    updateCube({ dimensions });
+    setEditingItem(null);
   };
 
   const addJoin = () => {
@@ -114,11 +156,62 @@ export default function CubeConfigurator() {
       relationship: "belongsTo",
       on: "table.id = other.id",
     };
-    setCubes(cubes.map(c =>
-      c.name === selectedCube
-        ? { ...c, joins: [...(c.joins || []), newJoin] }
-        : c
-    ));
+    updateCube({ joins: [...(cube.joins || []), newJoin] });
+  };
+
+  const updateJoin = (index: number, updates: Partial<JoinDescriptor>) => {
+    if (!cube) return;
+    const joins = [...(cube.joins || [])];
+    joins[index] = { ...joins[index], ...updates };
+    updateCube({ joins });
+  };
+
+  const deleteJoin = (index: number) => {
+    if (!cube) return;
+    const joins = [...(cube.joins || [])];
+    joins.splice(index, 1);
+    updateCube({ joins });
+    setEditingItem(null);
+  };
+
+  const addSegment = () => {
+    if (!cube) return;
+    const newSegment: SegmentDescriptor = {
+      name: "newSegment",
+      expression: "column = 'value'",
+      title: "New Segment",
+    };
+    updateCube({ segments: [...(cube.segments || []), newSegment] });
+  };
+
+  const updateSegment = (index: number, updates: Partial<SegmentDescriptor>) => {
+    if (!cube) return;
+    const segments = [...(cube.segments || [])];
+    segments[index] = { ...segments[index], ...updates };
+    updateCube({ segments });
+  };
+
+  const deleteSegment = (index: number) => {
+    if (!cube) return;
+    const segments = [...(cube.segments || [])];
+    segments.splice(index, 1);
+    updateCube({ segments });
+    setEditingItem(null);
+  };
+
+  const addNewCube = () => {
+    const newCube: CubeDescriptor = {
+      name: "newCube",
+      table: "schema.table",
+      title: "New Cube",
+      description: "Description",
+      measures: [],
+      dimensions: [],
+      joins: [],
+      segments: [],
+    };
+    setCubes([...cubes, newCube]);
+    setSelectedCube(newCube.name);
   };
 
   return (
@@ -137,7 +230,6 @@ export default function CubeConfigurator() {
         display: "flex",
         flexDirection: "column",
       }}>
-        {/* Header */}
         <div style={{
           padding: "20px",
           backgroundColor: "#1f2c33",
@@ -155,7 +247,6 @@ export default function CubeConfigurator() {
             </h1>
           </div>
 
-          {/* Search */}
           <div style={{
             display: "flex",
             alignItems: "center",
@@ -182,7 +273,6 @@ export default function CubeConfigurator() {
           </div>
         </div>
 
-        {/* Cube List */}
         <div style={{
           flex: 1,
           overflowY: "auto",
@@ -200,16 +290,6 @@ export default function CubeConfigurator() {
                 marginBottom: "4px",
                 transition: "background-color 0.2s",
                 border: selectedCube === c.name ? "1px solid #00a884" : "1px solid transparent",
-              }}
-              onMouseEnter={(e) => {
-                if (selectedCube !== c.name) {
-                  e.currentTarget.style.backgroundColor = "#1f2c33";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedCube !== c.name) {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                }
               }}
             >
               <div style={{
@@ -231,26 +311,27 @@ export default function CubeConfigurator() {
           ))}
         </div>
 
-        {/* Add Cube Button */}
         <div style={{
           padding: "16px",
           borderTop: "1px solid #2a2f32",
         }}>
-          <button style={{
-            width: "100%",
-            padding: "12px",
-            backgroundColor: "#00a884",
-            border: "none",
-            borderRadius: "8px",
-            color: "#fff",
-            fontSize: "14px",
-            fontWeight: "500",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "8px",
-          }}>
+          <button
+            onClick={addNewCube}
+            style={{
+              width: "100%",
+              padding: "12px",
+              backgroundColor: "#00a884",
+              border: "none",
+              borderRadius: "8px",
+              color: "#fff",
+              fontSize: "14px",
+              fontWeight: "500",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+            }}>
             <Plus size={18} />
             New Cube
           </button>
@@ -266,7 +347,6 @@ export default function CubeConfigurator() {
       }}>
         {cube ? (
           <>
-            {/* Cube Header */}
             <div style={{
               padding: "24px 32px",
               backgroundColor: "#1f2c33",
@@ -278,25 +358,21 @@ export default function CubeConfigurator() {
                 justifyContent: "space-between",
                 marginBottom: "12px",
               }}>
-                <h2 style={{ fontSize: "24px", fontWeight: "600", margin: 0 }}>
-                  {cube.title || cube.name}
-                </h2>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <button style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#2a3942",
+                <input
+                  type="text"
+                  value={cube.title || cube.name}
+                  onChange={(e) => updateCube({ title: e.target.value })}
+                  style={{
+                    fontSize: "24px",
+                    fontWeight: "600",
+                    backgroundColor: "transparent",
                     border: "none",
-                    borderRadius: "6px",
+                    outline: "none",
                     color: "#e9edef",
-                    fontSize: "13px",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                  }}>
-                    <Edit2 size={14} />
-                    Edit
-                  </button>
+                    width: "60%",
+                  }}
+                />
+                <div style={{ display: "flex", gap: "8px" }}>
                   <button style={{
                     padding: "8px 16px",
                     backgroundColor: "#00a884",
@@ -315,29 +391,44 @@ export default function CubeConfigurator() {
                   </button>
                 </div>
               </div>
-              <div style={{ fontSize: "14px", color: "#8696a0" }}>
-                {cube.description}
-              </div>
-              <div style={{
-                marginTop: "12px",
-                padding: "8px 12px",
-                backgroundColor: "#0b141a",
-                borderRadius: "6px",
-                fontSize: "13px",
-                fontFamily: "monospace",
-                color: "#00a884",
-              }}>
-                {cube.table}
-              </div>
+              <input
+                type="text"
+                value={cube.description || ""}
+                onChange={(e) => updateCube({ description: e.target.value })}
+                placeholder="Description..."
+                style={{
+                  fontSize: "14px",
+                  color: "#8696a0",
+                  backgroundColor: "transparent",
+                  border: "none",
+                  outline: "none",
+                  width: "100%",
+                  marginBottom: "12px",
+                }}
+              />
+              <input
+                type="text"
+                value={cube.table}
+                onChange={(e) => updateCube({ table: e.target.value })}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  backgroundColor: "#0b141a",
+                  border: "1px solid #2a2f32",
+                  borderRadius: "6px",
+                  fontSize: "13px",
+                  fontFamily: "monospace",
+                  color: "#00a884",
+                  outline: "none",
+                }}
+              />
             </div>
 
-            {/* Content Sections */}
             <div style={{
               flex: 1,
               overflowY: "auto",
               padding: "24px 32px",
             }}>
-              {/* Measures Section */}
               <Section
                 title="Measures"
                 icon={<BarChart3 size={18} />}
@@ -347,11 +438,18 @@ export default function CubeConfigurator() {
                 onAdd={addMeasure}
               >
                 {cube.measures?.map((measure, idx) => (
-                  <MeasureCard key={idx} measure={measure} />
+                  <MeasureCard
+                    key={idx}
+                    measure={measure}
+                    isEditing={editingItem?.type === "measure" && editingItem?.index === idx}
+                    onEdit={() => setEditingItem({ type: "measure", index: idx })}
+                    onSave={() => setEditingItem(null)}
+                    onDelete={() => deleteMeasure(idx)}
+                    onChange={(updates: Partial<MeasureDescriptor>) => updateMeasure(idx, updates)}
+                  />
                 ))}
               </Section>
 
-              {/* Dimensions Section */}
               <Section
                 title="Dimensions"
                 icon={<Filter size={18} />}
@@ -361,11 +459,18 @@ export default function CubeConfigurator() {
                 onAdd={addDimension}
               >
                 {cube.dimensions?.map((dimension, idx) => (
-                  <DimensionCard key={idx} dimension={dimension} />
+                  <DimensionCard
+                    key={idx}
+                    dimension={dimension}
+                    isEditing={editingItem?.type === "dimension" && editingItem?.index === idx}
+                    onEdit={() => setEditingItem({ type: "dimension", index: idx })}
+                    onSave={() => setEditingItem(null)}
+                    onDelete={() => deleteDimension(idx)}
+                    onChange={(updates: Partial<DimensionDescriptor>) => updateDimension(idx, updates)}
+                  />
                 ))}
               </Section>
 
-              {/* Joins Section */}
               <Section
                 title="Joins"
                 icon={<Link size={18} />}
@@ -375,7 +480,36 @@ export default function CubeConfigurator() {
                 onAdd={addJoin}
               >
                 {cube.joins?.map((join, idx) => (
-                  <JoinCard key={idx} join={join} />
+                  <JoinCard
+                    key={idx}
+                    join={join}
+                    isEditing={editingItem?.type === "join" && editingItem?.index === idx}
+                    onEdit={() => setEditingItem({ type: "join", index: idx })}
+                    onSave={() => setEditingItem(null)}
+                    onDelete={() => deleteJoin(idx)}
+                    onChange={(updates: Partial<JoinDescriptor>) => updateJoin(idx, updates)}
+                  />
+                ))}
+              </Section>
+
+              <Section
+                title="Segments"
+                icon={<Tag size={18} />}
+                count={cube.segments?.length || 0}
+                expanded={expandedSections.segments}
+                onToggle={() => toggleSection("segments")}
+                onAdd={addSegment}
+              >
+                {cube.segments?.map((segment, idx) => (
+                  <SegmentCard
+                    key={idx}
+                    segment={segment}
+                    isEditing={editingItem?.type === "segment" && editingItem?.index === idx}
+                    onEdit={() => setEditingItem({ type: "segment", index: idx })}
+                    onSave={() => setEditingItem(null)}
+                    onDelete={() => deleteSegment(idx)}
+                    onChange={(updates: Partial<SegmentDescriptor>) => updateSegment(idx, updates)}
+                  />
                 ))}
               </Section>
             </div>
@@ -468,236 +602,362 @@ function Section({ title, icon, count, expanded, onToggle, onAdd, children }: an
   );
 }
 
-function MeasureCard({ measure }: { measure: MeasureDescriptor }) {
+function MeasureCard({ measure, isEditing, onEdit, onSave, onDelete, onChange }: any) {
   return (
     <div style={{
       padding: "12px 16px",
       backgroundColor: "#2a3942",
       borderRadius: "8px",
       marginBottom: "8px",
-      border: "1px solid #3b4a54",
+      border: isEditing ? "1px solid #00a884" : "1px solid #3b4a54",
     }}>
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "start",
-        marginBottom: "8px",
-      }}>
+      {isEditing ? (
         <div>
-          <div style={{ fontSize: "15px", fontWeight: "500" }}>
-            {measure.title || measure.name}
+          <Input label="Name" value={measure.name} onChange={(v: any) => onChange({ name: v })} />
+          <Input label="Title" value={measure.title || ""} onChange={(v: any) => onChange({ title: v })} />
+          <Select
+            label="Type"
+            value={measure.type}
+            options={["count", "countDistinct", "sum", "avg", "min", "max"]}
+            onChange={(v: any) => onChange({ type: v })}
+          />
+          <Input label="Column" value={measure.column || ""} onChange={(v: any) => onChange({ column: v })} />
+          <Input label="Expression" value={measure.expression || ""} onChange={(v: any) => onChange({ expression: v })} />
+          <Input label="Description" value={measure.description || ""} onChange={(v: any) => onChange({ description: v })} />
+          <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+            <button onClick={onSave} style={btnStyle("#00a884")}>
+              <Save size={14} /> Save
+            </button>
+            <button onClick={onDelete} style={btnStyle("#ea4335")}>
+              <Trash2 size={14} /> Delete
+            </button>
           </div>
+        </div>
+      ) : (
+        <div>
           <div style={{
-            fontSize: "12px",
-            color: "#8696a0",
-            fontFamily: "monospace",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "start",
+            marginBottom: "8px",
           }}>
-            {measure.name}
+            <div>
+              <div style={{ fontSize: "15px", fontWeight: "500" }}>
+                {measure.title || measure.name}
+              </div>
+              <div style={{ fontSize: "12px", color: "#8696a0", fontFamily: "monospace" }}>
+                {measure.name}
+              </div>
+            </div>
+            <button onClick={onEdit} style={{
+              padding: "4px 8px",
+              backgroundColor: "#3b4a54",
+              border: "none",
+              borderRadius: "4px",
+              color: "#e9edef",
+              cursor: "pointer",
+            }}>
+              <Edit2 size={12} />
+            </button>
+          </div>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <span style={tagStyle("#00a884")}>{measure.type}</span>
+            {measure.column && <span style={tagStyle("#005c4b")}>{measure.column}</span>}
           </div>
         </div>
-        <div style={{ display: "flex", gap: "6px" }}>
-          <button style={{
-            padding: "4px 8px",
-            backgroundColor: "#3b4a54",
-            border: "none",
-            borderRadius: "4px",
-            color: "#e9edef",
-            cursor: "pointer",
-          }}>
-            <Edit2 size={12} />
-          </button>
-          <button style={{
-            padding: "4px 8px",
-            backgroundColor: "#3b4a54",
-            border: "none",
-            borderRadius: "4px",
-            color: "#ea4335",
-            cursor: "pointer",
-          }}>
-            <Trash2 size={12} />
-          </button>
-        </div>
-      </div>
-      <div style={{
-        display: "flex",
-        gap: "8px",
-        flexWrap: "wrap",
-      }}>
-        <span style={{
-          padding: "4px 10px",
-          backgroundColor: "#00a884",
-          borderRadius: "12px",
-          fontSize: "11px",
-          fontWeight: "500",
-        }}>
-          {measure.type}
-        </span>
-        {measure.column && (
-          <span style={{
-            padding: "4px 10px",
-            backgroundColor: "#005c4b",
-            borderRadius: "12px",
-            fontSize: "11px",
-            fontFamily: "monospace",
-          }}>
-            {measure.column}
-          </span>
-        )}
-      </div>
+      )}
     </div>
   );
 }
 
-function DimensionCard({ dimension }: { dimension: DimensionDescriptor }) {
+function DimensionCard({ dimension, isEditing, onEdit, onSave, onDelete, onChange }: any) {
   return (
     <div style={{
       padding: "12px 16px",
       backgroundColor: "#2a3942",
       borderRadius: "8px",
       marginBottom: "8px",
-      border: "1px solid #3b4a54",
+      border: isEditing ? "1px solid #00a884" : "1px solid #3b4a54",
     }}>
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "start",
-        marginBottom: "8px",
-      }}>
+      {isEditing ? (
         <div>
-          <div style={{ fontSize: "15px", fontWeight: "500" }}>
-            {dimension.title || dimension.name}
+          <Input label="Name" value={dimension.name} onChange={(v: any) => onChange({ name: v })} />
+          <Input label="Title" value={dimension.title || ""} onChange={(v: any) => onChange({ title: v })} />
+          <Input label="Column" value={dimension.column} onChange={(v: any) => onChange({ column: v })} />
+          <Select
+            label="Type"
+            value={dimension.type}
+            options={["string", "number", "time", "boolean"]}
+            onChange={(v: any) => onChange({ type: v })}
+          />
+          <Input label="Description" value={dimension.description || ""} onChange={(v: any) => onChange({ description: v })} />
+          <Checkbox
+            label="Primary Key"
+            checked={dimension.primaryKey || false}
+            onChange={(v: any) => onChange({ primaryKey: v })}
+          />
+          <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+            <button onClick={onSave} style={btnStyle("#00a884")}>
+              <Save size={14} /> Save
+            </button>
+            <button onClick={onDelete} style={btnStyle("#ea4335")}>
+              <Trash2 size={14} /> Delete
+            </button>
           </div>
+        </div>
+      ) : (
+        <div>
           <div style={{
-            fontSize: "12px",
-            color: "#8696a0",
-            fontFamily: "monospace",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "start",
+            marginBottom: "8px",
           }}>
-            {dimension.name}
+            <div>
+              <div style={{ fontSize: "15px", fontWeight: "500" }}>
+                {dimension.title || dimension.name}
+              </div>
+              <div style={{ fontSize: "12px", color: "#8696a0", fontFamily: "monospace" }}>
+                {dimension.name}
+              </div>
+            </div>
+            <button onClick={onEdit} style={{
+              padding: "4px 8px",
+              backgroundColor: "#3b4a54",
+              border: "none",
+              borderRadius: "4px",
+              color: "#e9edef",
+              cursor: "pointer",
+            }}>
+              <Edit2 size={12} />
+            </button>
+          </div>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+            <span style={tagStyle("#4a90e2")}>{dimension.type}</span>
+            <span style={tagStyle("#005c4b")}>{dimension.column}</span>
+            {dimension.primaryKey && <span style={tagStyle("#8b5cf6")}>PRIMARY KEY</span>}
           </div>
         </div>
-        <div style={{ display: "flex", gap: "6px" }}>
-          <button style={{
-            padding: "4px 8px",
-            backgroundColor: "#3b4a54",
-            border: "none",
-            borderRadius: "4px",
-            color: "#e9edef",
-            cursor: "pointer",
-          }}>
-            <Edit2 size={12} />
-          </button>
-          <button style={{
-            padding: "4px 8px",
-            backgroundColor: "#3b4a54",
-            border: "none",
-            borderRadius: "4px",
-            color: "#ea4335",
-            cursor: "pointer",
-          }}>
-            <Trash2 size={12} />
-          </button>
-        </div>
-      </div>
-      <div style={{
-        display: "flex",
-        gap: "8px",
-        flexWrap: "wrap",
-        alignItems: "center",
-      }}>
-        <span style={{
-          padding: "4px 10px",
-          backgroundColor: "#4a90e2",
-          borderRadius: "12px",
-          fontSize: "11px",
-          fontWeight: "500",
-        }}>
-          {dimension.type}
-        </span>
-        <span style={{
-          padding: "4px 10px",
-          backgroundColor: "#005c4b",
-          borderRadius: "12px",
-          fontSize: "11px",
-          fontFamily: "monospace",
-        }}>
-          {dimension.column}
-        </span>
-        {dimension.primaryKey && (
-          <span style={{
-            padding: "4px 10px",
-            backgroundColor: "#8b5cf6",
-            borderRadius: "12px",
-            fontSize: "11px",
-            fontWeight: "500",
-          }}>
-            PRIMARY KEY
-          </span>
-        )}
-      </div>
+      )}
     </div>
   );
 }
 
-function JoinCard({ join }: { join: JoinDescriptor }) {
+function JoinCard({ join, isEditing, onEdit, onSave, onDelete, onChange }: any) {
   return (
     <div style={{
       padding: "12px 16px",
       backgroundColor: "#2a3942",
       borderRadius: "8px",
       marginBottom: "8px",
-      border: "1px solid #3b4a54",
+      border: isEditing ? "1px solid #00a884" : "1px solid #3b4a54",
     }}>
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "start",
-        marginBottom: "8px",
-      }}>
+      {isEditing ? (
         <div>
-          <div style={{ fontSize: "15px", fontWeight: "500" }}>
-            {join.name}
+          <Input label="Name" value={join.name} onChange={(v: any) => onChange({ name: v })} />
+          <Select
+            label="Relationship"
+            value={join.relationship}
+            options={["belongsTo", "hasMany", "hasOne"]}
+            onChange={(v: any) => onChange({ relationship: v })}
+          />
+          <Input label="On" value={join.on} onChange={(v: any) => onChange({ on: v })} />
+          <Input label="Relation Mapping ID" value={join.relationMappingId || ""} onChange={(v: any) => onChange({ relationMappingId: v })} />
+          <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+            <button onClick={onSave} style={btnStyle("#00a884")}>
+              <Save size={14} /> Save
+            </button>
+            <button onClick={onDelete} style={btnStyle("#ea4335")}>
+              <Trash2 size={14} /> Delete
+            </button>
           </div>
+        </div>
+      ) : (
+        <div>
           <div style={{
-            fontSize: "12px",
-            color: "#8696a0",
-            fontFamily: "monospace",
-            marginTop: "4px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "start",
+            marginBottom: "8px",
           }}>
-            {join.on}
+            <div>
+              <div style={{ fontSize: "15px", fontWeight: "500" }}>
+                {join.name}
+              </div>
+              <div style={{ fontSize: "12px", color: "#8696a0", fontFamily: "monospace", marginTop: "4px" }}>
+                {join.on}
+              </div>
+            </div>
+            <button onClick={onEdit} style={{
+              padding: "4px 8px",
+              backgroundColor: "#3b4a54",
+              border: "none",
+              borderRadius: "4px",
+              color: "#e9edef",
+              cursor: "pointer",
+            }}>
+              <Edit2 size={12} />
+            </button>
           </div>
+          <span style={tagStyle("#f59e0b")}>{join.relationship}</span>
         </div>
-        <div style={{ display: "flex", gap: "6px" }}>
-          <button style={{
-            padding: "4px 8px",
-            backgroundColor: "#3b4a54",
-            border: "none",
-            borderRadius: "4px",
-            color: "#e9edef",
-            cursor: "pointer",
-          }}>
-            <Edit2 size={12} />
-          </button>
-          <button style={{
-            padding: "4px 8px",
-            backgroundColor: "#3b4a54",
-            border: "none",
-            borderRadius: "4px",
-            color: "#ea4335",
-            cursor: "pointer",
-          }}>
-            <Trash2 size={12} />
-          </button>
-        </div>
-      </div>
-      <span style={{
-        padding: "4px 10px",
-        backgroundColor: "#f59e0b",
-        borderRadius: "12px",
-        fontSize: "11px",
-        fontWeight: "500",
-      }}>
-        {join.relationship}
-      </span>
+      )}
     </div>
   );
+}
+
+function SegmentCard({ segment, isEditing, onEdit, onSave, onDelete, onChange }: any) {
+  return (
+    <div style={{
+      padding: "12px 16px",
+      backgroundColor: "#2a3942",
+      borderRadius: "8px",
+      marginBottom: "8px",
+      border: isEditing ? "1px solid #00a884" : "1px solid #3b4a54",
+    }}>
+      {isEditing ? (
+        <div>
+          <Input label="Name" value={segment.name} onChange={(v: any) => onChange({ name: v })} />
+          <Input label="Title" value={segment.title || ""} onChange={(v: any) => onChange({ title: v })} />
+          <Input label="Expression" value={segment.expression} onChange={(v: any) => onChange({ expression: v })} />
+          <Input label="Description" value={segment.description || ""} onChange={(v: any) => onChange({ description: v })} />
+          <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+            <button onClick={onSave} style={btnStyle("#00a884")}>
+              <Save size={14} /> Save
+            </button>
+            <button onClick={onDelete} style={btnStyle("#ea4335")}>
+              <Trash2 size={14} /> Delete
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "start",
+            marginBottom: "8px",
+          }}>
+            <div>
+              <div style={{ fontSize: "15px", fontWeight: "500" }}>
+                {segment.title || segment.name}
+              </div>
+              <div style={{ fontSize: "12px", color: "#8696a0", fontFamily: "monospace", marginTop: "4px" }}>
+                {segment.expression}
+              </div>
+            </div>
+            <button onClick={onEdit} style={{
+              padding: "4px 8px",
+              backgroundColor: "#3b4a54",
+              border: "none",
+              borderRadius: "4px",
+              color: "#e9edef",
+              cursor: "pointer",
+            }}>
+              <Edit2 size={12} />
+            </button>
+          </div>
+          <span style={tagStyle("#10b981")}>segment</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Helper Components
+function Input({ label, value, onChange }: any) {
+  return (
+    <div style={{ marginBottom: "12px" }}>
+      <label style={{ display: "block", fontSize: "12px", color: "#8696a0", marginBottom: "4px" }}>
+        {label}
+      </label>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "8px 12px",
+          backgroundColor: "#1f2c33",
+          border: "1px solid #3b4a54",
+          borderRadius: "6px",
+          color: "#e9edef",
+          fontSize: "13px",
+          outline: "none",
+        }}
+      />
+    </div>
+  );
+}
+
+function Select({ label, value, options, onChange }: any) {
+  return (
+    <div style={{ marginBottom: "12px" }}>
+      <label style={{ display: "block", fontSize: "12px", color: "#8696a0", marginBottom: "4px" }}>
+        {label}
+      </label>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "8px 12px",
+          backgroundColor: "#1f2c33",
+          border: "1px solid #3b4a54",
+          borderRadius: "6px",
+          color: "#e9edef",
+          fontSize: "13px",
+          outline: "none",
+          cursor: "pointer",
+        }}
+      >
+        {options.map((opt: string) => (
+          <option key={opt} value={opt}>{opt}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+function Checkbox({ label, checked, onChange }: any) {
+  return (
+    <div style={{ marginBottom: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        style={{ cursor: "pointer" }}
+      />
+      <label style={{ fontSize: "13px", color: "#e9edef", cursor: "pointer" }}>
+        {label}
+      </label>
+    </div>
+  );
+}
+
+function btnStyle(bg: string) {
+  return {
+    padding: "8px 16px",
+    backgroundColor: bg,
+    border: "none",
+    borderRadius: "6px",
+    color: "#fff",
+    fontSize: "13px",
+    fontWeight: "500" as const,
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+  };
+}
+
+function tagStyle(bg: string) {
+  return {
+    padding: "4px 10px",
+    backgroundColor: bg,
+    borderRadius: "12px",
+    fontSize: "11px",
+    fontWeight: "500" as const,
+    fontFamily: bg.includes("#005c4b") ? "monospace" : "inherit",
+  };
 }
