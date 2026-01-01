@@ -41,7 +41,7 @@ export function SearchModelPanel({
       type: newType(selectedType),
       mandatory: false,
       default: false,
-      operators: getDefaultOperatorsForType(newType(selectedType)),
+      //operators: getDefaultOperatorsForType(newType(selectedType)),
     };
 
     const updated = [...criteria, newCriterion];

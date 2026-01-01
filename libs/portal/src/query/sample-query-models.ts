@@ -3,10 +3,7 @@
  */
 
 import {
-  QueryModel,
-  SearchCriterion,
-  CommonOperators,
-  getDefaultOperatorsForType,
+  QueryModel
 } from "./query-model";
 import {string, number, integer, boolean as boolType, date} from "@portal/validation";
 
@@ -23,12 +20,6 @@ export const CustomerQueryModel: QueryModel = {
       type: integer("customerId").toJSON(),
       mandatory: false,
       default: false,
-      operators: [
-        CommonOperators.EQUALS,
-        CommonOperators.NOT_EQUALS,
-        CommonOperators.GREATER_THAN,
-        CommonOperators.LESS_THAN,
-      ],
     },
     {
       name: "customerName",
@@ -37,12 +28,6 @@ export const CustomerQueryModel: QueryModel = {
       type: string("customerName").toJSON(),
       mandatory: false,
       default: true,
-      operators: [
-        CommonOperators.EQUALS,
-        CommonOperators.CONTAINS,
-        CommonOperators.STARTS_WITH,
-        CommonOperators.ENDS_WITH,
-      ],
     },
     {
       name: "country",
@@ -50,8 +35,7 @@ export const CustomerQueryModel: QueryModel = {
       path: "customer.country",
       type: string("country").toJSON(),
       mandatory: false,
-      default: false,
-      operators: [CommonOperators.EQUALS, CommonOperators.NOT_EQUALS, CommonOperators.CONTAINS],
+      default: false
     },
     {
       name: "registrationDate",
@@ -59,13 +43,7 @@ export const CustomerQueryModel: QueryModel = {
       path: "customer.registrationDate",
       type: date("registrationDate").toJSON(),
       mandatory: false,
-      default: false,
-      operators: [
-        CommonOperators.EQUALS,
-        CommonOperators.GREATER_THAN,
-        CommonOperators.LESS_THAN,
-        CommonOperators.BETWEEN,
-      ],
+      default: false
     },
     {
       name: "active",
@@ -73,8 +51,7 @@ export const CustomerQueryModel: QueryModel = {
       path: "customer.active",
       type: boolType("active"),
       mandatory: false,
-      default: false,
-      operators: [CommonOperators.EQUALS],
+      default: false
     },
   ],
   resultColumns: [
@@ -131,7 +108,6 @@ export const OrderQueryModel: QueryModel = {
       type: integer("orderId").toJSON(),
       mandatory: false,
       default: false,
-      operators: getDefaultOperatorsForType(integer()),
     },
     {
       name: "orderNumber",
@@ -140,7 +116,6 @@ export const OrderQueryModel: QueryModel = {
       type: string("orderNumber").toJSON(),
       mandatory: false,
       default: true,
-      operators: getDefaultOperatorsForType(string()),
     },
     {
       name: "orderDate",
@@ -149,7 +124,6 @@ export const OrderQueryModel: QueryModel = {
       type: date("orderDate").toJSON(),
       mandatory: false,
       default: false,
-      operators: getDefaultOperatorsForType(date()),
     },
     {
       name: "totalAmount",
@@ -158,7 +132,6 @@ export const OrderQueryModel: QueryModel = {
       type: number("totalAmount").toJSON(),
       mandatory: false,
       default: false,
-      operators: getDefaultOperatorsForType(number()),
     },
     {
       name: "status",
@@ -167,7 +140,6 @@ export const OrderQueryModel: QueryModel = {
       type: string("status").toJSON(),
       mandatory: false,
       default: false,
-      operators: [CommonOperators.EQUALS, CommonOperators.NOT_EQUALS],
     },
   ],
   resultColumns: [
@@ -224,7 +196,6 @@ export const ProductQueryModel: QueryModel = {
       type: integer("productId").toJSON(),
       mandatory: false,
       default: false,
-      operators: getDefaultOperatorsForType(integer()),
     },
     {
       name: "productName",
@@ -233,7 +204,6 @@ export const ProductQueryModel: QueryModel = {
       type: string("productName").toJSON(),
       mandatory: false,
       default: true,
-      operators: getDefaultOperatorsForType(string()),
     },
     {
       name: "category",
@@ -242,7 +212,6 @@ export const ProductQueryModel: QueryModel = {
       type: string("category").toJSON(),
       mandatory: false,
       default: false,
-      operators: getDefaultOperatorsForType(string()),
     },
     {
       name: "price",
@@ -251,7 +220,6 @@ export const ProductQueryModel: QueryModel = {
       type: number("price"),
       mandatory: false,
       default: false,
-      operators: getDefaultOperatorsForType(number()),
     },
     {
       name: "inStock",
@@ -260,7 +228,6 @@ export const ProductQueryModel: QueryModel = {
       type: boolType("inStock").toJSON(),
       mandatory: false,
       default: false,
-      operators: [CommonOperators.EQUALS],
     },
   ],
   resultColumns: [

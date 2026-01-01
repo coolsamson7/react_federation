@@ -28,9 +28,25 @@ export class SearchPanelWidgetBuilder extends WidgetBuilder<SearchPanelWidgetDat
     const typeRegistry = container.resolve(TypeRegistry);
     const widgetFactory = container.resolve(WidgetFactory);
 
-    console.log("####### serach oabel ")
+    // Fix nested search panel bug
+    if (data.searchModel && (data.searchModel as any).type === 'search-panel') {
+      console.warn('[SearchPanel] Fixing nested search panel structure');
+      const nestedPanel = data.searchModel as any;
+      data.searchModel = nestedPanel.searchModel;
+      data.predefinedQuery = nestedPanel.predefinedQuery;
+    }
 
-      console.log(data)
+    console.log("####### Search Panel Data Structure:");
+    console.log('- data.searchModel type:', typeof data.searchModel);
+    console.log('- data.searchModel:', data.searchModel);
+    console.log('- data.predefinedQuery:', data.predefinedQuery);
+
+    // Check if searchModel is actually a widget instead of a SearchModel
+    if (data.searchModel && (data.searchModel as any).type === 'search-panel') {
+      console.error('⚠️ FOUND THE BUG: searchModel contains a nested search-panel widget!');
+      console.error('Expected: SearchModel object');
+      console.error('Got:', data.searchModel);
+    }
 
     return (
       <SearchPanelProvider
@@ -57,11 +73,11 @@ export class SearchPanelWidgetBuilder extends WidgetBuilder<SearchPanelWidgetDat
             </h3>
           )}
 
-          {data.searchModel && (
+          {data.searchModel && data.searchModel.criteria && (
             <ChipSearchPanel
-              criteria={data.searchModel.criteria || []} // searchModel
-              queryExpression={data.predefinedQuery || null} // searchModel
-              onQueryExpressionChange={() => {}} 
+              criteria={data.searchModel.criteria}
+              queryExpression={data.predefinedQuery || null}
+              onQueryExpressionChange={() => {}}
               onSearch={this.handleSearch}
             />
           )}

@@ -1,5 +1,12 @@
 import React, { useState, useMemo } from "react";
-import { SearchCriterion, SearchOperator, QueryExpression, getEffectiveType } from "../query-model";
+import {
+    SearchCriterion,
+    SearchOperator,
+    QueryExpression,
+    getEffectiveType,
+    OperatorFactory,
+    getOperatorsForCriterion
+} from "../query-model";
 import { Type } from "@portal/validation";
 
 interface ChipSearchPanelProps {
@@ -91,12 +98,15 @@ export const ChipSearchPanel = React.memo(({
     
     if (criterion) {
       console.log('[ChipSearchPanel] Found criterion:', criterion);
+
+      let operators = getOperatorsForCriterion(criterion);
+      let operator = operators[0];
       
       const newLiteral = {
         type: "literal",
         criterionName: criterionName,
-        operatorName: criterion.operators[0]?.name || "equals",
-        operandValues: new Array(criterion.operators[0]?.operandCount || 1).fill("")
+        operatorName:  operator.name,
+        operandValues: new Array(operator.operandCount || 1).fill("") // TODO FIX -> type!
       };
       
       console.log('[ChipSearchPanel] Creating literal:', newLiteral);
@@ -344,9 +354,7 @@ export const ChipSearchPanel = React.memo(({
             const criterion = criteria.find(
               (c) => c.name === literal.criterionName
             );
-            const operator = criterion?.operators.find(
-              (op) => op.name === literal.operatorName
-            );
+            const operator = OperatorFactory.getInstance().getOperatorByName(literal.operatorName);
             const effectiveType = criterion ? getEffectiveType(criterion) : null;
 
             return (
@@ -484,11 +492,11 @@ const LiteralExpressionChip = React.memo(({
   }, [isOpen]);
   
   // Memoized operators for better performance
-  const availableOperators = React.useMemo(() => criterion?.operators || [], [criterion?.operators]);
+  const availableOperators = getOperatorsForCriterion(criterion!);// TODO React.useMemo(() => criterion?.operators || [], [criterion?.operators]);
   
   // Optimized update handlers
   const handleOperatorChange = React.useCallback((operatorName: string) => {
-    const newOperator = availableOperators.find(op => op.name === operatorName);
+    const newOperator = OperatorFactory.getInstance().getOperatorByName(operatorName);
     onUpdate({
       operatorName: operatorName,
       operandValues: new Array(newOperator?.operandCount || 0).fill(""),

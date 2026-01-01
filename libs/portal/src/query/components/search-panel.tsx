@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
 import {
-  QueryModel,
-  SearchCriterion,
-  getDefaultOperatorsForType,
-  QueryExpression,
-  createAndExpression,
-  createOrExpression,
-  createLiteralExpression,
+    QueryModel,
+    SearchCriterion,
+    getDefaultOperatorsForType,
+    QueryExpression,
+    createAndExpression,
+    createOrExpression,
+    createLiteralExpression, getOperatorsForCriterion,
 } from "../query-model";
 import { inputEditorRegistry, initializeInputEditors } from "../input-editor/input-editor-registry";
 
@@ -94,16 +94,16 @@ function SearchRowComponent({
 }) {
   const criteria: SearchCriterion[] = queryModel?.criteria || [];
   const selectedCriterion = criteria.find((c) => c.name === row.criterionName);
-  const operators = selectedCriterion?.operators || getDefaultOperatorsForType(selectedCriterion?.type);
+  const operators = getOperatorsForCriterion(selectedCriterion!);
   const selectedOperator = operators.find((op) => op.name === row.operatorName);
 
   const handleCriterionChange = (criterionName: string) => {
     const criterion = criteria.find((c) => c.name === criterionName);
-    const newOperators = criterion?.operators || getDefaultOperatorsForType(criterion?.type);
+    //const newOperators = criterion?.operators || getDefaultOperatorsForType(criterion?.type);
     onChange({
       ...row,
       criterionName,
-      operatorName: newOperators[0]?.name || "",
+      operatorName: operators[0]?.name || "",
       operandValues: [],
     });
   };

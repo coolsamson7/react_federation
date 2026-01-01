@@ -77,13 +77,223 @@ export interface SearchOperator {
 
   /** Number of operands required by this operator */
   operandCount: number;
-
-  /** Whether this operator allows passing values to another operator */
-  allowOperandValuesPassingOn?: (receiver: SearchOperator) => boolean;
-
-  /** Whether this operator allows adopting values from another operator */
-  allowOperandValuesAdoption?: (sender: SearchOperator) => boolean;
 }
+
+export abstract class AbstractSearchOperator implements SearchOperator {
+  readonly name: string;
+  readonly label: string;
+  readonly operandCount: number;
+
+  protected constructor(
+    name: string,
+    label: string,
+    operandCount: number
+  ) {
+    this.name = name;
+    this.label = label;
+    this.operandCount = operandCount;
+  }
+}
+
+// specific classes
+
+export class EQOperator extends AbstractSearchOperator {
+  static readonly INSTANCE = new EQOperator();
+
+  private constructor() {
+    super("equals", "=", 1);
+  }
+}
+
+export class NEQOperator extends AbstractSearchOperator {
+  static readonly INSTANCE = new NEQOperator();
+
+  private constructor() {
+    super("notEquals", "!=", 1);
+  }
+}
+
+export class LTOperator extends AbstractSearchOperator {
+  static readonly INSTANCE = new LTOperator();
+
+  private constructor() {
+    super("lt", "<", 1);
+  }
+}
+
+export class LEQOperator extends AbstractSearchOperator {
+  static readonly INSTANCE = new LEQOperator();
+
+  private constructor() {
+    super("leq", "<=", 1);
+  }
+}
+
+export class GTOperator extends AbstractSearchOperator {
+  static readonly INSTANCE = new GTOperator();
+
+  private constructor() {
+    super("gt", ">", 1);
+  }
+}
+
+export class GEQOperator extends AbstractSearchOperator {
+  static readonly INSTANCE = new GEQOperator();
+
+  private constructor() {
+    super("qeq", ">=", 1);
+  }
+}
+
+export class StartsWithOperator extends AbstractSearchOperator {
+  static readonly INSTANCE = new StartsWithOperator();
+
+  private constructor() {
+    super("startsWith", "starts with", 1);
+  }
+}
+
+export class EndsWithOperator extends AbstractSearchOperator {
+  static readonly INSTANCE = new EndsWithOperator();
+
+  private constructor() {
+    super("endsWith", "ends with", 1);
+  }
+}
+
+export class ContainsOperator extends AbstractSearchOperator {
+  static readonly INSTANCE = new ContainsOperator();
+
+  private constructor() {
+    super("contains", "contains", 1);
+  }
+}
+
+
+export class OperatorFactory {
+  private static instance: OperatorFactory;
+
+  static getInstance(): OperatorFactory {
+    if (!this.instance) {
+      this.instance = new OperatorFactory();
+    }
+    return this.instance;
+  }
+
+  // ----------------------------------
+  // registries
+  // ----------------------------------
+
+  /** operators registered for a concrete Type instance */
+  private readonly byType = new Map<Type<any>, SearchOperator[]>();
+
+  /** operators registered for a base type ("string", "number", …) */
+  readonly byBaseType = new Map<string, SearchOperator[]>();
+
+  /** lookup by operator name ("equals", "lt", …) */
+  private readonly byName = new Map<string, SearchOperator>();
+
+  /** fallback */
+  private readonly defaultOperators: SearchOperator[] = [];
+
+  private constructor() {
+    this.registerDefaults();
+  }
+
+  // ----------------------------------
+  // internal helpers
+  // ----------------------------------
+
+  private autoRegisterNames(operators: SearchOperator[]) {
+    for (const op of operators) {
+      // first wins (singleton semantics)
+      if (!this.byName.has(op.name)) {
+        this.byName.set(op.name, op);
+      }
+    }
+  }
+
+  // ----------------------------------
+  // defaults
+  // ----------------------------------
+
+  private registerDefaults() {
+    // string
+    this.registerBaseType("string", [
+      EQOperator.INSTANCE,
+      NEQOperator.INSTANCE,
+      StartsWithOperator.INSTANCE,
+      EndsWithOperator.INSTANCE,
+      ContainsOperator.INSTANCE
+    ]);
+
+    // number-like
+    const numberOps = [
+      EQOperator.INSTANCE,
+      NEQOperator.INSTANCE,
+      LTOperator.INSTANCE,
+      LEQOperator.INSTANCE,
+      GTOperator.INSTANCE,
+      GEQOperator.INSTANCE
+    ];
+
+    this.registerBaseType("number", numberOps);
+    this.registerBaseType("integer", numberOps);
+    this.registerBaseType("float", numberOps);
+    this.registerBaseType("double", numberOps);
+
+    // boolean
+    this.registerBaseType("boolean", [
+      EQOperator.INSTANCE,
+      NEQOperator.INSTANCE
+    ]);
+  }
+
+  // ----------------------------------
+  // registration API
+  // ----------------------------------
+
+  /** register operators for a concrete Type */
+  registerType(type: Type<any>, operators: SearchOperator[]) {
+    this.byType.set(type, operators);
+    this.autoRegisterNames(operators);
+  }
+
+  /** register operators for a base type */
+  registerBaseType(baseType: string, operators: SearchOperator[]) {
+    this.byBaseType.set(baseType, operators);
+    this.autoRegisterNames(operators);
+  }
+
+  // ----------------------------------
+  // lookup
+  // ----------------------------------
+
+  /** lookup operators by Type (with baseType fallback) */
+  getOperators(type: Type<any>): SearchOperator[] {
+    const direct = this.byType.get(type);
+    if (direct) return direct;
+
+    const base = this.byBaseType.get(type.baseType);
+    if (base) return base;
+
+    return this.defaultOperators;
+  }
+
+  /** lookup a single operator by name */
+  getOperatorByName(name: string): SearchOperator | undefined {
+    return this.byName.get(name);
+  }
+
+  /** lookup multiple operators by name (preserves order) */
+  getOperatorsByName(names: string[]): SearchOperator[] {
+    return names
+      .map(n => this.byName.get(n))
+      .filter((op): op is SearchOperator => op !== undefined);
+  }
+}
+
+
 
 // ============================================================================
 // Search Criterion
@@ -115,7 +325,7 @@ export interface SearchCriterion {
   default: boolean;
 
   /** Available operators for this criterion */
-  operators: SearchOperator[]; // TODO OperatorFactory!
+  operators?: string[];
 }
 
 // ============================================================================
@@ -259,31 +469,6 @@ export function expressionToString(expr: QueryExpression): string {
   }
 }
 
-// ============================================================================
-// Common Operators
-// ============================================================================
-
-export const CommonOperators = {
-  // String operators
-  EQUALS: { name: "equals", label: "equals", operandCount: 1 } as SearchOperator,
-  NOT_EQUALS: { name: "notEquals", label: "not equals", operandCount: 1 } as SearchOperator,
-  CONTAINS: { name: "contains", label: "contains", operandCount: 1 } as SearchOperator,
-  STARTS_WITH: { name: "startsWith", label: "starts with", operandCount: 1 } as SearchOperator,
-  ENDS_WITH: { name: "endsWith", label: "ends with", operandCount: 1 } as SearchOperator,
-
-  // Numeric operators
-  GREATER_THAN: { name: "greaterThan", label: ">", operandCount: 1 } as SearchOperator,
-  GREATER_THAN_OR_EQUAL: { name: "greaterThanOrEqual", label: ">=", operandCount: 1 } as SearchOperator,
-  LESS_THAN: { name: "lessThan", label: "<", operandCount: 1 } as SearchOperator,
-  LESS_THAN_OR_EQUAL: { name: "lessThanOrEqual", label: "<=", operandCount: 1 } as SearchOperator,
-
-  // Range operators
-  BETWEEN: { name: "between", label: "between", operandCount: 2 } as SearchOperator,
-
-  // Null operators
-  IS_NULL: { name: "isNull", label: "is null", operandCount: 0 } as SearchOperator,
-  IS_NOT_NULL: { name: "isNotNull", label: "is not null", operandCount: 0 } as SearchOperator,
-};
 
 /**
  * Get the effective Type instance from a SearchCriterion
@@ -306,53 +491,20 @@ export function getEffectiveType(criterion: SearchCriterion): Type<any> | null {
   }
 }
 
+export function getOperatorsForCriterion(criterion: SearchCriterion) : SearchOperator[] {
+    if ( criterion.operators)
+        return OperatorFactory.getInstance().getOperatorsByName(criterion.operators);
+    else
+        return getDefaultOperatorsForType(criterion.type)
+}
 /**
  * Get default operators for a given type
  */
 export function getDefaultOperatorsForType(type: Type<any> | Record<string,any> | undefined): SearchOperator[] {
-    let baseType = "string"
     if (type instanceof Type)
-      baseType = type.baseType;
-    else if (type !== undefined)
-        baseType = Object.keys(type as any)[0];
+      return OperatorFactory.getInstance().getOperators(type);
+    else if (type)
+      return OperatorFactory.getInstance().byBaseType.get(Object.keys(type)[0])! ;
 
-  switch (baseType) {
-    case "string":
-      return [
-        CommonOperators.EQUALS,
-        CommonOperators.NOT_EQUALS,
-        CommonOperators.CONTAINS,
-        CommonOperators.STARTS_WITH,
-        CommonOperators.ENDS_WITH,
-        CommonOperators.IS_NULL,
-        CommonOperators.IS_NOT_NULL,
-      ];
-    case "number":
-    case "int":
-      return [
-        CommonOperators.EQUALS,
-        CommonOperators.NOT_EQUALS,
-        CommonOperators.GREATER_THAN,
-        CommonOperators.GREATER_THAN_OR_EQUAL,
-        CommonOperators.LESS_THAN,
-        CommonOperators.LESS_THAN_OR_EQUAL,
-        CommonOperators.BETWEEN,
-        CommonOperators.IS_NULL,
-        CommonOperators.IS_NOT_NULL,
-      ];
-    case "date":
-      return [
-        CommonOperators.EQUALS,
-        CommonOperators.NOT_EQUALS,
-        CommonOperators.GREATER_THAN,
-        CommonOperators.LESS_THAN,
-        CommonOperators.BETWEEN,
-        CommonOperators.IS_NULL,
-        CommonOperators.IS_NOT_NULL,
-      ];
-    case "boolean":
-      return [CommonOperators.EQUALS, CommonOperators.IS_NULL, CommonOperators.IS_NOT_NULL];
-    default:
-      return [CommonOperators.EQUALS, CommonOperators.NOT_EQUALS];
-  }
+     return [];
 }
