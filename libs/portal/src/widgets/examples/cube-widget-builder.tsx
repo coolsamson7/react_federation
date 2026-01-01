@@ -20,6 +20,7 @@ import {
   PieChart, Pie, Cell
 } from "recharts";
 import { messageBus } from "../editor/message-bus";
+import {SearchPanelContext, SearchPanelContextValue} from "@portal/widgets/search-panel/search-panel-context";
 
 /**
  * Runtime builder for CubeWidget
@@ -27,8 +28,15 @@ import { messageBus } from "../editor/message-bus";
  */
 @RegisterBuilder("cube", false)
 export class CubeWidgetBuilder extends WidgetBuilder<CubeWidgetData> {
+  static contextType = SearchPanelContext;
+  context!: SearchPanelContextValue; // tell Typ
+
   render() {
     const { data } = this.props;
+
+    const { searchModel, predefinedQuery, onConfigChange } = this.context;
+
+    console.log(predefinedQuery)
 
     if (!data.configuration) {
       return (

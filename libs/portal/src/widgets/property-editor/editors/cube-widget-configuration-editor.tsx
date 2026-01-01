@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { PropertyEditor } from "../property-editor-metadata";
 import { RegisterPropertyEditor } from "../property-editor-registry";
-import { CubeWidgetConfiguration } from "../../examples/cube-widget-data";
-import { FilterOperator, OPERATORS_BY_TYPE, INPUT_TYPE_BY_DIMENSION } from "../../../query/cube-widget-data";
+import { CubeWidgetConfiguration, ValueType } from "../../examples/cube-widget-data";
+import { FilterOperator, OPERATORS_BY_TYPE, INPUT_TYPE_BY_DIMENSION, ValueType as QueryValueType } from "../../../query/cube-widget-data";
+import { ValueTypeEditor } from "../components/value-type-editor";
 
 // Local cube database with dimension types for filtering
 const LOCAL_CUBES = [
@@ -238,7 +239,7 @@ function CubeConfigurationForm({
                       value={filter.dimension}
                       onChange={(e) => {
                         const newFilters = [...config.filters];
-                        newFilters[index] = { ...filter, dimension: e.target.value, value: "" };
+                        newFilters[index] = { ...filter, dimension: e.target.value, value: { type: 'value' as const, value: '' } };
                         const newConfig = { ...config, filters: newFilters };
                         setConfig(newConfig);
                         onChange(newConfig);
@@ -308,57 +309,18 @@ function CubeConfigurationForm({
 
                   {/* Value Input Row */}
                   <div>
-                    {dimensionType === "boolean" ? (
-                      <select
-                        value={String(filter.value)}
-                        onChange={(e) => {
-                          const newFilters = [...config.filters];
-                          newFilters[index] = { ...filter, value: e.target.value === "true" };
-                          const newConfig = { ...config, filters: newFilters };
-                          setConfig(newConfig);
-                          onChange(newConfig);
-                        }}
-                        style={{
-                          width: "100%",
-                          padding: "4px",
-                          backgroundColor: "#1a1a1a",
-                          color: "#e0e0e0",
-                          border: "1px solid #404040",
-                          borderRadius: "2px",
-                          fontSize: "11px",
-                        }}
-                      >
-                        <option value="">-- Select Value --</option>
-                        <option value="true">True</option>
-                        <option value="false">False</option>
-                      </select>
-                    ) : (
-                      <input
-                        type={inputType}
-                        placeholder={`Enter ${dimensionType} value`}
-                        value={String(filter.value)}
-                        onChange={(e) => {
-                          const newFilters = [...config.filters];
-                          let value: any = e.target.value;
-                          if (inputType === "number") {
-                            value = value === "" ? "" : parseFloat(value);
-                          }
-                          newFilters[index] = { ...filter, value };
-                          const newConfig = { ...config, filters: newFilters };
-                          setConfig(newConfig);
-                          onChange(newConfig);
-                        }}
-                        style={{
-                          width: "100%",
-                          padding: "4px",
-                          backgroundColor: "#1a1a1a",
-                          color: "#e0e0e0",
-                          border: "1px solid #404040",
-                          borderRadius: "2px",
-                          fontSize: "11px",
-                        }}
-                      />
-                    )}
+                    <ValueTypeEditor
+                      value={filter.value || { type: 'value', value: '' }}
+                      onChange={(newValueType: ValueType) => {
+                        const newFilters = [...config.filters];
+                        newFilters[index] = { ...filter, value: newValueType };
+                        const newConfig = { ...config, filters: newFilters };
+                        setConfig(newConfig);
+                        onChange(newConfig);
+                      }}
+                      inputType={dimensionType === "boolean" ? "boolean" : inputType}
+                      placeholder={`Enter ${dimensionType} value or variable name`}
+                    />
                   </div>
                 </div>
               );
@@ -366,7 +328,7 @@ function CubeConfigurationForm({
           )}
           <button
             onClick={() => {
-              const newFilters = [...config.filters, { dimension: "", operator: "equals", value: "" }];
+              const newFilters = [...config.filters, { dimension: "", operator: "equals", value: { type: 'value' as const, value: '' } }];
               const newConfig = { ...config, filters: newFilters };
               setConfig(newConfig);
               onChange(newConfig);

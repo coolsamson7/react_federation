@@ -2,6 +2,11 @@ import { WidgetData } from "../metadata";
 import { DeclareWidget, DeclareProperty } from "../decorators";
 import { AutoRegisterWidget } from "../type-registry";
 
+export type ValueType = {
+  type: 'variable' | 'value';
+  value:  string | number | boolean;
+};
+
 /**
  * Cube widget configuration type
  */
@@ -12,7 +17,7 @@ export interface CubeWidgetConfiguration {
   filters: Array<{
     dimension: string;
     operator: string;
-    value: string | number | boolean;
+    value: ValueType;
   }>;
   renderingComponent: "linechart" | "barchart" | "table";
   xAxisField: string;

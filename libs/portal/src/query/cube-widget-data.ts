@@ -41,21 +41,77 @@ export const INPUT_TYPE_BY_DIMENSION: Record<DimensionType, string> = {
 };
 
 /**
+ * Value type for filter configuration
+ */
+export type ValueType = {
+  type: 'variable' | 'value';
+  value: string | number | boolean;
+};
+
+/**
  * Filter configuration for a cube query - Cube.js compatible
  */
 export interface FilterConfig {
   dimension: string; // e.g. "Orders.status" (cube name + dimension name)
   operator: FilterOperator;
-  value: string | number | string[] | number[] | boolean;
+  value: ValueType;
+}
+
+/**
+ * Evaluate a ValueType with the predefinedQuery context
+ *
+ * This function evaluates a ValueType object based on its type:
+ * - If type is 'value', it returns the direct value
+ * - If type is 'variable', it looks up the variable name in the predefinedQuery context
+ *
+ * @example
+ * // Direct value
+ * const valueType = { type: 'value', value: 'completed' };
+ * evaluateValueType(valueType); // Returns 'completed'
+ *
+ * // Variable reference
+ * const valueType = { type: 'variable', value: 'orderStatus' };
+ * const context = { predefinedQuery: { orderStatus: 'completed' } };
+ * evaluateValueType(valueType, context); // Returns 'completed'
+ *
+ * @param valueType - The ValueType object to evaluate
+ * @param context - The context object containing predefinedQuery variables
+ * @returns The evaluated value
+ */
+export function evaluateValueType(valueType: ValueType, context: any = {}) {
+  if (!valueType || typeof valueType !== 'object') {
+    console.warn('Invalid ValueType provided:', valueType);
+    return valueType;
+  }
+
+  if (valueType.type === 'value') {
+    return valueType.value;
+  } else if (valueType.type === 'variable') {
+    // Get the variable name from valueType.value
+    const variableName = String(valueType.value);
+
+    // Look for the variable in predefinedQuery from context
+    if (context.predefinedQuery && context.predefinedQuery[variableName] !== undefined) {
+      return context.predefinedQuery[variableName];
+    } else {
+      console.warn(`Variable ${variableName} not found in predefinedQuery context`);
+      return valueType.value; // Fall back to the variable name as a string
+    }
+  }
+
+  return valueType.value;
 }
 
 /**
  * Convert FilterConfig to Cube.js API format
  */
-export function toCubeJsFilter(filter: FilterConfig) {
-  const values = Array.isArray(filter.value) 
-    ? filter.value 
-    : [filter.value];
+export function toCubeJsFilter(filter: FilterConfig, context: any = {}) {
+  // Evaluate the value based on its type (direct value or variable)
+  const evaluatedValue = evaluateValueType(filter.value, context);
+
+  const values = Array.isArray(evaluatedValue)
+    ? evaluatedValue
+    : [evaluatedValue];
 
   return {
     member: filter.dimension,
@@ -111,8 +167,40 @@ export interface QueryResult {
 
 /**
  * Build a Cube.js query object from widget config
+ *
+ * This function converts a CubeWidgetConfig into a Cube.js compatible query object.
+ * It handles filter value resolution from context for variable references.
+ *
+ * @example
+ * // Usage with variable binding in filters
+ * const config = {
+ *   id: 'order-stats',
+ *   cubeName: 'Orders',
+ *   measures: ['count'],
+ *   dimensions: ['status'],
+ *   filters: [{
+ *     dimension: 'Orders.status',
+ *     operator: 'equals',
+ *     value: { type: 'variable', value: 'statusFilter' }
+ *   }],
+ *   renderingComponent: 'barchart'
+ * };
+ *
+ * // Context with predefined variables
+ * const context = {
+ *   predefinedQuery: {
+ *     statusFilter: 'completed'
+ *   }
+ * };
+ *
+ * const query = buildCubeQuery(config, context);
+ * // The filter value 'statusFilter' will be replaced with 'completed'
+ *
+ * @param config - The widget configuration
+ * @param context - The context containing predefinedQuery variables
+ * @returns A Cube.js compatible query object
  */
-export function buildCubeQuery(config: CubeWidgetConfig) {
+export function buildCubeQuery(config: CubeWidgetConfig, context: any = {}) {
   const measures = config.measures.map(
     (m) => `${config.cubeName}.${m}`
   );
@@ -120,7 +208,7 @@ export function buildCubeQuery(config: CubeWidgetConfig) {
     (d) => `${config.cubeName}.${d}`
   );
 
-  const filters = config.filters.map(toCubeJsFilter);
+  const filters = config.filters.map(filter => toCubeJsFilter(filter, context));
 
   return {
     measures,
