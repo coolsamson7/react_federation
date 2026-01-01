@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
-import { get, set } from "../../lang/index";
-import { StringBuilder } from "../../util/index";
+import { get, set } from "../../lang";
+import { StringBuilder } from "../../util";
 import { Test } from "../test"
 import { ValidationContext } from "../validation-context"
 import { ValidationError } from "../validation-error"
@@ -9,13 +9,6 @@ import { ValidationError } from "../validation-error"
 export interface ConstraintInfo {
     message?: string
 }
-
-export const Constraint = (): MethodDecorator => {
-    return (target, propertyKey, descriptor) => {
-        // Mark the method with metadata
-        Reflect.defineMetadata("isFluentConstraint", true, target, propertyKey);
-    };
-};
 
 class Patch {
   // data
@@ -41,45 +34,125 @@ class Patch {
   }
 }
 
-export type TypeFactory = () => Type<any>;
+export interface ConstraintMethodDescriptor {
+    typeName: string;         // the Type this constraint belongs to, e.g. "string"
+    name: string;             // method name: "max"
+    params: { name: string; type: any }[];  // parameter names + type
+}
+
+interface TypeRegistryDescriptor {
+    typeClass: { new(): Type<any> };
+    constraints: ConstraintMethodDescriptor[];
+}
+
+export const Constraint = (): MethodDecorator => {
+    return (target, propertyKey, descriptor) => {
+        // mark method
+        Reflect.defineMetadata("isFluentConstraint", true, target, propertyKey);
+
+        // get parameter types (using reflect-metadata)
+        const paramTypes: any[] = Reflect.getMetadata("design:paramtypes", target, propertyKey) || [];
+
+        // get parameter names (from function text)
+        const fn = descriptor.value as Function;
+        const paramNames = fn
+            .toString()
+            .match(/\(([^)]*)\)/)?.[1]
+            .split(",")
+            .map(p => p.trim())
+            .filter(Boolean) || [];
+
+        // combine names and types
+        const params = paramNames.map((name, i) => ({ name, type: paramTypes[i] }));
+
+        // store metadata with type info
+        const existing: ConstraintMethodDescriptor[] =
+            Reflect.getMetadata("fluentConstraints", target) || [];
+
+        console.log("target: ", target)
+        console.log();
+        existing.push({
+            typeName: target.constructor.name,
+            name: propertyKey as string,
+            params
+        });
+        Reflect.defineMetadata("fluentConstraints", existing, target);
+    };
+};
 
 export class Type<T> {
     // static data
 
     static cache: { } = {}
-    private static factories = new Map<string, TypeFactory>();
+    private static factories = new Map<string, TypeRegistryDescriptor>();
     private static patches: Patch[] = [];
     private static timeout = false
 
     // static methods
 
-    static registerFactory(typeName: string, factory: TypeFactory) {
-        this.factories.set(typeName, factory);
+    static getTypes(): string[] {
+        return Array.from(Type.factories.keys())
     }
 
-    static create(typeName: string, constraints?: Record<string, any>): Type<any> {
-        const factory = this.factories.get(typeName);
-        if (!factory) {
-            throw new Error(`Unknown type: ${typeName}`);
+    static getConstraints(typeName: string): ConstraintMethodDescriptor[] {
+        const type = this.factories.get(typeName);
+        if (!type) return [];
+        return type.constraints;
+    }
+
+    static registerFactory(typeName: string, typeClass: { new(): Type<any> }) {
+    const constraints: ConstraintMethodDescriptor[] = [];
+
+    let proto = typeClass.prototype;
+    const seen = new Set<string>();
+
+    // walk prototype chain (important!)
+    while (proto && proto !== Object.prototype) {
+        const local: ConstraintMethodDescriptor[] =
+            Reflect.getMetadata("fluentConstraints", proto) || [];
+
+        for (const c of local) {
+            // child overrides parent
+            if (!seen.has(c.name)) {
+                seen.add(c.name);
+                constraints.push({
+                    ...c,
+                    typeName
+                });
+            }
         }
 
-        let instance = factory();
+        proto = Object.getPrototypeOf(proto);
+    }
 
-        if ( constraints ) {
-            for (const [constraint, value] of Object.entries(constraints)) {
+    this.factories.set(typeName, {
+        typeClass,
+        constraints
+    });
+}
+
+
+    static create(typeName: string, constraints?: Record<string, any>): Type<any> {
+        const entry = this.factories.get(typeName);
+        if (!entry) throw new Error(`Unknown type: ${typeName}`);
+
+        const instance = new entry.typeClass();
+
+        if (constraints) {
+            for (const [name, value] of Object.entries(constraints)) {
                 // @ts-ignore
-                if (typeof instance[constraint] !== "function") {
-                    throw new Error(`Unknown constraint: ${constraint}`);
+                if (typeof instance[name] !== "function") {
+                    throw new Error(`Unknown constraint: ${name}`);
                 }
 
                 if (value === true) {
                     // @ts-ignore
-                    instance[constraint]();
+                    instance[name]();
                 } else {
                     // @ts-ignore
-                    instance[constraint](value);
+                    instance[name](value);
                 }
-            } // for
+            }
         }
 
         return instance;

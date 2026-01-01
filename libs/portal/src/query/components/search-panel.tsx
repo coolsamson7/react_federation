@@ -2,17 +2,15 @@ import React, { useState, useCallback, useEffect } from "react";
 import {
   QueryModel,
   SearchCriterion,
-  SearchOperator,
-  TypeDescriptor,
   getDefaultOperatorsForType,
   QueryExpression,
   createAndExpression,
   createOrExpression,
   createLiteralExpression,
-} from "./query-model";
-import { inputEditorRegistry, initializeInputEditors } from "./input-editor/input-editor-registry";
-import "./input-editor/editors/editor-registry";
-import {string, Type} from "@portal/validation";
+} from "../query-model";
+import { inputEditorRegistry, initializeInputEditors } from "../input-editor/input-editor-registry";
+
+import {Type} from "@portal/validation";
 
 /**
  * Represents a single row in the search panel
@@ -44,18 +42,25 @@ function DynamicInput({
   onChange,
   operandIndex,
 }: {
-  type: Type<any>
+  type: Type<any> | Record<string,any> | undefined
   value: any;
   onChange: (value: any) => void;
   operandIndex: number;
 }) {
-  const EditorClass = inputEditorRegistry.getEditor(type);
+
+    let baseType = "string"
+    if (type instanceof Type)
+      baseType = type.baseType;
+    else if (type !== null)
+        baseType = Object.keys(type as any)[0];
+
+  const EditorClass = inputEditorRegistry.getEditor(baseType);
 
   if (!EditorClass) {
     console.warn(`[DynamicInput] No editor found for type: ${type}`);
     return (
       <div style={{ flex: 1, padding: "8px", color: "#ff6b6b", fontSize: "12px" }}>
-        No editor for type: {type.name}
+        No editor for type: {baseType}
       </div>
     );
   }
@@ -89,12 +94,12 @@ function SearchRowComponent({
 }) {
   const criteria: SearchCriterion[] = queryModel?.criteria || [];
   const selectedCriterion = criteria.find((c) => c.name === row.criterionName);
-  const operators = selectedCriterion?.operators || getDefaultOperatorsForType(selectedCriterion?.type || string());
+  const operators = selectedCriterion?.operators || getDefaultOperatorsForType(selectedCriterion?.type);
   const selectedOperator = operators.find((op) => op.name === row.operatorName);
 
   const handleCriterionChange = (criterionName: string) => {
     const criterion = criteria.find((c) => c.name === criterionName);
-    const newOperators = criterion?.operators || getDefaultOperatorsForType(criterion?.type || string());
+    const newOperators = criterion?.operators || getDefaultOperatorsForType(criterion?.type);
     onChange({
       ...row,
       criterionName,
@@ -187,7 +192,7 @@ function SearchRowComponent({
           {Array.from({ length: selectedOperator.operandCount }).map((_, index) => (
             <DynamicInput
               key={index}
-              type={selectedCriterion?.type || string()}
+              type={selectedCriterion?.type}
               value={row.operandValues[index]}
               onChange={(value) => handleOperandChange(index, value)}
               operandIndex={index}

@@ -1,8 +1,6 @@
 import React, { useState, useMemo } from "react";
+import { SearchCriterion, SearchOperator, QueryExpression, getEffectiveType } from "../query-model";
 import { Type } from "@portal/validation";
-import { SearchCriterion, SearchOperator, QueryExpression } from "../query-model";
-import { ConstraintChip, ConstraintDefinition } from "./constraint-chip";
-import { extractConstraintMethods } from "./constraint-panel";
 
 interface ChipSearchPanelProps {
   criteria: SearchCriterion[];
@@ -24,6 +22,8 @@ export const ChipSearchPanel = React.memo(({
   onSearch,
   logicalOperator = "and",
 }: ChipSearchPanelProps) => {
+
+    console.log("### chips ")
   
   // Debug logging
   React.useEffect(() => {
@@ -76,7 +76,7 @@ export const ChipSearchPanel = React.memo(({
       return [{ ...(queryExpression as any), id: "single" }];
     } else if (queryExpression.type === "and" || queryExpression.type === "or") {
       const compound = queryExpression as any;
-      return (compound.subExpressions || [])
+      return (compound.values || [])
         .filter((expr: any) => expr.type === "literal")
         .map((expr: any, index: number) => ({ ...expr, id: `compound-${index}` }));
     }
@@ -108,7 +108,7 @@ export const ChipSearchPanel = React.memo(({
         // Convert single literal to compound
         const compound = {
           type: logicalOperator,
-          subExpressions: [queryExpression, newLiteral]
+          values: [queryExpression, newLiteral]
         };
         onQueryExpressionChange(compound as any);
       } else if (queryExpression.type === "and" || queryExpression.type === "or") {
@@ -116,7 +116,7 @@ export const ChipSearchPanel = React.memo(({
         const compound = queryExpression as any;
         const updated = {
           ...compound,
-          subExpressions: [...(compound.subExpressions || []), newLiteral]
+          values: [...(compound.values || []), newLiteral]
         };
         onQueryExpressionChange(updated);
       }
@@ -137,7 +137,7 @@ export const ChipSearchPanel = React.memo(({
       onQueryExpressionChange(null);
     } else if (queryExpression.type === "and" || queryExpression.type === "or") {
       const compound = queryExpression as any;
-      const subExpressions = compound.subExpressions || [];
+      const subExpressions = compound.values || [];
       const index = parseInt(literalId.split('-')[1]);
       const newSubExpressions = subExpressions.filter((_: any, i: number) => i !== index);
       
@@ -148,7 +148,7 @@ export const ChipSearchPanel = React.memo(({
       } else {
         onQueryExpressionChange({
           ...compound,
-          subExpressions: newSubExpressions
+          values: newSubExpressions
         });
       }
     }
@@ -161,7 +161,7 @@ export const ChipSearchPanel = React.memo(({
       onQueryExpressionChange({ ...queryExpression, ...updates } as any);
     } else if (queryExpression.type === "and" || queryExpression.type === "or") {
       const compound = queryExpression as any;
-      const subExpressions = compound.subExpressions || [];
+      const subExpressions = compound.values || [];
       const index = parseInt(literalId.split('-')[1]);
       const newSubExpressions = subExpressions.map((expr: any, i: number) => 
         i === index ? { ...expr, ...updates } : expr
@@ -169,7 +169,7 @@ export const ChipSearchPanel = React.memo(({
       
       onQueryExpressionChange({
         ...compound,
-        subExpressions: newSubExpressions
+        values: newSubExpressions
       });
     }
   }, [queryExpression, onQueryExpressionChange]);
@@ -347,6 +347,7 @@ export const ChipSearchPanel = React.memo(({
             const operator = criterion?.operators.find(
               (op) => op.name === literal.operatorName
             );
+            const effectiveType = criterion ? getEffectiveType(criterion) : null;
 
             return (
               <LiteralExpressionChip
@@ -354,6 +355,7 @@ export const ChipSearchPanel = React.memo(({
                 literalExpression={literal}
                 criterion={criterion}
                 operator={operator}
+                effectiveType={effectiveType}
                 onUpdate={(updates) => handleUpdateLiteral(literal.id, updates)}
                 onRemove={() => handleRemoveLiteral(literal.id)}
               />
@@ -444,6 +446,7 @@ interface LiteralExpressionChipProps {
   };
   criterion?: SearchCriterion;
   operator?: SearchOperator;
+  effectiveType?: Type<any> | null;
   onUpdate: (updates: any) => void;
   onRemove: () => void;
 }
@@ -452,6 +455,7 @@ const LiteralExpressionChip = React.memo(({
   literalExpression,
   criterion,
   operator,
+  effectiveType,
   onUpdate,
   onRemove,
 }: LiteralExpressionChipProps) => {
@@ -493,10 +497,29 @@ const LiteralExpressionChip = React.memo(({
   
   const handleOperandChange = React.useCallback((index: number, value: string) => {
     const newValues = [...(literalExpression.operandValues || [])];
-    newValues[index] = value;
+
+    // Validate and convert the value based on type
+    let convertedValue: any = value;
+    if (effectiveType) {
+      try {
+        // Use the Type instance to validate the input
+        if (effectiveType.baseType === 'number') {
+          convertedValue = value === '' ? '' : Number(value);
+        } else if (effectiveType.baseType === 'boolean') {
+          convertedValue = value === 'true';
+        } else if (effectiveType.baseType === 'date') {
+          convertedValue = value === '' ? '' : new Date(value);
+        }
+        // For validation, we could call effectiveType.isValid(convertedValue)
+      } catch (error) {
+        console.warn('Value conversion failed:', error);
+      }
+    }
+
+    newValues[index] = convertedValue;
     onUpdate({ operandValues: newValues });
-  }, [literalExpression.operandValues, onUpdate]);
-  
+  }, [literalExpression.operandValues, onUpdate, effectiveType]);
+
   const handleToggleOpen = React.useCallback(() => {
     setIsOpen(!isOpen);
   }, [isOpen]);
@@ -538,28 +561,27 @@ const LiteralExpressionChip = React.memo(({
         </span>
       )}
 
-        <button
-          onClick={handleRemoveClick}
-          style={{
-            width: "16px",
-            height: "16px",
-            padding: 0,
-            marginLeft: "4px",
-            backgroundColor: "transparent",
-            border: "none",
-            color: "#ff6b6b",
-            cursor: "pointer",
-            fontSize: "12px",
-            fontWeight: "bold",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          title="Remove constraint"
-        >
-          ✕
-        </button>
-      )
+      <button
+        onClick={handleRemoveClick}
+        style={{
+          width: "16px",
+          height: "16px",
+          padding: 0,
+          marginLeft: "4px",
+          backgroundColor: "transparent",
+          border: "none",
+          color: "#ff6b6b",
+          cursor: "pointer",
+          fontSize: "12px",
+          fontWeight: "bold",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        title="Remove constraint"
+      >
+        ✕
+      </button>
 
       {/* Dropdown for operator and value selection */}
       {isOpen && availableOperators.length > 0 && (
@@ -630,12 +652,21 @@ const LiteralExpressionChip = React.memo(({
                       Value {idx + 1}:
                     </label>
                     <input
-                      type="text"
-                      value={literalExpression.operandValues?.[idx] || ""}
-                      onChange={(e) => handleOperandChange(idx, e.target.value)}
+                      type={effectiveType?.baseType === 'number' ? 'number' :
+                            effectiveType?.baseType === 'date' ? 'date' :
+                            effectiveType?.baseType === 'boolean' ? 'checkbox' : 'text'}
+                      value={effectiveType?.baseType === 'boolean' ? undefined :
+                             (literalExpression.operandValues?.[idx] || "")}
+                      checked={effectiveType?.baseType === 'boolean' ?
+                               !!literalExpression.operandValues?.[idx] : undefined}
+                      onChange={(e) => {
+                        const value = effectiveType?.baseType === 'boolean' ?
+                                     e.target.checked : e.target.value;
+                        handleOperandChange(idx, value.toString());
+                      }}
                       style={{
-                        width: "100%",
-                        padding: "6px",
+                        width: effectiveType?.baseType === 'boolean' ? 'auto' : "100%",
+                        padding: effectiveType?.baseType === 'boolean' ? '0' : "6px",
                         backgroundColor: "#2a2a2a",
                         border: "1px solid #404040",
                         borderRadius: "2px",

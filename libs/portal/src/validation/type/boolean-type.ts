@@ -3,7 +3,7 @@ import {Type, ConstraintInfo, Constraint} from "./type"
 /**
  * this constraint class adds specific checks for booleans.
  */
-export class BooleanConstraint extends Type<boolean> {
+export class BooleanType extends Type<boolean> {
     // constructor
 
     constructor(name?: string) {
@@ -15,7 +15,7 @@ export class BooleanConstraint extends Type<boolean> {
     // fluent
 
     @Constraint()
-    isTrue(info?: ConstraintInfo): BooleanConstraint {
+    isTrue(info?: ConstraintInfo): BooleanType {
         this.test({
             type: "boolean",
             name: "isTrue",
@@ -30,7 +30,7 @@ export class BooleanConstraint extends Type<boolean> {
     }
 
     @Constraint()
-    isFalse(info?: ConstraintInfo): BooleanConstraint {
+    isFalse(info?: ConstraintInfo): BooleanType {
         this.test({
             type: "boolean",
             name: "isFalse",
@@ -48,4 +48,4 @@ export class BooleanConstraint extends Type<boolean> {
 /**
  * return a new constraint based on boolean values
  */
-export const boolean = (name?: string) => new BooleanConstraint(name)
+export const boolean = (name?: string) => new BooleanType(name)

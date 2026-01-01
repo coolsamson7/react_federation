@@ -302,7 +302,7 @@ function CubeConfigurationForm({
                         fontSize: "11px",
                       }}
                     >
-                      ✕
+                      ✕ OOOO
                     </button>
                   </div>
 

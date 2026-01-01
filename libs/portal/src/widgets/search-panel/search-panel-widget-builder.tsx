@@ -28,6 +28,10 @@ export class SearchPanelWidgetBuilder extends WidgetBuilder<SearchPanelWidgetDat
     const typeRegistry = container.resolve(TypeRegistry);
     const widgetFactory = container.resolve(WidgetFactory);
 
+    console.log("####### serach oabel ")
+
+      console.log(data)
+
     return (
       <SearchPanelProvider
         value={{
@@ -55,8 +59,8 @@ export class SearchPanelWidgetBuilder extends WidgetBuilder<SearchPanelWidgetDat
 
           {data.searchModel && (
             <ChipSearchPanel
-              criteria={data.searchModel.criteria || []}
-              queryExpression={data.predefinedQuery || null}
+              criteria={data.searchModel.criteria || []} // searchModel
+              queryExpression={data.predefinedQuery || null} // searchModel
               onQueryExpressionChange={() => {}} 
               onSearch={this.handleSearch}
             />

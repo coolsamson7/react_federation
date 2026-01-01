@@ -1,12 +1,11 @@
 import React, { createContext, useContext } from "react";
-import { SearchModelWithConstraints } from "../../query/components";
-import { QueryExpression } from "../../query/query-model";
+import {QueryExpression, SearchModel} from "../../query/query-model";
 
 export interface SearchPanelContextValue {
-  searchModel: SearchModelWithConstraints;
+  searchModel: SearchModel;
   predefinedQuery?: QueryExpression | null;
   onConfigChange?: (config: {
-    searchModel: SearchModelWithConstraints;
+    searchModel: SearchModel;
     predefinedQuery?: QueryExpression | null;
   }) => void;
 }

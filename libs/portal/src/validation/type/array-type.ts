@@ -5,7 +5,7 @@ import {Type, ConstraintInfo, Constraint} from "./type"
 /**
  * this constraint class adds specific checks for arrays.
  */
-export class ArrayConstraint<T extends Array<any>> extends Type<T> {
+export class ArrayType<T extends Array<any>> extends Type<T> {
     // constructor
 
     constructor(public element: Type<any>) {
@@ -27,7 +27,7 @@ export class ArrayConstraint<T extends Array<any>> extends Type<T> {
     // fluent
 
     @Constraint()
-    min(min: number, info?: ConstraintInfo): ArrayConstraint<T> {
+    min(min: number, info?: ConstraintInfo): ArrayType<T> {
         this.test({
             type: "array",
             name: "min",
@@ -44,7 +44,7 @@ export class ArrayConstraint<T extends Array<any>> extends Type<T> {
     }
 
     @Constraint()
-    max(max: number, info?: ConstraintInfo): ArrayConstraint<T> {
+    max(max: number, info?: ConstraintInfo): ArrayType<T> {
         this.test({
             type: "array",
             name: "max",
@@ -88,4 +88,4 @@ export class ArrayConstraint<T extends Array<any>> extends Type<T> {
     }
 }
 
-export const array = <T>(constraint: Type<T>) => new ArrayConstraint(constraint)
+export const array = <T>(constraint: Type<T>) => new ArrayType(constraint)

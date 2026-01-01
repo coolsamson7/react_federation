@@ -3,7 +3,13 @@ import {Type, ConstraintInfo, Constraint} from "./type"
 /**
  * this constraint class adds specific checks for dates.
  */
-export class DateConstraint extends Type<Date> {
+export class DateType extends Type<Date> {
+    // static block
+
+    static {
+        Type.registerFactory("date", DateType);
+    }
+
     // constructor
 
     constructor(name?: string) {
@@ -25,7 +31,7 @@ export class DateConstraint extends Type<Date> {
     // fluent
 
     @Constraint()
-    min(min: Date, info?: ConstraintInfo): DateConstraint {
+    min(min: Date, info?: ConstraintInfo): DateType {
         this.test({
             type: "number",
             name: "min",
@@ -42,7 +48,7 @@ export class DateConstraint extends Type<Date> {
     }
 
     @Constraint()
-    max(max: Date, info?: ConstraintInfo): DateConstraint {
+    max(max: Date, info?: ConstraintInfo): DateType {
         this.test({
             type: "number",
             name: "max",
@@ -59,7 +65,7 @@ export class DateConstraint extends Type<Date> {
     }
 
     @Constraint()
-    format(format: string, info?: ConstraintInfo): DateConstraint {
+    format(format: string, info?: ConstraintInfo): DateType {
         this.test({
             type: "date",
             name: "format",
@@ -76,4 +82,4 @@ export class DateConstraint extends Type<Date> {
     }
 }
 
-export const date = (name?: string) => new DateConstraint(name)
+export const date = (name?: string) => new DateType(name)

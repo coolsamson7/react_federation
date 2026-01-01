@@ -1,4 +1,4 @@
-import {Type, ConstraintInfo, Constraint} from "./type"
+import {Type, Constraint, ConstraintInfo} from "./type"
 
 /**
  * this constraint class adds specific checks for numbers.
@@ -7,7 +7,7 @@ export class NumberType extends Type<number> {
      // static block
 
     static {
-        Type.registerFactory("number", () => new NumberType());
+        Type.registerFactory("number", NumberType);
     }
 
     // constructor
@@ -198,7 +198,7 @@ export class ShortType extends NumberType {
     // static block
 
     static {
-        Type.registerFactory("short", () => new ShortType());
+        Type.registerFactory("short", ShortType);
     }
 
     // constructor
@@ -212,13 +212,15 @@ export class IntegerType extends NumberType {
     // static block
 
     static {
-        Type.registerFactory("integer", () => new IntegerType());
+        Type.registerFactory("integer", IntegerType);
     }
 
     // constructor
 
     constructor(name?: string) {
         super(name)
+
+        console.log("### new int type")
     }
 }
 
@@ -226,7 +228,7 @@ export class LongType extends NumberType {
     // static block
 
     static {
-        Type.registerFactory("long", () => new LongType());
+        Type.registerFactory("long", LongType);
     }
 
     // constructor
@@ -240,7 +242,7 @@ export class FloatType extends NumberType {
     // static block
 
     static {
-        Type.registerFactory("float", () => new FloatType());
+        Type.registerFactory("float", FloatType);
     }
 
     // constructor
@@ -254,7 +256,7 @@ export class DoubleType extends NumberType {
     // static block
 
     static {
-        Type.registerFactory("double", () => new DoubleType());
+        Type.registerFactory("double", DoubleType);
     }
 
     // constructor

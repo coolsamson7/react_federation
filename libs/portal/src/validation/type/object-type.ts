@@ -6,7 +6,7 @@ export type PropertyConstraints = { [property: string]: Type<any> | string }
 /**
  * this constraint class adds specific checks for complex objects.
  */
-export class ObjectConstraint<T = any> extends Type<T> {
+export class ObjectType<T = any> extends Type<T> {
     // constructor
 
     constructor(public shape: PropertyConstraints, name?: string) {
@@ -58,4 +58,4 @@ export class ObjectConstraint<T = any> extends Type<T> {
     }
 }
 
-export const object = (constraints: PropertyConstraints, name?: string) => new ObjectConstraint(constraints, name)
+export const object = (constraints: PropertyConstraints, name?: string) => new ObjectType(constraints, name)

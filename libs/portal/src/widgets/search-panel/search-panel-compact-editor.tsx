@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { SearchCriterion, QueryExpression } from "../../query/query-model";
-import { SearchModelWithConstraints } from "../../query/components";
+import {SearchCriterion, QueryExpression, SearchModel} from "../../query/query-model";
 import { SearchPanelProvider } from "./search-panel-context";
 
 /**
@@ -90,9 +89,9 @@ function CompactInput({
 }
 
 interface SearchPanelCompactEditorProps {
-  searchModel: SearchModelWithConstraints;
+  searchModel: SearchModel;
   predefinedQuery?: QueryExpression | null;
-  onSearchModelChange: (model: SearchModelWithConstraints) => void;
+  onSearchModelChange: (model: SearchModel) => void;
   onPredefinedQueryChange: (query: QueryExpression | null | undefined) => void;
   onOpenFullEditor?: () => void;
 }
@@ -133,7 +132,7 @@ export function SearchPanelCompactEditor({
           </p>
           {searchModel.criteria && searchModel.criteria.length > 0 && (
             <ul style={{ margin: 0, paddingLeft: "16px", fontSize: "10px" }}>
-              {searchModel.criteria.slice(0, 3).map((c, i) => (
+              {searchModel.criteria.slice(0, 3).map((c: { label: any; name: any; }, i: React.Key | null | undefined) => (
                 <li key={i} style={{ color: "#a0a0a0", marginBottom: "2px" }}>
                   {c.label || c.name}
                 </li>

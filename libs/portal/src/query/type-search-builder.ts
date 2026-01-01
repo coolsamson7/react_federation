@@ -5,32 +5,7 @@
  */
 
 import { Type } from "@portal/validation";
-import { SearchCriterion, SearchOperator } from "./query-model";
-import { ConstraintDefinition } from "./components/constraint-chip";
-import { CriterionWithConstraints } from "./components/search-model-definition";
-
-/**
- * Extract constraint definitions from a Type instance
- */
-export function extractConstraintsFromType(type: Type<any>): ConstraintDefinition[] {
-  const constraints: ConstraintDefinition[] = [];
-
-  if (!type.tests) {
-    return constraints;
-  }
-
-  type.tests.forEach((test, index) => {
-    constraints.push({
-      id: `${test.name}-${index}`,
-      name: test.name,
-      test,
-      params: test.params || {},
-      message: test.message,
-    });
-  });
-
-  return constraints;
-}
+import {SearchCriterion, SearchOperator} from "./query-model";
 
 /**
  * Get operator names for a specific type
@@ -90,10 +65,9 @@ export function createCriterionFromType(
     default?: boolean;
     visible?: boolean;
   }
-): CriterionWithConstraints {
+): SearchCriterion {
   const operatorNames = getOperatorsForType(type);
   const operators = operatorNames.map((name) => getOperator(name));
-  const constraints = extractConstraintsFromType(type);
 
   return {
     name,
@@ -103,56 +77,6 @@ export function createCriterionFromType(
     mandatory: options?.mandatory ?? false,
     default: options?.default ?? false,
     visible: options?.visible ?? true,
-    operators,
-    typeConstraints: constraints,
+    operators
   };
-}
-
-/**
- * Validate a value against type constraints
- */
-export function validateAgainstConstraints(
-  value: any,
-  constraints: ConstraintDefinition[]
-): string[] {
-  const errors: string[] = [];
-
-  constraints.forEach((constraint) => {
-    if (constraint.test.check && !constraint.test.check(value)) {
-      errors.push(constraint.message || `Failed constraint: ${constraint.name}`);
-    }
-  });
-
-  return errors;
-}
-
-/**
- * Get constraint parameter input type hint
- */
-export function getConstraintParamInputType(
-  constraintName: string,
-  paramName: string
-): string {
-  const paramTypeMap: Record<string, Record<string, string>> = {
-    min: { min: "number" },
-    max: { max: "number" },
-    length: { length: "number" },
-    matches: { re: "text" },
-    format: { format: "text" },
-    before: { date: "date" },
-    after: { date: "date" },
-  };
-
-  return paramTypeMap[constraintName]?.[paramName] || "text";
-}
-
-/**
- * Format constraint display value
- */
-export function formatConstraintValue(constraint: ConstraintDefinition): string {
-  const paramValues = Object.entries(constraint.params)
-    .map(([key, value]) => `${key}=${value}`)
-    .join(", ");
-
-  return paramValues ? `${constraint.name}(${paramValues})` : constraint.name;
 }

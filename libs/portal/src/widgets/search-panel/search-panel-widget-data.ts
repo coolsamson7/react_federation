@@ -1,16 +1,13 @@
 import { WidgetData } from "../metadata";
 import { DeclareWidget, DeclareProperty } from "../decorators";
 import { AutoRegisterWidget } from "../type-registry";
-import { SearchModelWithConstraints } from "../../query/components";
-import { QueryExpression } from "../../query/query-model";
-import { PropertyMetadata, WidgetMetadata } from "../metadata";
-
+import {QueryExpression, SearchModel} from "../../query/query-model";
 /**
  * Configuration for the SearchPanelWidget
  */
 export interface SearchPanelWidgetConfiguration {
   title?: string;
-  searchModel: SearchModelWithConstraints;
+  searchModel: SearchModel;
   predefinedQuery?: QueryExpression | null;
   minHeight?: number;
   showClear?: boolean;
@@ -42,7 +39,7 @@ export class SearchPanelWidgetData extends WidgetData {
     required: true,
     editor: "searchPanelConfiguration",
   })
-  searchModel: SearchModelWithConstraints;
+  searchModel: SearchModel;
 
   @DeclareProperty({
     label: "Predefined Query",

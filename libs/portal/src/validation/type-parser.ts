@@ -4,12 +4,12 @@ import {
     date,
     number,
     string,
-    ArrayConstraint,
-    RecordConstraint,
+    ArrayType,
+    RecordType,
     record,
-    StringConstraint,
+    StringType,
     NumberType,
-    DateConstraint,
+    DateType,
     Type,
     double,
     float,
@@ -56,7 +56,7 @@ const typeMap: TypeMap = {
     string: {
         nullable: { call: "optional" },
         format: {
-            call: (constraint: StringConstraint, format: string): StringConstraint => {
+            call: (constraint: StringType, format: string): StringType => {
                 if (format === "email") return constraint.email()
                 else return constraint
             },
@@ -74,7 +74,7 @@ const typeMap: TypeMap = {
     },
     date: {
         format: {
-            call: (constraint: DateConstraint, format: string): DateConstraint => {
+            call: (constraint: DateType, format: string): DateType => {
                 return constraint
             },
         },
@@ -85,7 +85,7 @@ const typeMap: TypeMap = {
     },
     array: {
         format: {
-            call: (constraint: ArrayConstraint<any>, format: string): ArrayConstraint<any> => {
+            call: (constraint: ArrayType<any>, format: string): ArrayType<any> => {
                 return constraint
             },
         },
@@ -95,7 +95,7 @@ const typeMap: TypeMap = {
     },
     record: {
         format: {
-            call: (constraint: RecordConstraint<any>, format: string): RecordConstraint<any> => {
+            call: (constraint: RecordType<any>, format: string): RecordType<any> => {
                 return constraint
             },
         },
@@ -303,8 +303,8 @@ export class TypeParser {
 
         const constraint = this.constraint4(type)
 
-        if (constraint instanceof ArrayConstraint) type = "array"
-        else if (constraint instanceof RecordConstraint) type = "record"
+        if (constraint instanceof ArrayType) type = "array"
+        else if (constraint instanceof RecordType) type = "record"
 
         // and add checks
 

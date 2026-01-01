@@ -1,171 +1,126 @@
 import React, { useState } from "react";
-import { Test, ConstraintInfo } from "@portal/validation";
-
-export interface ConstraintDefinition {
-  id: string;
-  name: string;
-  test: Test<any>;
-  params: Record<string, any>;
-  message?: string;
-}
+import {AppliedConstraint} from "./constraint-panel";
+import {ConstraintMethodDescriptor} from "@portal/validation";
 
 interface ConstraintChipProps {
-  constraint: ConstraintDefinition;
+  constraint: AppliedConstraint;
+  methodInfo: ConstraintMethodDescriptor;
   onUpdate: (params: Record<string, any>) => void;
   onRemove: () => void;
   canRemove?: boolean;
 }
 
 /**
- * Displays a single constraint as a chip with editable parameters
+ * Displays a single constraint from a SearchCriterion's type record as a chip.
+ * Allows editing of the constraint's parameters in a dropdown.
  */
-export function ConstraintChip({
-  constraint,
-  onUpdate,
-  onRemove,
-  canRemove = true,
-}: ConstraintChipProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = React.useRef<HTMLDivElement>(null);
+export function ConstraintChip({ constraint, methodInfo, onUpdate, onRemove }: ConstraintChipProps) {
+  const [editing, setEditing] = useState(false);
   const chipRef = React.useRef<HTMLDivElement>(null);
 
-  const paramKeys = Object.keys(constraint.params || {});
+  console.log("### chip ", constraint)
 
-  // Close dropdown when clicking outside
+  // Close editing when clicking outside
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        chipRef.current &&
-        !chipRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
+      if (chipRef.current && !chipRef.current.contains(event.target as Node)) {
+        setEditing(false);
       }
     }
-
-    if (isOpen) {
+    if (editing) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
+      return () => document.removeEventListener("mousedown", handleClickOutside);
     }
-  }, [isOpen]);
+  }, [editing]);
 
-  const handleParamChange = (paramName: string, value: any) => {
-    const newParams = {
-      ...constraint.params,
-      [paramName]: value === "" ? undefined : value,
-    };
-    onUpdate(newParams);
+  // Parse value for display/input
+  const formatValue = (val: any, type: any) => {
+    if (type === Boolean) return !!val;
+    return val ?? "";
+  };
+
+  // Handle change according to type
+  const handleChange = (name: string, val: string | boolean, type: any) => {
+    let parsed: any = val;
+    if (type === Number) parsed = Number(val);
+    else if (type === Boolean) parsed = Boolean(val);
+      onUpdate({ ...constraint.params, [name]: parsed });
   };
 
   return (
     <div
       ref={chipRef}
+      onClick={() => methodInfo?.params.length && setEditing(!editing)}
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: "6px",
+        gap: 6,
         padding: "6px 12px",
         backgroundColor: "#2a4a5a",
         border: "1px solid #3a6a7a",
-        borderRadius: "16px",
-        fontSize: "12px",
+        borderRadius: 16,
+        fontSize: 12,
         color: "#e0e0e0",
+        cursor: methodInfo?.params.length ? "pointer" : "default",
         position: "relative",
-        cursor: paramKeys.length > 0 ? "pointer" : "default",
       }}
-      onClick={() => paramKeys.length > 0 && setIsOpen(!isOpen)}
     >
-      <span style={{ fontWeight: "500" }}>{constraint.name}</span>
+      <span style={{ fontWeight: 500 }}>{constraint.name}</span>
 
-      {paramKeys.length > 0 && (
-        <span 
-          style={{ 
-            fontSize: "10px", 
-            color: "#a0a0a0",
-            marginLeft: "4px",
-          }}
-          title={paramKeys.map((k) => `${k}: ${constraint.params[k]}`).join(", ")}
-        >
-          ▼
-        </span>
-      )}
+      <button
+        onClick={e => { e.stopPropagation(); onRemove(); }}
+        style={{
+          width: 16, height: 16, padding: 0, marginLeft: 4,
+          backgroundColor: "transparent", border: "none",
+          color: "#ff6b6b", cursor: "pointer", fontSize: 12, fontWeight: "bold",
+          display: "flex", alignItems: "center", justifyContent: "center"
+        }}
+        title="Remove constraint"
+      >
+        ✕
+      </button>
 
-      {canRemove && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove();
-          }}
-          style={{
-            width: "16px",
-            height: "16px",
-            padding: 0,
-            marginLeft: paramKeys.length > 0 ? "2px" : "4px",
-            backgroundColor: "transparent",
-            border: "none",
-            color: "#ff6b6b",
-            cursor: "pointer",
-            fontSize: "12px",
-            fontWeight: "bold",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          title="Remove constraint"
-        >
-          ✕
-        </button>
-      )}
-
-      {/* Dropdown for parameter editing */}
-      {isOpen && paramKeys.length > 0 && (
+      {editing && methodInfo?.params.length && (
         <div
-          ref={dropdownRef}
           style={{
             position: "absolute",
-            top: "100%",
-            left: 0,
-            marginTop: "6px",
-            backgroundColor: "#1a1a1a",
-            border: "1px solid #444",
-            borderRadius: "4px",
-            padding: "8px",
-            minWidth: "200px",
-            zIndex: 1000,
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
+            top: "100%", left: 0, marginTop: 6,
+            backgroundColor: "#1a1a1a", border: "1px solid #444",
+            borderRadius: 4, padding: 8, minWidth: 200, zIndex: 1000
           }}
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
-          {paramKeys.map((paramName) => (
-            <div key={paramName} style={{ marginBottom: "8px" }}>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "11px",
-                  color: "#b0b0b0",
-                  marginBottom: "4px",
-                  textTransform: "capitalize",
-                }}
-              >
-                {paramName}:
+          {methodInfo.params.map(p => (
+            <div key={p.name} style={{ marginBottom: 8 }}>
+              <label style={{ display: "block", fontSize: 11, color: "#b0b0b0", marginBottom: 4 }}>
+                {p.name}:
               </label>
-              <input
-                type="text"
-                value={String(constraint.params[paramName] || "")}
-                onChange={(e) => handleParamChange(paramName, e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "4px 6px",
-                  backgroundColor: "#2a2a2a",
-                  border: "1px solid #404040",
-                  borderRadius: "2px",
-                  color: "#e0e0e0",
-                  fontSize: "12px",
-                  boxSizing: "border-box",
-                }}
-              />
+
+              {p.type === Boolean ? (
+                <input
+                  type="checkbox"
+                  checked={formatValue(constraint.params[p.name], p.type)}
+                  onChange={e => handleChange(p.name, e.target.checked, p.type)}
+                  style={{
+                    width: "auto", height: "16px", backgroundColor: "#2a2a2a",
+                    border: "1px solid #404040", borderRadius: 2,
+                    cursor: "pointer"
+                  }}
+                />
+              ) : (
+                <input
+                  type={p.type === Number ? "number" :
+                        p.type?.name === 'Date' ? "date" : "text"}
+                  value={formatValue(constraint.params[p.name], p.type)}
+                  onChange={e => handleChange(p.name, e.target.value, p.type)}
+                  placeholder={`Enter ${p.name}`}
+                  style={{
+                    width: "100%", padding: 6, backgroundColor: "#2a2a2a",
+                    border: "1px solid #404040", borderRadius: 2,
+                    color: "#e0e0e0", fontSize: 11, boxSizing: "border-box"
+                  }}
+                />
+              )}
             </div>
           ))}
         </div>
@@ -173,3 +128,4 @@ export function ConstraintChip({
     </div>
   );
 }
+

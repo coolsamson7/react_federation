@@ -3,11 +3,11 @@ import {Type, ConstraintInfo, Constraint} from "./type"
 /**
  * this constraint class adds specific checks for strings.
  */
-export class StringConstraint extends Type<string> {
+export class StringType extends Type<string> {
     // static block
 
     static {
-        Type.registerFactory("string", () => new StringConstraint());
+        Type.registerFactory("string",StringType);
     }
 
     // static data
@@ -26,7 +26,7 @@ export class StringConstraint extends Type<string> {
     // fluent api
 
     @Constraint()
-    in(values: string[], info?: ConstraintInfo): StringConstraint {
+    in(values: string[], info?: ConstraintInfo): StringType {
         this.test({
             type: "string",
             name: "in",
@@ -41,7 +41,7 @@ export class StringConstraint extends Type<string> {
     }
 
     @Constraint()
-    length(length: number, info?: ConstraintInfo): StringConstraint {
+    length(length: number, info?: ConstraintInfo): StringType {
         this.test({
             type: "string",
             name: "length",
@@ -58,7 +58,7 @@ export class StringConstraint extends Type<string> {
     }
 
     @Constraint()
-    min(min: number, info?: ConstraintInfo): StringConstraint {
+    min(min: number, info?: ConstraintInfo): StringType {
         this.test({
             type: "string",
             name: "min",
@@ -75,7 +75,7 @@ export class StringConstraint extends Type<string> {
     }
 
     @Constraint()
-    max(max: number, info?: ConstraintInfo): StringConstraint {
+    max(max: number, info?: ConstraintInfo): StringType {
         this.test({
             type: "string",
             name: "max",
@@ -92,7 +92,7 @@ export class StringConstraint extends Type<string> {
     }
 
     @Constraint()
-    nonEmpty(info?: ConstraintInfo): StringConstraint {
+    nonEmpty(info?: ConstraintInfo): StringType {
         this.test({
             type: "string",
             name: "nonEmpty",
@@ -107,14 +107,14 @@ export class StringConstraint extends Type<string> {
     }
 
     @Constraint()
-    email(info?: ConstraintInfo): StringConstraint {
+    email(info?: ConstraintInfo): StringType {
         this.test({
             type: "string",
             name: "email",
             params: {},
             ...info,
             check(object: string): boolean {
-                return object.search(StringConstraint.EMAIL) !== -1
+                return object.search(StringType.EMAIL) !== -1
             },
         })
 
@@ -122,7 +122,7 @@ export class StringConstraint extends Type<string> {
     }
 
     @Constraint()
-    matches(re: RegExp, info?: ConstraintInfo): StringConstraint {
+    matches(re: RegExp, info?: ConstraintInfo): StringType {
         this.test({
             type: "string",
             name: "matches",
@@ -139,7 +139,7 @@ export class StringConstraint extends Type<string> {
     }
 
     @Constraint()
-    format(format: string, info?: ConstraintInfo): StringConstraint {
+    format(format: string, info?: ConstraintInfo): StringType {
         this.test({
             type: "string",
             name: "format",
@@ -156,4 +156,4 @@ export class StringConstraint extends Type<string> {
     }
 }
 
-export const string = (name?: string) => new StringConstraint(name)
+export const string = (name?: string) => new StringType(name)

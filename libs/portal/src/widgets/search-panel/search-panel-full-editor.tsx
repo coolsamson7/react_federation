@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { SearchModelWithConstraints, SearchModelDefinition, ChipSearchPanel } from "../../query/components";
-import { QueryExpression } from "../../query/query-model";
+import { SearchModelPanel, ChipSearchPanel } from "../../query/components";
+import {QueryExpression, SearchModel} from "../../query/query-model";
 import { Type } from "@portal/validation";
 
 interface SearchPanelFullEditorProps {
-  searchModel: SearchModelWithConstraints;
+  searchModel: SearchModel;
   predefinedQuery?: QueryExpression | null;
   availableTypes: Type<any>[];
-  onSearchModelChange: (model: SearchModelWithConstraints) => void;
+  onSearchModelChange: (model: SearchModel) => void;
   onPredefinedQueryChange: (query: QueryExpression | null | undefined) => void;
   onClose: () => void;
 }
@@ -19,7 +19,6 @@ interface SearchPanelFullEditorProps {
 export function SearchPanelFullEditor({
   searchModel,
   predefinedQuery,
-  availableTypes,
   onSearchModelChange,
   onPredefinedQueryChange,
   onClose,
@@ -111,10 +110,10 @@ export function SearchPanelFullEditor({
             <h4 style={{ margin: "0 0 12px 0", color: "#b0b0b0", fontSize: "13px" }}>
               Define Search Criteria and Type Constraints
             </h4>
-            <SearchModelDefinition
-              availableTypes={availableTypes}
+            <SearchModelPanel
               onModelChange={onSearchModelChange}
-              initialModel={searchModel}
+              searchModel={searchModel} // TODO FIX
+              //initialModel={searchModel}
             />
           </div>
         ) : (

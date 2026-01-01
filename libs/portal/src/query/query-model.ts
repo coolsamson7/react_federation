@@ -27,7 +27,7 @@ export interface QueryExpression {
  */
 export interface LiteralQueryExpression extends QueryExpression {
   type: "literal";
-  criterionName: string;
+  criterion: string | SearchCriterion;
   operator: string;
   values: any[];
 }
@@ -103,7 +103,7 @@ export interface SearchCriterion {
   path: string;
 
   /** Business data type of this criterion */
-  type: Type<any>;
+  type: Record<string,any> | Type<any>;
 
   /** Whether this criterion is mandatory */
   mandatory: boolean;
@@ -115,7 +115,7 @@ export interface SearchCriterion {
   default: boolean;
 
   /** Available operators for this criterion */
-  operators: SearchOperator[];
+  operators: SearchOperator[]; // TODO OperatorFactory!
 }
 
 // ============================================================================
@@ -193,7 +193,7 @@ export function createLiteralExpression(
 ): LiteralQueryExpression {
   return {
     type: "literal",
-    criterionName,
+    criterion: criterionName,
     operator: operatorName,
     values: operandValues,
   };
@@ -242,7 +242,7 @@ export function expressionToString(expr: QueryExpression): string {
   switch (expr.type) {
     case "literal": {
       const lit = expr as LiteralQueryExpression;
-      return `${lit.criterionName} ${lit.operator} ${lit.values.join(", ")}`;
+      return `${lit.criterion} ${lit.operator} ${lit.values.join(", ")}`;
     }
     case "and": {
       const and = expr as AndQueryExpression;
@@ -286,10 +286,37 @@ export const CommonOperators = {
 };
 
 /**
+ * Get the effective Type instance from a SearchCriterion
+ */
+export function getEffectiveType(criterion: SearchCriterion): Type<any> | null {
+  if (criterion.type instanceof Type) {
+    return criterion.type;
+  } else {
+    // Use Type.create to convert record to instance
+    const typeRecord = criterion.type as Record<string, any>;
+    const typeName = Object.keys(typeRecord)[0];
+    const constraints = typeRecord[typeName];
+
+    try {
+      return Type.create(typeName, constraints);
+    } catch (error) {
+      console.warn(`Failed to create Type instance for ${typeName}:`, error);
+      return null;
+    }
+  }
+}
+
+/**
  * Get default operators for a given type
  */
-export function getDefaultOperatorsForType(type: Type<any>): SearchOperator[] {
-  switch (type.baseType) {
+export function getDefaultOperatorsForType(type: Type<any> | Record<string,any> | undefined): SearchOperator[] {
+    let baseType = "string"
+    if (type instanceof Type)
+      baseType = type.baseType;
+    else if (type !== undefined)
+        baseType = Object.keys(type as any)[0];
+
+  switch (baseType) {
     case "string":
       return [
         CommonOperators.EQUALS,

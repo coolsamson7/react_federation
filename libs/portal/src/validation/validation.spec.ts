@@ -15,6 +15,14 @@ enum StringColor {
 }
 
 describe("validation", () => {
+    it("should work", async () => {
+        let intConstraints = Type.getConstraints("integer")
+
+        console.log(intConstraints)
+
+        //expect(constraint.isValid(-1)).toBe(false)
+    })
+
     it("should produce json", async () => {
         const constraint = number().min(0).max(10)
 
