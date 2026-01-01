@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Plus, Search, Database, Layers, Filter, Link, BarChart3, X, Edit2, Save, Trash2, ChevronRight, ChevronDown, Tag } from "lucide-react";
+import { Plus, Search, Database, Layers, Filter, Link, BarChart3, X, Edit2, Save, Trash2, ChevronRight, ChevronDown, Tag, Wand2, Table } from "lucide-react";
 
-// Type definitions
+// Cube.js Type definitions
 type MeasureType = "count" | "countDistinct" | "sum" | "avg" | "min" | "max";
 type DimensionType = "string" | "number" | "time" | "boolean";
 type JoinRelationship = "belongsTo" | "hasMany" | "hasOne";
@@ -14,7 +14,6 @@ interface MeasureDescriptor {
   expression?: string;
   title?: string;
   description?: string;
-  filters?: Record<string, string | number | boolean>;
 }
 
 interface DimensionDescriptor {
@@ -53,32 +52,156 @@ interface CubeDescriptor {
   description?: string;
 }
 
-export default function CubeConfigurator() {
-  const [cubes, setCubes] = useState<CubeDescriptor[]>([
-    {
-      name: "orders",
-      table: "public.orders",
-      title: "Orders",
-      description: "Customer orders and transactions",
-      measures: [
-        { name: "count", type: "count", title: "Total Orders" },
-        { name: "totalAmount", type: "sum", column: "amount", title: "Total Revenue" },
-      ],
-      dimensions: [
-        { name: "id", column: "id", type: "number", primaryKey: true },
-        { name: "status", column: "status", type: "string" },
-        { name: "createdAt", column: "created_at", type: "time" },
-      ],
-      joins: [
-        { name: "customers", relationship: "belongsTo", on: "orders.customer_id = customers.id" },
-      ],
-      segments: [
-        { name: "completed", expression: "status = 'completed'", title: "Completed Orders" },
-      ],
-    },
-  ]);
+// Database Metadata Types
+type SemanticType = "string" | "number" | "time" | "boolean";
+type Cardinality = "one" | "many";
 
-  const [selectedCube, setSelectedCube] = useState<string | null>("orders");
+interface ColumnDescriptor {
+  name: string;
+  dbType: string;
+  sqlalchemyType: string;
+  semanticType: SemanticType;
+  nullable: boolean;
+  isPrimaryKey: boolean;
+  isForeignKey: boolean;
+}
+
+interface ForeignKeyDescriptor {
+  name?: string;
+  sourceColumn: string;
+  targetTable: string;
+  targetColumn: string;
+}
+
+interface RelationMappingDescriptor {
+  leftTable: string;
+  rightTable: string;
+  columnPairs: Array<[string, string]>;
+  leftCardinality: Cardinality;
+  rightCardinality: Cardinality;
+  bridgeTable?: string;
+  foreignKeys?: ForeignKeyDescriptor[];
+}
+
+interface RelationDescriptor {
+  table: string;
+  otherTable: string;
+  mapping: RelationMappingDescriptor;
+  direction: "left" | "right";
+  attributeName?: string;
+  inverseName?: string;
+}
+
+interface TableDescriptor {
+  id: string;
+  schema?: string;
+  name: string;
+  columns: ColumnDescriptor[];
+  primaryKey: string[];
+  foreignKeys: ForeignKeyDescriptor[];
+  relations: RelationDescriptor[];
+}
+
+interface SchemaDescriptor {
+  name: string;
+  tables: TableDescriptor[];
+}
+
+interface DatabaseDescriptor {
+  dialect: string;
+  schemas: SchemaDescriptor[];
+}
+
+// Sample database metadata
+const sampleMetadata: DatabaseDescriptor = {
+  dialect: "postgresql",
+  schemas: [
+    {
+      name: "public",
+      tables: [
+        {
+          id: "public.orders",
+          schema: "public",
+          name: "orders",
+          columns: [
+            { name: "id", dbType: "INTEGER", sqlalchemyType: "Integer", semanticType: "number", nullable: false, isPrimaryKey: true, isForeignKey: false },
+            { name: "customer_id", dbType: "INTEGER", sqlalchemyType: "Integer", semanticType: "number", nullable: false, isPrimaryKey: false, isForeignKey: true },
+            { name: "amount", dbType: "DECIMAL", sqlalchemyType: "Numeric", semanticType: "number", nullable: false, isPrimaryKey: false, isForeignKey: false },
+            { name: "status", dbType: "VARCHAR", sqlalchemyType: "String", semanticType: "string", nullable: false, isPrimaryKey: false, isForeignKey: false },
+            { name: "created_at", dbType: "TIMESTAMP", sqlalchemyType: "DateTime", semanticType: "time", nullable: false, isPrimaryKey: false, isForeignKey: false },
+            { name: "updated_at", dbType: "TIMESTAMP", sqlalchemyType: "DateTime", semanticType: "time", nullable: true, isPrimaryKey: false, isForeignKey: false },
+          ],
+          primaryKey: ["id"],
+          foreignKeys: [
+            { sourceColumn: "customer_id", targetTable: "public.customers", targetColumn: "id" }
+          ],
+          relations: [
+            {
+              table: "public.orders",
+              otherTable: "public.customers",
+              mapping: {
+                leftTable: "public.orders",
+                rightTable: "public.customers",
+                columnPairs: [["customer_id", "id"]],
+                leftCardinality: "many",
+                rightCardinality: "one"
+              },
+              direction: "left",
+              attributeName: "customer"
+            }
+          ]
+        },
+        {
+          id: "public.customers",
+          schema: "public",
+          name: "customers",
+          columns: [
+            { name: "id", dbType: "INTEGER", sqlalchemyType: "Integer", semanticType: "number", nullable: false, isPrimaryKey: true, isForeignKey: false },
+            { name: "name", dbType: "VARCHAR", sqlalchemyType: "String", semanticType: "string", nullable: false, isPrimaryKey: false, isForeignKey: false },
+            { name: "email", dbType: "VARCHAR", sqlalchemyType: "String", semanticType: "string", nullable: false, isPrimaryKey: false, isForeignKey: false },
+            { name: "created_at", dbType: "TIMESTAMP", sqlalchemyType: "DateTime", semanticType: "time", nullable: false, isPrimaryKey: false, isForeignKey: false },
+          ],
+          primaryKey: ["id"],
+          foreignKeys: [],
+          relations: [
+            {
+              table: "public.customers",
+              otherTable: "public.orders",
+              mapping: {
+                leftTable: "public.orders",
+                rightTable: "public.customers",
+                columnPairs: [["customer_id", "id"]],
+                leftCardinality: "many",
+                rightCardinality: "one"
+              },
+              direction: "right",
+              attributeName: "orders"
+            }
+          ]
+        },
+        {
+          id: "public.products",
+          schema: "public",
+          name: "products",
+          columns: [
+            { name: "id", dbType: "INTEGER", sqlalchemyType: "Integer", semanticType: "number", nullable: false, isPrimaryKey: true, isForeignKey: false },
+            { name: "name", dbType: "VARCHAR", sqlalchemyType: "String", semanticType: "string", nullable: false, isPrimaryKey: false, isForeignKey: false },
+            { name: "price", dbType: "DECIMAL", sqlalchemyType: "Numeric", semanticType: "number", nullable: false, isPrimaryKey: false, isForeignKey: false },
+            { name: "category", dbType: "VARCHAR", sqlalchemyType: "String", semanticType: "string", nullable: true, isPrimaryKey: false, isForeignKey: false },
+          ],
+          primaryKey: ["id"],
+          foreignKeys: [],
+          relations: []
+        }
+      ]
+    }
+  ]
+};
+
+export default function CubeConfigurator() {
+  const [metadata] = useState<DatabaseDescriptor>(sampleMetadata);
+  const [cubes, setCubes] = useState<CubeDescriptor[]>([]);
+  const [selectedCube, setSelectedCube] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     measures: true,
@@ -87,15 +210,81 @@ export default function CubeConfigurator() {
     segments: false,
   });
   const [editingItem, setEditingItem] = useState<{ type: string; index: number } | null>(null);
+  const [showTableSelector, setShowTableSelector] = useState(false);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
   const cube = cubes.find(c => c.name === selectedCube);
+  const cubeTable = cube ? metadata.schemas.flatMap(s => s.tables).find(t => t.id === cube.table) : null;
 
   const updateCube = (updates: Partial<CubeDescriptor>) => {
     setCubes(cubes.map(c => c.name === selectedCube ? { ...c, ...updates } : c));
+  };
+
+  // Generate cube from table metadata
+  const generateCubeFromTable = (table: TableDescriptor) => {
+    const dimensions: DimensionDescriptor[] = table.columns.map(col => ({
+      name: col.name,
+      column: col.name,
+      type: col.semanticType,
+      primaryKey: col.isPrimaryKey,
+      title: col.name.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+    }));
+
+    const measures: MeasureDescriptor[] = [
+      { name: "count", type: "count", title: "Count" }
+    ];
+
+    table.columns.forEach(col => {
+      if (col.semanticType === "number" && !col.isPrimaryKey && !col.isForeignKey) {
+        measures.push({
+          name: `${col.name}Sum`,
+          type: "sum",
+          column: col.name,
+          title: `Total ${col.name.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`
+        });
+        measures.push({
+          name: `${col.name}Avg`,
+          type: "avg",
+          column: col.name,
+          title: `Average ${col.name.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`
+        });
+      }
+    });
+
+    const joins: JoinDescriptor[] = table.relations.map(rel => {
+      const relationship: JoinRelationship =
+        rel.direction === "left"
+          ? (rel.mapping.leftCardinality === "many" ? "belongsTo" : "hasOne")
+          : "hasMany";
+
+      const joinCondition = rel.mapping.columnPairs
+        .map(([left, right]) => `${table.id}.${left} = ${rel.otherTable}.${right}`)
+        .join(" AND ");
+
+      return {
+        name: rel.otherTable.split('.')[1],
+        relationship,
+        on: joinCondition,
+      };
+    });
+
+    const newCube: CubeDescriptor = {
+      name: table.name,
+      table: table.id,
+      title: table.name.charAt(0).toUpperCase() + table.name.slice(1),
+      description: `Auto-generated cube for ${table.name}`,
+      measures,
+      dimensions,
+      joins,
+      segments: [],
+    };
+
+    setCubes([...cubes, newCube]);
+    setSelectedCube(newCube.name);
+    setShowTableSelector(false);
   };
 
   const addMeasure = () => {
@@ -214,6 +403,11 @@ export default function CubeConfigurator() {
     setSelectedCube(newCube.name);
   };
 
+  const allTables = metadata.schemas.flatMap(s => s.tables);
+  const availableColumns = cubeTable?.columns || [];
+  const availableRelations = cubeTable?.relations || [];
+  const otherCubes = cubes.filter(c => c.name !== selectedCube);
+
   return (
     <div style={{
       display: "flex",
@@ -314,9 +508,12 @@ export default function CubeConfigurator() {
         <div style={{
           padding: "16px",
           borderTop: "1px solid #2a2f32",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
         }}>
           <button
-            onClick={addNewCube}
+            onClick={() => setShowTableSelector(!showTableSelector)}
             style={{
               width: "100%",
               padding: "12px",
@@ -324,6 +521,26 @@ export default function CubeConfigurator() {
               border: "none",
               borderRadius: "8px",
               color: "#fff",
+              fontSize: "14px",
+              fontWeight: "500",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+            }}>
+            <Wand2 size={18} />
+            Generate from DB
+          </button>
+          <button
+            onClick={addNewCube}
+            style={{
+              width: "100%",
+              padding: "12px",
+              backgroundColor: "#2a3942",
+              border: "none",
+              borderRadius: "8px",
+              color: "#e9edef",
               fontSize: "14px",
               fontWeight: "500",
               cursor: "pointer",
@@ -345,7 +562,107 @@ export default function CubeConfigurator() {
         flexDirection: "column",
         overflow: "hidden",
       }}>
-        {cube ? (
+        {showTableSelector ? (
+          <div style={{
+            flex: 1,
+            padding: "32px",
+            overflowY: "auto",
+          }}>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: "24px",
+            }}>
+              <h2 style={{ fontSize: "24px", fontWeight: "600", margin: 0 }}>
+                Select a Table to Generate Cube
+              </h2>
+              <button
+                onClick={() => setShowTableSelector(false)}
+                style={{
+                  padding: "8px",
+                  backgroundColor: "#2a3942",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#e9edef",
+                  cursor: "pointer",
+                }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: "16px",
+            }}>
+              {allTables.map(table => (
+                <div
+                  key={table.id}
+                  onClick={() => generateCubeFromTable(table)}
+                  style={{
+                    padding: "20px",
+                    backgroundColor: "#1f2c33",
+                    borderRadius: "12px",
+                    border: "1px solid #2a2f32",
+                    cursor: "pointer",
+                    transition: "all 0.2s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "#00a884";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "#2a2f32";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginBottom: "12px",
+                  }}>
+                    <Table size={20} color="#00a884" />
+                    <div style={{ fontSize: "18px", fontWeight: "500" }}>
+                      {table.name}
+                    </div>
+                  </div>
+                  <div style={{
+                    fontSize: "13px",
+                    color: "#8696a0",
+                    marginBottom: "12px",
+                    fontFamily: "monospace",
+                  }}>
+                    {table.id}
+                  </div>
+                  <div style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "8px",
+                  }}>
+                    <span style={{
+                      padding: "4px 10px",
+                      backgroundColor: "#2a3942",
+                      borderRadius: "12px",
+                      fontSize: "11px",
+                    }}>
+                      {table.columns.length} columns
+                    </span>
+                    <span style={{
+                      padding: "4px 10px",
+                      backgroundColor: "#2a3942",
+                      borderRadius: "12px",
+                      fontSize: "11px",
+                    }}>
+                      {table.relations.length} relations
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : cube ? (
           <>
             <div style={{
               padding: "24px 32px",
@@ -406,10 +723,11 @@ export default function CubeConfigurator() {
                   marginBottom: "12px",
                 }}
               />
-              <input
-                type="text"
+              <Autocomplete
                 value={cube.table}
-                onChange={(e) => updateCube({ table: e.target.value })}
+                options={allTables.map(t => t.id)}
+                onChange={(v: any) => updateCube({ table: v })}
+                placeholder="schema.table"
                 style={{
                   width: "100%",
                   padding: "8px 12px",
@@ -441,6 +759,7 @@ export default function CubeConfigurator() {
                   <MeasureCard
                     key={idx}
                     measure={measure}
+                    availableColumns={availableColumns}
                     isEditing={editingItem?.type === "measure" && editingItem?.index === idx}
                     onEdit={() => setEditingItem({ type: "measure", index: idx })}
                     onSave={() => setEditingItem(null)}
@@ -462,6 +781,7 @@ export default function CubeConfigurator() {
                   <DimensionCard
                     key={idx}
                     dimension={dimension}
+                    availableColumns={availableColumns}
                     isEditing={editingItem?.type === "dimension" && editingItem?.index === idx}
                     onEdit={() => setEditingItem({ type: "dimension", index: idx })}
                     onSave={() => setEditingItem(null)}
@@ -483,6 +803,9 @@ export default function CubeConfigurator() {
                   <JoinCard
                     key={idx}
                     join={join}
+                    availableRelations={availableRelations}
+                    otherCubes={otherCubes}
+                    cubeTable={cubeTable}
                     isEditing={editingItem?.type === "join" && editingItem?.index === idx}
                     onEdit={() => setEditingItem({ type: "join", index: idx })}
                     onSave={() => setEditingItem(null)}
@@ -504,6 +827,7 @@ export default function CubeConfigurator() {
                   <SegmentCard
                     key={idx}
                     segment={segment}
+                    availableColumns={availableColumns}
                     isEditing={editingItem?.type === "segment" && editingItem?.index === idx}
                     onEdit={() => setEditingItem({ type: "segment", index: idx })}
                     onSave={() => setEditingItem(null)}
@@ -526,6 +850,7 @@ export default function CubeConfigurator() {
           }}>
             <Database size={64} />
             <div style={{ fontSize: "18px" }}>Select a cube to configure</div>
+            <div style={{ fontSize: "14px" }}>or generate one from your database</div>
           </div>
         )}
       </div>
@@ -602,7 +927,11 @@ function Section({ title, icon, count, expanded, onToggle, onAdd, children }: an
   );
 }
 
-function MeasureCard({ measure, isEditing, onEdit, onSave, onDelete, onChange }: any) {
+function MeasureCard({ measure, availableColumns, isEditing, onEdit, onSave, onDelete, onChange }: any) {
+  const numericColumns = availableColumns.filter((c: ColumnDescriptor) =>
+    c.semanticType === "number" && !c.isPrimaryKey
+  );
+
   return (
     <div style={{
       padding: "12px 16px",
@@ -613,17 +942,25 @@ function MeasureCard({ measure, isEditing, onEdit, onSave, onDelete, onChange }:
     }}>
       {isEditing ? (
         <div>
-          <Input label="Name" value={measure.name} onChange={(v: any) => onChange({ name: v })} />
-          <Input label="Title" value={measure.title || ""} onChange={(v: any) => onChange({ title: v })} />
+          <Input label="Name" value={measure.name} onChange={(v: string) => onChange({ name: v })} />
+          <Input label="Title" value={measure.title || ""} onChange={(v: string) => onChange({ title: v })} />
           <Select
             label="Type"
             value={measure.type}
             options={["count", "countDistinct", "sum", "avg", "min", "max"]}
-            onChange={(v: any) => onChange({ type: v })}
+            onChange={(v: string) => onChange({ type: v })}
           />
-          <Input label="Column" value={measure.column || ""} onChange={(v: any) => onChange({ column: v })} />
-          <Input label="Expression" value={measure.expression || ""} onChange={(v: any) => onChange({ expression: v })} />
-          <Input label="Description" value={measure.description || ""} onChange={(v: any) => onChange({ description: v })} />
+          {measure.type !== "count" && (
+            <Autocomplete
+              label="Column"
+              value={measure.column || ""}
+              options={numericColumns.map((c: ColumnDescriptor) => c.name)}
+              onChange={(v: string) => onChange({ column: v })}
+              placeholder="Select column..."
+            />
+          )}
+          <Input label="Expression (SQL)" value={measure.expression || ""} onChange={(v: string) => onChange({ expression: v })} />
+          <Input label="Description" value={measure.description || ""} onChange={(v: string) => onChange({ description: v })} />
           <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
             <button onClick={onSave} style={btnStyle("#00a884")}>
               <Save size={14} /> Save
@@ -670,7 +1007,7 @@ function MeasureCard({ measure, isEditing, onEdit, onSave, onDelete, onChange }:
   );
 }
 
-function DimensionCard({ dimension, isEditing, onEdit, onSave, onDelete, onChange }: any) {
+function DimensionCard({ dimension, availableColumns, isEditing, onEdit, onSave, onDelete, onChange }: any) {
   return (
     <div style={{
       padding: "12px 16px",
@@ -681,20 +1018,33 @@ function DimensionCard({ dimension, isEditing, onEdit, onSave, onDelete, onChang
     }}>
       {isEditing ? (
         <div>
-          <Input label="Name" value={dimension.name} onChange={(v: any) => onChange({ name: v })} />
-          <Input label="Title" value={dimension.title || ""} onChange={(v: any) => onChange({ title: v })} />
-          <Input label="Column" value={dimension.column} onChange={(v: any) => onChange({ column: v })} />
+          <Input label="Name" value={dimension.name} onChange={(v: string) => onChange({ name: v })} />
+          <Input label="Title" value={dimension.title || ""} onChange={(v: string) => onChange({ title: v })} />
+          <Autocomplete
+            label="Column"
+            value={dimension.column}
+            options={availableColumns.map((c: ColumnDescriptor) => c.name)}
+            onChange={(v: string) => {
+              const col = availableColumns.find((c: ColumnDescriptor) => c.name === v);
+              onChange({
+                column: v,
+                type: col?.semanticType || dimension.type,
+                primaryKey: col?.isPrimaryKey || false
+              });
+            }}
+            placeholder="Select column..."
+          />
           <Select
             label="Type"
             value={dimension.type}
             options={["string", "number", "time", "boolean"]}
-            onChange={(v: any) => onChange({ type: v })}
+            onChange={(v: string) => onChange({ type: v })}
           />
-          <Input label="Description" value={dimension.description || ""} onChange={(v: any) => onChange({ description: v })} />
+          <Input label="Description" value={dimension.description || ""} onChange={(v: string) => onChange({ description: v })} />
           <Checkbox
             label="Primary Key"
             checked={dimension.primaryKey || false}
-            onChange={(v: any) => onChange({ primaryKey: v })}
+            onChange={(v: boolean) => onChange({ primaryKey: v })}
           />
           <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
             <button onClick={onSave} style={btnStyle("#00a884")}>
@@ -743,7 +1093,30 @@ function DimensionCard({ dimension, isEditing, onEdit, onSave, onDelete, onChang
   );
 }
 
-function JoinCard({ join, isEditing, onEdit, onSave, onDelete, onChange }: any) {
+function JoinCard({ join, availableRelations, otherCubes, cubeTable, isEditing, onEdit, onSave, onDelete, onChange }: any) {
+  const suggestJoinFromRelation = (relName: string) => {
+    const rel = availableRelations.find((r: RelationDescriptor) => r.otherTable.includes(relName));
+    if (rel && cubeTable) {
+      const relationship: JoinRelationship =
+        rel.direction === "left"
+          ? (rel.mapping.leftCardinality === "many" ? "belongsTo" : "hasOne")
+          : "hasMany";
+
+      // @ts-ignore
+        // @ts-ignore
+        const joinCondition = rel.mapping.columnPairs
+             // @ts-ignore
+        .map(([left, right]) => `${cubeTable.id}.${left} = ${rel.otherTable}.${right}`)
+        .join(" AND ");
+
+      onChange({
+        name: relName,
+        relationship,
+        on: joinCondition
+      });
+    }
+  };
+
   return (
     <div style={{
       padding: "12px 16px",
@@ -754,15 +1127,23 @@ function JoinCard({ join, isEditing, onEdit, onSave, onDelete, onChange }: any) 
     }}>
       {isEditing ? (
         <div>
-          <Input label="Name" value={join.name} onChange={(v: any) => onChange({ name: v })} />
+          <Autocomplete
+            label="Target Cube"
+            value={join.name}
+            options={[...otherCubes.map((c: CubeDescriptor) => c.name), ...availableRelations.map((r: RelationDescriptor) => r.otherTable.split('.')[1])]}
+            onChange={(v: string) => {
+              suggestJoinFromRelation(v);
+            }}
+            placeholder="Select cube to join..."
+          />
           <Select
             label="Relationship"
             value={join.relationship}
             options={["belongsTo", "hasMany", "hasOne"]}
-            onChange={(v: any) => onChange({ relationship: v })}
+            onChange={(v: string) => onChange({ relationship: v })}
           />
-          <Input label="On" value={join.on} onChange={(v: any) => onChange({ on: v })} />
-          <Input label="Relation Mapping ID" value={join.relationMappingId || ""} onChange={(v: any) => onChange({ relationMappingId: v })} />
+          <Input label="Join Condition (SQL)" value={join.on} onChange={(v: string) => onChange({ on: v })} />
+          <Input label="Relation Mapping ID" value={join.relationMappingId || ""} onChange={(v: string) => onChange({ relationMappingId: v })} />
           <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
             <button onClick={onSave} style={btnStyle("#00a884")}>
               <Save size={14} /> Save
@@ -806,7 +1187,7 @@ function JoinCard({ join, isEditing, onEdit, onSave, onDelete, onChange }: any) 
   );
 }
 
-function SegmentCard({ segment, isEditing, onEdit, onSave, onDelete, onChange }: any) {
+function SegmentCard({ segment, availableColumns, isEditing, onEdit, onSave, onDelete, onChange }: any) {
   return (
     <div style={{
       padding: "12px 16px",
@@ -817,10 +1198,22 @@ function SegmentCard({ segment, isEditing, onEdit, onSave, onDelete, onChange }:
     }}>
       {isEditing ? (
         <div>
-          <Input label="Name" value={segment.name} onChange={(v: any) => onChange({ name: v })} />
-          <Input label="Title" value={segment.title || ""} onChange={(v: any) => onChange({ title: v })} />
-          <Input label="Expression" value={segment.expression} onChange={(v: any) => onChange({ expression: v })} />
-          <Input label="Description" value={segment.description || ""} onChange={(v: any) => onChange({ description: v })} />
+          <Input label="Name" value={segment.name} onChange={(v: string) => onChange({ name: v })} />
+          <Input label="Title" value={segment.title || ""} onChange={(v: string) => onChange({ title: v })} />
+          <Input label="Expression (SQL)" value={segment.expression} onChange={(v: string) => onChange({ expression: v })} />
+          <Input label="Description" value={segment.description || ""} onChange={(v: string) => onChange({ description: v })} />
+          {availableColumns.length > 0 && (
+            <div style={{
+              marginTop: "8px",
+              padding: "8px",
+              backgroundColor: "#1f2c33",
+              borderRadius: "4px",
+              fontSize: "11px",
+              color: "#8696a0"
+            }}>
+              Available columns: {availableColumns.map((c: ColumnDescriptor) => c.name).join(", ")}
+            </div>
+          )}
           <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
             <button onClick={onSave} style={btnStyle("#00a884")}>
               <Save size={14} /> Save
@@ -915,6 +1308,98 @@ function Select({ label, value, options, onChange }: any) {
           <option key={opt} value={opt}>{opt}</option>
         ))}
       </select>
+    </div>
+  );
+}
+
+function Autocomplete({ label, value, options, onChange, placeholder, style }: any) {
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
+
+  const handleChange = (val: string) => {
+    onChange(val);
+    if (val) {
+      const filtered = options.filter((opt: string) =>
+        opt.toLowerCase().includes(val.toLowerCase())
+      );
+      setFilteredOptions(filtered);
+      setShowSuggestions(filtered.length > 0);
+    } else {
+      setFilteredOptions(options);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleFocus = () => {
+    setFilteredOptions(options);
+    setShowSuggestions(options.length > 0);
+  };
+
+  return (
+    <div style={{ marginBottom: label ? "12px" : 0, position: "relative" }}>
+      {label && (
+        <label style={{ display: "block", fontSize: "12px", color: "#8696a0", marginBottom: "4px" }}>
+          {label}
+        </label>
+      )}
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => handleChange(e.target.value)}
+        onFocus={handleFocus}
+        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+        placeholder={placeholder}
+        style={style || {
+          width: "100%",
+          padding: "8px 12px",
+          backgroundColor: "#1f2c33",
+          border: "1px solid #3b4a54",
+          borderRadius: "6px",
+          color: "#e9edef",
+          fontSize: "13px",
+          outline: "none",
+        }}
+      />
+      {showSuggestions && filteredOptions.length > 0 && (
+        <div style={{
+          position: "absolute",
+          top: "100%",
+          left: 0,
+          right: 0,
+          backgroundColor: "#1f2c33",
+          border: "1px solid #3b4a54",
+          borderRadius: "6px",
+          marginTop: "4px",
+          maxHeight: "200px",
+          overflowY: "auto",
+          zIndex: 1000,
+        }}>
+          {filteredOptions.map((opt: string) => (
+            <div
+              key={opt}
+              onClick={() => {
+                onChange(opt);
+                setShowSuggestions(false);
+              }}
+              style={{
+                padding: "8px 12px",
+                cursor: "pointer",
+                fontSize: "13px",
+                color: "#e9edef",
+                borderBottom: "1px solid #2a2f32",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#2a3942";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+              }}
+            >
+              {opt}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
