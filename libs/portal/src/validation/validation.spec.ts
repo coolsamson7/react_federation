@@ -17,6 +17,7 @@ enum StringColor {
 describe("validation", () => {
     it("should work", async () => {
         let intConstraints = Type.getConstraints("integer")
+        let stringConstraints = Type.getConstraints("string")
 
         console.log(intConstraints)
 

@@ -7,7 +7,7 @@ export class NumberType extends Type<number> {
      // static block
 
     static {
-        Type.registerFactory("number", NumberType);
+
     }
 
     // constructor
@@ -191,6 +191,8 @@ export class NumberType extends Type<number> {
           };
       }
 }
+
+Type.registerFactory("number", NumberType);
 
 // more
 

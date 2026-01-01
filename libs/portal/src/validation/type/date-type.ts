@@ -7,7 +7,7 @@ export class DateType extends Type<Date> {
     // static block
 
     static {
-        Type.registerFactory("date", DateType);
+
     }
 
     // constructor
@@ -81,5 +81,7 @@ export class DateType extends Type<Date> {
         return this
     }
 }
+
+ Type.registerFactory("date", DateType);
 
 export const date = (name?: string) => new DateType(name)

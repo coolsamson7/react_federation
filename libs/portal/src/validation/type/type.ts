@@ -35,7 +35,6 @@ class Patch {
 }
 
 export interface ConstraintMethodDescriptor {
-    typeName: string;         // the Type this constraint belongs to, e.g. "string"
     name: string;             // method name: "max"
     params: { name: string; type: any }[];  // parameter names + type
 }
@@ -62,17 +61,23 @@ export const Constraint = (): MethodDecorator => {
             .map(p => p.trim())
             .filter(Boolean) || [];
 
-        // combine names and types
-        const params = paramNames.map((name, i) => ({ name, type: paramTypes[i] }));
+        // combine names and types, filter out optional info parameters
+        const params = paramNames
+            .map((name, i) => ({
+                name: name.replace(/\?.*$/, ''), // remove ? and everything after
+                type: paramTypes[i],
+                isOptional: name.includes('?')
+            }))
+            .filter(p => !p.name.includes('info')) // exclude info parameters
+            .map(p => ({ name: p.name, type: p.type }));
 
         // store metadata with type info
         const existing: ConstraintMethodDescriptor[] =
-            Reflect.getMetadata("fluentConstraints", target) || [];
+            Reflect.getOwnMetadata("fluentConstraints", target) || [];
 
         console.log("target: ", target)
-        console.log();
+
         existing.push({
-            typeName: target.constructor.name,
             name: propertyKey as string,
             params
         });
@@ -96,40 +101,43 @@ export class Type<T> {
 
     static getConstraints(typeName: string): ConstraintMethodDescriptor[] {
         const type = this.factories.get(typeName);
-        if (!type) return [];
+        if (!type) {
+            console.warn(`Type '${typeName}' not found in factories`);
+            return [];
+        }
+        console.log(`Getting constraints for '${typeName}':`, type.constraints.map(c => c.name));
         return type.constraints;
     }
 
     static registerFactory(typeName: string, typeClass: { new(): Type<any> }) {
-    const constraints: ConstraintMethodDescriptor[] = [];
+        const constraints: ConstraintMethodDescriptor[] = [];
 
-    let proto = typeClass.prototype;
-    const seen = new Set<string>();
+        let proto = typeClass.prototype;
+        const seen = new Set<string>();
 
-    // walk prototype chain (important!)
-    while (proto && proto !== Object.prototype) {
-        const local: ConstraintMethodDescriptor[] =
-            Reflect.getMetadata("fluentConstraints", proto) || [];
+        // walk prototype chain (important!)
+        while (proto && proto !== Object.prototype) {
+            const local: ConstraintMethodDescriptor[] =
+                Reflect.getOwnMetadata("fluentConstraints", proto) || [];
 
-        for (const c of local) {
-            // child overrides parent
-            if (!seen.has(c.name)) {
-                seen.add(c.name);
-                constraints.push({
-                    ...c,
-                    typeName
-                });
+            for (const c of local) {
+                // child overrides parent
+                if (!seen.has(c.name)) {
+                    seen.add(c.name);
+                    constraints.push({
+                        ...c
+                    });
+                }
             }
+
+            proto = Object.getPrototypeOf(proto);
         }
 
-        proto = Object.getPrototypeOf(proto);
+        this.factories.set(typeName, {
+            typeClass,
+            constraints
+        });
     }
-
-    this.factories.set(typeName, {
-        typeClass,
-        constraints
-    });
-}
 
 
     static create(typeName: string, constraints?: Record<string, any>): Type<any> {

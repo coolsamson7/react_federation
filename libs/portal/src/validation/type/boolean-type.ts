@@ -45,6 +45,8 @@ export class BooleanType extends Type<boolean> {
     }
 }
 
+ Type.registerFactory("boolean", BooleanType);
+
 /**
  * return a new constraint based on boolean values
  */

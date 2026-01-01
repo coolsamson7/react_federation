@@ -4,12 +4,6 @@ import {Type, ConstraintInfo, Constraint} from "./type"
  * this constraint class adds specific checks for strings.
  */
 export class StringType extends Type<string> {
-    // static block
-
-    static {
-        Type.registerFactory("string",StringType);
-    }
-
     // static data
 
     private static readonly EMAIL =
@@ -155,5 +149,7 @@ export class StringType extends Type<string> {
         return this
     }
 }
+
+Type.registerFactory("string",StringType);
 
 export const string = (name?: string) => new StringType(name)
