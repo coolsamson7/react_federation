@@ -99,9 +99,9 @@ export function ConstraintPanel({ criterion, onUpdateConstraints }: ConstraintPa
       const typeName = Object.keys(typeRecord)[0];
       const constraints = typeRecord[typeName] || {};
 
-      return Object.entries(constraints).map(([name, params]) => ({
+      return Object.entries(constraints).map(([name, params]): AppliedConstraint => ({
         name,
-        params: typeof params === 'object' && params !== null ? params as Record<string, any> : { value: params },
+        params: (typeof params === 'object' && params !== null) ? (params as Record<string, any>) : { value: params },
       }));
     }
     return [];
