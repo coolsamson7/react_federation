@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { ValueType } from "../../examples/cube-widget-data";
-
 interface ValueTypeEditorProps {
   value: ValueType;
   onChange: (value: ValueType) => void;
@@ -11,61 +10,61 @@ interface ValueTypeEditorProps {
 /**
  * Component that lets users toggle between direct value and variable binding
  */
-export function ValueTypeEditor({ 
+export function ValueTypeEditor({
   value,
   onChange,
-  inputType = "text",
-  placeholder = "Enter value or variable name"
+  inputType = "string",
+  placeholder = "Enter value or variable name",
 }: ValueTypeEditorProps) {
-  // Initialize with a default ValueType if none is provided
-  const [localValue, setLocalValue] = useState<ValueType>(
-    value || { type: 'value' as const, value: '' }
-  );
-  
-  useEffect(() => {
-    // Update local state when the prop changes
-    if (value && (value.type !== localValue.type || value.value !== localValue.value)) {
-      setLocalValue(value);
-    }
-  }, [value]);
-  
+  // Toggle between 'value' and 'variable'
   const handleTypeChange = () => {
-    // Toggle between 'value' and 'variable'
-    const newType = localValue.type === 'value' ? 'variable' as const : 'value' as const;
-    const newValue = {
-      ...localValue,
-      type: newType
+    const newType = value.type === "value" ? "variable" : "value";
+
+    // Reset value when switching type
+    const resetValue: ValueType = {
+      type: newType,
+      value: newType === "value" ? getDefaultValue(inputType) : "",
     };
-    setLocalValue(newValue);
-    onChange(newValue);
+
+    onChange(resetValue);
   };
-  
-  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+
+  // Handle input changes
+  const handleValueChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     let newVal: string | number | boolean = e.target.value;
-    
-    // Convert value based on input type
-    if (inputType === "number" && newVal !== "") {
-      newVal = parseFloat(newVal as string);
-    } else if (inputType === "checkbox") {
-      newVal = (e.target as HTMLInputElement).checked;
+
+    if (inputType === "number" && value.type === "value") {
+      newVal = newVal === "" ? "" : parseFloat(newVal as string);
+    } else if (inputType === "boolean") {
+      newVal = (e.target as HTMLSelectElement).value === "true";
     }
-    
-    const newValue = {
-      ...localValue,
-      value: newVal
-    };
-    setLocalValue(newValue);
+
+    const newValue: ValueType = { ...value, value: newVal };
     onChange(newValue);
   };
 
-  // Main styles
+  // Determine default value based on type
+  const getDefaultValue = (type: string): string | number | boolean => {
+    switch (type) {
+      case "number":
+        return 0;
+      case "boolean":
+        return false;
+      default:
+        return "";
+    }
+  };
+
+  // Styles
   const containerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     width: "100%",
     position: "relative",
   };
-  
+
   const inputStyle: React.CSSProperties = {
     flex: 1,
     padding: "4px 8px 4px 28px",
@@ -74,9 +73,9 @@ export function ValueTypeEditor({
     border: "1px solid #404040",
     borderRadius: "2px",
     fontSize: "11px",
-    width: "100%"
+    width: "100%",
   };
-  
+
   const iconContainerStyle: React.CSSProperties = {
     position: "absolute",
     left: "6px",
@@ -85,23 +84,27 @@ export function ValueTypeEditor({
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    zIndex: 1,
   };
 
-  // Conditional rendering for boolean type
+  // Boolean input
   if (inputType === "boolean") {
     return (
       <div style={containerStyle}>
         <div style={iconContainerStyle} onClick={handleTypeChange}>
-          {localValue.type === 'variable' ? (
-            <span title="Variable binding" style={{ color: '#4a9eff' }}>⚡</span>
+          {value.type === "variable" ? (
+            <span title="Variable binding" style={{ color: "#4a9eff" }}>
+              ⚡
+            </span>
           ) : (
-            <span title="Direct value" style={{ color: '#cccccc' }}>✏️</span>
+            <span title="Direct value" style={{ color: "#cccccc" }}>
+              ✏️
+            </span>
           )}
         </div>
-        
-        <select 
-          value={String(localValue.value)} 
+        <select
+          value={String(value.value)}
           onChange={handleValueChange}
           style={inputStyle}
         >
@@ -112,23 +115,28 @@ export function ValueTypeEditor({
       </div>
     );
   }
-  
-  // For text, number and other types
+
+  // Text or number input - key difference: use text input for variable type
+  const inputTypeToUse = value.type === "variable" ? "text" : (inputType === "number" ? "number" : "text");
+
   return (
     <div style={containerStyle}>
       <div style={iconContainerStyle} onClick={handleTypeChange}>
-        {localValue.type === 'variable' ? (
-          <span title="Variable binding" style={{ color: '#4a9eff' }}>⚡</span>
+        {value.type === "variable" ? (
+          <span title="Variable binding" style={{ color: "#4a9eff" }}>
+            ⚡
+          </span>
         ) : (
-          <span title="Direct value" style={{ color: '#cccccc' }}>✏️</span>
+          <span title="Direct value" style={{ color: "#cccccc" }}>
+            ✏️
+          </span>
         )}
       </div>
-      
       <input
-        type={inputType}
-        value={localValue.value !== undefined ? String(localValue.value) : ''}
+        type={inputTypeToUse}
+        value={value.value !== undefined ? String(value.value) : ""}
         onChange={handleValueChange}
-        placeholder={placeholder}
+        placeholder={value.type === "variable" ? "Variable name (e.g., myVar)" : placeholder}
         style={inputStyle}
       />
     </div>

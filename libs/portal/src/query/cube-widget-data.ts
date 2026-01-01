@@ -34,7 +34,7 @@ export const OPERATORS_BY_TYPE: Record<DimensionType, FilterOperator[]> = {
  * Input type for filter value based on dimension type
  */
 export const INPUT_TYPE_BY_DIMENSION: Record<DimensionType, string> = {
-  string: "text",
+  string: "string", // TODO? text
   number: "number",
   time: "date",
   boolean: "select",
