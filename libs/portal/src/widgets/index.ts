@@ -28,3 +28,7 @@ export * from "./examples/text-widget-builder";
 export * from "./examples/list-widget-data";
 export * from "./examples/list-widget-builder";
 export * from "./examples/example-usage";
+
+// service
+
+export * from "./dashboard-service"
