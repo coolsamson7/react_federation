@@ -1,116 +1,9 @@
 import React, { useState } from "react";
 import { Plus, Search, Database, Layers, Filter, Link, BarChart3, X, Edit2, Save, Trash2, ChevronRight, ChevronDown, Tag, Wand2, Table } from "lucide-react";
+import {CubeDescriptor, MeasureDescriptor, DimensionDescriptor, JoinDescriptor, SegmentDescriptor, JoinRelationship} from "./cube_metadata";
+import {ColumnDescriptor, DatabaseDescriptor, RelationDescriptor, TableDescriptor} from "./metadata";
 
-// Cube.js Type definitions
-type MeasureType = "count" | "countDistinct" | "sum" | "avg" | "min" | "max";
-type DimensionType = "string" | "number" | "time" | "boolean";
-type JoinRelationship = "belongsTo" | "hasMany" | "hasOne";
-type TimeGranularity = "second" | "minute" | "hour" | "day" | "week" | "month" | "quarter" | "year";
-
-interface MeasureDescriptor {
-  name: string;
-  type: MeasureType;
-  column?: string;
-  expression?: string;
-  title?: string;
-  description?: string;
-}
-
-interface DimensionDescriptor {
-  name: string;
-  column: string;
-  type: DimensionType;
-  primaryKey?: boolean;
-  granularities?: TimeGranularity[];
-  title?: string;
-  description?: string;
-}
-
-interface SegmentDescriptor {
-  name: string;
-  expression: string;
-  title?: string;
-  description?: string;
-}
-
-interface JoinDescriptor {
-  name: string;
-  relationship: JoinRelationship;
-  on: string;
-  relationMappingId?: string;
-}
-
-interface CubeDescriptor {
-  name: string;
-  table: string;
-  sql?: string;
-  measures?: MeasureDescriptor[];
-  dimensions?: DimensionDescriptor[];
-  segments?: SegmentDescriptor[];
-  joins?: JoinDescriptor[];
-  title?: string;
-  description?: string;
-}
-
-// Database Metadata Types
-type SemanticType = "string" | "number" | "time" | "boolean";
-type Cardinality = "one" | "many";
-
-interface ColumnDescriptor {
-  name: string;
-  dbType: string;
-  sqlalchemyType: string;
-  semanticType: SemanticType;
-  nullable: boolean;
-  isPrimaryKey: boolean;
-  isForeignKey: boolean;
-}
-
-interface ForeignKeyDescriptor {
-  name?: string;
-  sourceColumn: string;
-  targetTable: string;
-  targetColumn: string;
-}
-
-interface RelationMappingDescriptor {
-  leftTable: string;
-  rightTable: string;
-  columnPairs: Array<[string, string]>;
-  leftCardinality: Cardinality;
-  rightCardinality: Cardinality;
-  bridgeTable?: string;
-  foreignKeys?: ForeignKeyDescriptor[];
-}
-
-interface RelationDescriptor {
-  table: string;
-  otherTable: string;
-  mapping: RelationMappingDescriptor;
-  direction: "left" | "right";
-  attributeName?: string;
-  inverseName?: string;
-}
-
-interface TableDescriptor {
-  id: string;
-  schema?: string;
-  name: string;
-  columns: ColumnDescriptor[];
-  primaryKey: string[];
-  foreignKeys: ForeignKeyDescriptor[];
-  relations: RelationDescriptor[];
-}
-
-interface SchemaDescriptor {
-  name: string;
-  tables: TableDescriptor[];
-}
-
-interface DatabaseDescriptor {
-  dialect: string;
-  schemas: SchemaDescriptor[];
-}
+import {CubeService, MetadataService} from "@portal/metadata/cube_metadata";
 
 // Sample database metadata
 const sampleMetadata: DatabaseDescriptor = {
@@ -124,30 +17,30 @@ const sampleMetadata: DatabaseDescriptor = {
           schema: "public",
           name: "orders",
           columns: [
-            { name: "id", dbType: "INTEGER", sqlalchemyType: "Integer", semanticType: "number", nullable: false, isPrimaryKey: true, isForeignKey: false },
-            { name: "customer_id", dbType: "INTEGER", sqlalchemyType: "Integer", semanticType: "number", nullable: false, isPrimaryKey: false, isForeignKey: true },
-            { name: "amount", dbType: "DECIMAL", sqlalchemyType: "Numeric", semanticType: "number", nullable: false, isPrimaryKey: false, isForeignKey: false },
-            { name: "status", dbType: "VARCHAR", sqlalchemyType: "String", semanticType: "string", nullable: false, isPrimaryKey: false, isForeignKey: false },
-            { name: "created_at", dbType: "TIMESTAMP", sqlalchemyType: "DateTime", semanticType: "time", nullable: false, isPrimaryKey: false, isForeignKey: false },
-            { name: "updated_at", dbType: "TIMESTAMP", sqlalchemyType: "DateTime", semanticType: "time", nullable: true, isPrimaryKey: false, isForeignKey: false },
+            { name: "id", db_type: "INTEGER", sqlalchemy_type: "Integer", semantic_type: "number", nullable: false, is_primary_key: true, is_foreign_key: false },
+            { name: "customer_id", db_type: "INTEGER", sqlalchemy_type: "Integer", semantic_type: "number", nullable: false, is_primary_key: false, is_foreign_key: true },
+            { name: "amount", db_type: "DECIMAL", sqlalchemy_type: "Numeric", semantic_type: "number", nullable: false, is_primary_key: false, is_foreign_key: false },
+            { name: "status", db_type: "VARCHAR", sqlalchemy_type: "String", semantic_type: "string", nullable: false, is_primary_key: false, is_foreign_key: false },
+            { name: "created_at", db_type: "TIMESTAMP", sqlalchemy_type: "DateTime", semantic_type: "time", nullable: false, is_primary_key: false, is_foreign_key: false },
+            { name: "updated_at", db_type: "TIMESTAMP", sqlalchemy_type: "DateTime", semantic_type: "time", nullable: true, is_primary_key: false, is_foreign_key: false },
           ],
-          primaryKey: ["id"],
-          foreignKeys: [
-            { sourceColumn: "customer_id", targetTable: "public.customers", targetColumn: "id" }
+          primary_key: ["id"],
+          foreign_keys: [
+            { source_column: "customer_id", target_table: "public.customers", target_column: "id" }
           ],
           relations: [
             {
               table: "public.orders",
-              otherTable: "public.customers",
+              other_table: "public.customers",
               mapping: {
-                leftTable: "public.orders",
-                rightTable: "public.customers",
-                columnPairs: [["customer_id", "id"]],
-                leftCardinality: "many",
-                rightCardinality: "one"
+                left_table: "public.orders",
+                right_table: "public.customers",
+                column_pairs: [["customer_id", "id"]],
+                left_cardinality: "many",
+                right_cardinality: "one"
               },
               direction: "left",
-              attributeName: "customer"
+              attribute_name: "customer"
             }
           ]
         },
@@ -156,26 +49,26 @@ const sampleMetadata: DatabaseDescriptor = {
           schema: "public",
           name: "customers",
           columns: [
-            { name: "id", dbType: "INTEGER", sqlalchemyType: "Integer", semanticType: "number", nullable: false, isPrimaryKey: true, isForeignKey: false },
-            { name: "name", dbType: "VARCHAR", sqlalchemyType: "String", semanticType: "string", nullable: false, isPrimaryKey: false, isForeignKey: false },
-            { name: "email", dbType: "VARCHAR", sqlalchemyType: "String", semanticType: "string", nullable: false, isPrimaryKey: false, isForeignKey: false },
-            { name: "created_at", dbType: "TIMESTAMP", sqlalchemyType: "DateTime", semanticType: "time", nullable: false, isPrimaryKey: false, isForeignKey: false },
+            { name: "id", db_type: "INTEGER", sqlalchemy_type: "Integer", semantic_type: "number", nullable: false, is_primary_key: true, is_foreign_key: false },
+            { name: "name", db_type: "VARCHAR", sqlalchemy_type: "String", semantic_type: "string", nullable: false, is_primary_key: false, is_foreign_key: false },
+            { name: "email", db_type: "VARCHAR", sqlalchemy_type: "String", semantic_type: "string", nullable: false, is_primary_key: false, is_foreign_key: false },
+            { name: "created_at", db_type: "TIMESTAMP", sqlalchemy_type: "DateTime", semantic_type: "time", nullable: false, is_primary_key: false, is_foreign_key: false },
           ],
-          primaryKey: ["id"],
-          foreignKeys: [],
+          primary_key: ["id"],
+          foreign_keys: [],
           relations: [
             {
               table: "public.customers",
-              otherTable: "public.orders",
+              other_table: "public.orders",
               mapping: {
-                leftTable: "public.orders",
-                rightTable: "public.customers",
-                columnPairs: [["customer_id", "id"]],
-                leftCardinality: "many",
-                rightCardinality: "one"
+                left_table: "public.orders",
+                right_table: "public.customers",
+                column_pairs: [["customer_id", "id"]],
+                left_cardinality: "many",
+                right_cardinality: "one"
               },
               direction: "right",
-              attributeName: "orders"
+              attribute_name: "orders"
             }
           ]
         },
@@ -184,13 +77,13 @@ const sampleMetadata: DatabaseDescriptor = {
           schema: "public",
           name: "products",
           columns: [
-            { name: "id", dbType: "INTEGER", sqlalchemyType: "Integer", semanticType: "number", nullable: false, isPrimaryKey: true, isForeignKey: false },
-            { name: "name", dbType: "VARCHAR", sqlalchemyType: "String", semanticType: "string", nullable: false, isPrimaryKey: false, isForeignKey: false },
-            { name: "price", dbType: "DECIMAL", sqlalchemyType: "Numeric", semanticType: "number", nullable: false, isPrimaryKey: false, isForeignKey: false },
-            { name: "category", dbType: "VARCHAR", sqlalchemyType: "String", semanticType: "string", nullable: true, isPrimaryKey: false, isForeignKey: false },
+            { name: "id", db_type: "INTEGER", sqlalchemy_type: "Integer", semantic_type: "number", nullable: false, is_primary_key: true, is_foreign_key: false },
+            { name: "name", db_type: "VARCHAR", sqlalchemy_type: "String", semantic_type: "string", nullable: false, is_primary_key: false, is_foreign_key: false },
+            { name: "price", db_type: "DECIMAL", sqlalchemy_type: "Numeric", semantic_type: "number", nullable: false, is_primary_key: false, is_foreign_key: false },
+            { name: "category", db_type: "VARCHAR", sqlalchemy_type: "String", semantic_type: "string", nullable: true, is_primary_key: false, is_foreign_key: false },
           ],
-          primaryKey: ["id"],
-          foreignKeys: [],
+          primary_key: ["id"],
+          foreign_keys: [],
           relations: []
         }
       ]
@@ -199,8 +92,40 @@ const sampleMetadata: DatabaseDescriptor = {
 };
 
 export default function CubeConfigurator() {
-  const [metadata] = useState<DatabaseDescriptor>(sampleMetadata);
+
+  // TEsTMetadataService
+
+  // TEST
+
+  const [metadata, setMetadata] = useState<DatabaseDescriptor | null>(null);
   const [cubes, setCubes] = useState<CubeDescriptor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const metadataService = new MetadataService();
+  const cubeService = new CubeService();
+
+  // Add useEffect for loading data:
+  React.useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true);
+        const [metadataResult, cubesResult] = await Promise.all([
+          metadataService.getMetadata(),
+          cubeService.listCubes()
+        ]);
+        setMetadata(metadataResult);
+        setCubes(cubesResult);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load data");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
   const [selectedCube, setSelectedCube] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
@@ -217,75 +142,102 @@ export default function CubeConfigurator() {
   };
 
   const cube = cubes.find(c => c.name === selectedCube);
-  const cubeTable = cube ? metadata.schemas.flatMap(s => s.tables).find(t => t.id === cube.table) : null;
+  const cubeTable = cube ? metadata?.schemas.flatMap(s => s.tables).find(t => t.id === cube.table) : null;
 
-  const updateCube = (updates: Partial<CubeDescriptor>) => {
-    setCubes(cubes.map(c => c.name === selectedCube ? { ...c, ...updates } : c));
+  const updateCube = async (updates: Partial<CubeDescriptor>) => {
+    if (!cube) return;
+    const updated = { ...cube, ...updates };
+    try {
+      await cubeService.updateCube(updated);
+      setCubes(cubes.map(c => c.name === selectedCube ? updated : c));
+    } catch (err) {
+      alert(`Failed to update cube: ${err}`);
+    }
   };
 
   // Generate cube from table metadata
   const generateCubeFromTable = (table: TableDescriptor) => {
-    const dimensions: DimensionDescriptor[] = table.columns.map(col => ({
-      name: col.name,
-      column: col.name,
-      type: col.semanticType,
-      primaryKey: col.isPrimaryKey,
-      title: col.name.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-    }));
+  // --- Dimensions ---
+  const dimensions: DimensionDescriptor[] = table.columns.map(col => ({
+    name: col.name,
+    column: col.name,
+    type: col.semantic_type,
+    primary_key: col.is_primary_key,
+    title: col.name
+      .split('_')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' '),
+  }));
 
-    const measures: MeasureDescriptor[] = [
-      { name: "count", type: "count", title: "Count" }
-    ];
+  // --- Measures ---
+  const measures: MeasureDescriptor[] = [
+    { name: "count", type: "count", title: "Count" },
+  ];
 
-    table.columns.forEach(col => {
-      if (col.semanticType === "number" && !col.isPrimaryKey && !col.isForeignKey) {
-        measures.push({
-          name: `${col.name}Sum`,
-          type: "sum",
-          column: col.name,
-          title: `Total ${col.name.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`
-        });
-        measures.push({
-          name: `${col.name}Avg`,
-          type: "avg",
-          column: col.name,
-          title: `Average ${col.name.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`
-        });
-      }
+  table.columns.forEach(col => {
+    if (col.semantic_type === "number" && !col.is_primary_key && !col.is_foreign_key) {
+      const title = col.name
+        .split('_')
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ');
+
+      measures.push(
+        { name: `${col.name}Sum`, type: "sum", column: col.name, title: `Total ${title}` },
+        { name: `${col.name}Avg`, type: "avg", column: col.name, title: `Average ${title}` }
+      );
+    }
+  });
+
+  // --- Joins ---
+  // Remove duplicate relations by key
+  const seenJoins = new Set<string>();
+  const joins: JoinDescriptor[] = [];
+
+  table.relations.forEach(rel => {
+    // Unique key for this relation
+    const key = [rel.table, rel.other_table, JSON.stringify(rel.mapping.column_pairs)].join('|');
+    if (seenJoins.has(key)) return; // skip duplicates
+    seenJoins.add(key);
+
+    // Determine relationship type
+    let relationship: JoinRelationship;
+    if (rel.direction === "left") {
+      relationship = rel.mapping.left_cardinality === "many" ? "belongsTo" : "hasOne";
+    } else {
+      relationship = rel.mapping.left_cardinality === "many" ? "hasMany" : "hasOne";
+    }
+
+    // Build join condition
+    const joinCondition = rel.mapping.column_pairs
+      .map(([left, right]) => `${rel.table}.${left} = ${rel.other_table}.${right}`)
+      .join(" AND ");
+
+    // Join name = other table name (can adjust if you want aliasing)
+    joins.push({
+      name: rel.other_table.split('.').pop() || rel.other_table,
+      relationship,
+      on: joinCondition,
     });
+  });
 
-    const joins: JoinDescriptor[] = table.relations.map(rel => {
-      const relationship: JoinRelationship =
-        rel.direction === "left"
-          ? (rel.mapping.leftCardinality === "many" ? "belongsTo" : "hasOne")
-          : "hasMany";
-
-      const joinCondition = rel.mapping.columnPairs
-        .map(([left, right]) => `${table.id}.${left} = ${rel.otherTable}.${right}`)
-        .join(" AND ");
-
-      return {
-        name: rel.otherTable.split('.')[1],
-        relationship,
-        on: joinCondition,
-      };
-    });
-
-    const newCube: CubeDescriptor = {
-      name: table.name,
-      table: table.id,
-      title: table.name.charAt(0).toUpperCase() + table.name.slice(1),
-      description: `Auto-generated cube for ${table.name}`,
-      measures,
-      dimensions,
-      joins,
-      segments: [],
-    };
-
-    setCubes([...cubes, newCube]);
-    setSelectedCube(newCube.name);
-    setShowTableSelector(false);
+  // --- New cube object ---
+  const newCube: CubeDescriptor = {
+    name: table.name,
+    table: table.id,
+    title: table.name.charAt(0).toUpperCase() + table.name.slice(1),
+    description: `Auto-generated cube for ${table.name}`,
+    measures,
+    dimensions,
+    joins,
+    segments: [],
   };
+
+  // --- Update state ---
+  setCubes([...cubes, newCube]);
+  setSelectedCube(newCube.name);
+  setShowTableSelector(false);
+};
+
 
   const addMeasure = () => {
     if (!cube) return;
@@ -388,7 +340,7 @@ export default function CubeConfigurator() {
     setEditingItem(null);
   };
 
-  const addNewCube = () => {
+  const addNewCube = async () => {
     const newCube: CubeDescriptor = {
       name: "newCube",
       table: "schema.table",
@@ -399,11 +351,16 @@ export default function CubeConfigurator() {
       joins: [],
       segments: [],
     };
-    setCubes([...cubes, newCube]);
-    setSelectedCube(newCube.name);
+    try {
+      const created = await cubeService.createCube(newCube);
+      setCubes([...cubes, created]);
+      setSelectedCube(created.name);
+    } catch (err) {
+      alert(`Failed to create cube: ${err}`);
+    }
   };
 
-  const allTables = metadata.schemas.flatMap(s => s.tables);
+  const allTables = metadata?.schemas.flatMap(s => s.tables) || [];
   const availableColumns = cubeTable?.columns || [];
   const availableRelations = cubeTable?.relations || [];
   const otherCubes = cubes.filter(c => c.name !== selectedCube);
@@ -690,7 +647,18 @@ export default function CubeConfigurator() {
                   }}
                 />
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button style={{
+                  <button
+                       onClick={async () => {
+      if (cube) {
+        try {
+          await cubeService.createCube(cube);
+          //alert("Cube deployed successfully!");
+        } catch (err) {
+          alert(`Failed to deploy cube: ${err}`);
+        }
+      }
+    }}
+                       style={{
                     padding: "8px 16px",
                     backgroundColor: "#00a884",
                     border: "none",
@@ -929,7 +897,7 @@ function Section({ title, icon, count, expanded, onToggle, onAdd, children }: an
 
 function MeasureCard({ measure, availableColumns, isEditing, onEdit, onSave, onDelete, onChange }: any) {
   const numericColumns = availableColumns.filter((c: ColumnDescriptor) =>
-    c.semanticType === "number" && !c.isPrimaryKey
+    c.semantic_type === "number" && !c.is_primary_key
   );
 
   return (
@@ -1095,7 +1063,7 @@ function DimensionCard({ dimension, availableColumns, isEditing, onEdit, onSave,
 
 function JoinCard({ join, availableRelations, otherCubes, cubeTable, isEditing, onEdit, onSave, onDelete, onChange }: any) {
   const suggestJoinFromRelation = (relName: string) => {
-    const rel = availableRelations.find((r: RelationDescriptor) => r.otherTable.includes(relName));
+    const rel = availableRelations.find((r: RelationDescriptor) => r.other_table.includes(relName));
     if (rel && cubeTable) {
       const relationship: JoinRelationship =
         rel.direction === "left"
@@ -1130,7 +1098,7 @@ function JoinCard({ join, availableRelations, otherCubes, cubeTable, isEditing, 
           <Autocomplete
             label="Target Cube"
             value={join.name}
-            options={[...otherCubes.map((c: CubeDescriptor) => c.name), ...availableRelations.map((r: RelationDescriptor) => r.otherTable.split('.')[1])]}
+            options={[...otherCubes.map((c: CubeDescriptor) => c.name), ...availableRelations.map((r: RelationDescriptor) => r.other_table.split('.')[1])]}
             onChange={(v: string) => {
               suggestJoinFromRelation(v);
             }}

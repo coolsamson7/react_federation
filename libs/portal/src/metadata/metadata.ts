@@ -8,12 +8,12 @@ export type Cardinality = "one" | "many";
 // -------------------------
 export interface ColumnDescriptor {
   name: string;
-  dbType: string;
-  sqlalchemyType: string; // can keep as string for generic purposes
-  semanticType: SemanticType;
+  db_type: string;
+  sqlalchemy_type: string; // can keep as string for generic purposes
+  semantic_type: SemanticType;
   nullable: boolean;
-  isPrimaryKey: boolean;
-  isForeignKey: boolean;
+  is_primary_key: boolean;
+  is_foreign_key: boolean;
 }
 
 // -------------------------
@@ -21,27 +21,27 @@ export interface ColumnDescriptor {
 // -------------------------
 export interface ForeignKeyDescriptor {
   name?: string;
-  sourceColumn: string;
-  targetTable: string; // schema.table or just table
-  targetColumn: string;
+  source_column: string;
+  target_table: string; // schema.table or just table
+  target_column: string;
 }
 
 // -------------------------
 // Canonical relation mapping
 // -------------------------
 export interface RelationMappingDescriptor {
-  leftTable: string;
-  rightTable: string;
+  left_table: string;
+  right_table: string;
 
   // column pairs: [leftColumn, rightColumn]
-  columnPairs: Array<[string, string]>;
+  column_pairs: Array<[string, string]>;
 
-  leftCardinality: Cardinality;
-  rightCardinality: Cardinality;
+  left_cardinality: Cardinality;
+  right_cardinality: Cardinality;
 
-  bridgeTable?: string; // optional N-N association table
+  bridge_table?: string; // optional N-N association table
 
-  foreignKeys?: ForeignKeyDescriptor[]; // optional for debugging/UI
+  foreign_keys?: ForeignKeyDescriptor[]; // optional for debugging/UI
 }
 
 // -------------------------
@@ -49,12 +49,12 @@ export interface RelationMappingDescriptor {
 // -------------------------
 export interface RelationDescriptor {
   table: string;
-  otherTable: string;
+  other_table: string;
   mapping: RelationMappingDescriptor;
   direction: "left" | "right";
 
-  attributeName?: string; // ORM attribute name
-  inverseName?: string;   // ORM back_populates name
+  attribute_name?: string; // ORM attribute name
+  inverse_name?: string;   // ORM back_populates name
 }
 
 // -------------------------
@@ -66,9 +66,9 @@ export interface TableDescriptor {
   name: string;
 
   columns: ColumnDescriptor[];
-  primaryKey: string[];
+  primary_key: string[];
 
-  foreignKeys: ForeignKeyDescriptor[];
+  foreign_keys: ForeignKeyDescriptor[];
   relations: RelationDescriptor[];
 }
 

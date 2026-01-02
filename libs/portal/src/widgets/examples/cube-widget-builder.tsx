@@ -36,6 +36,8 @@ export class CubeWidgetBuilder extends WidgetBuilder<CubeWidgetData> {
 
     const { searchModel, predefinedQuery, onConfigChange } = this.context;
 
+    console.log("### CUBE ")
+
     console.log(predefinedQuery)
 
     if (!data.configuration) {

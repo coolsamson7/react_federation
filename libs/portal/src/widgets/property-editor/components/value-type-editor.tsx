@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ValueType } from "../../examples/cube-widget-data";
 interface ValueTypeEditorProps {
   value: ValueType;
