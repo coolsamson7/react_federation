@@ -420,6 +420,7 @@ export const WidgetEditor: React.FC = () => {
                     <div
                         style={{
                             display: "flex",
+                             gap: 8,
                             alignItems: "center",
                             justifyContent: "flex-start",
                             padding: "12px 16px",
@@ -427,6 +428,11 @@ export const WidgetEditor: React.FC = () => {
                             borderBottom: "1px solid #333",
                         }}
                     >
+
+                           <div className="dashboard-name">
+                                {currentDashboard ? currentDashboard.name : "Untitled Dashboard"}
+                            </div>
+
                         <button
                             onClick={() => setIsEditMode(!isEditMode)}
                             style={{
@@ -455,19 +461,57 @@ export const WidgetEditor: React.FC = () => {
                         </button>
 
                         {/* Dashboard controls */}
-                        <div className="dashboard-controls">
+                        <div className="dashboard-controls"
+                         style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
+                                padding: "6px 12px",
+
+                                fontWeight: 600,
+                                fontSize: 13,
+                                cursor: "pointer",
+                                transition: "all 0.2s ease",
+                            }}
+                        >
+
+
                             <button
+                                style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
+                                padding: "6px 12px",
+                                backgroundColor: isEditMode ? "#fff" : "#000",
+                                border: "1px solid #333",
+                                borderRadius: 4,
+                                color: isEditMode ? "#000" : "#fff",
+                                fontWeight: 600,
+                                fontSize: 13,
+                                cursor: "pointer",
+                                transition: "all 0.2s ease",
+                            }}
                                 className="new-dashboard-btn"
                                 onClick={handleNewDashboard}
                             >
                                 New
                             </button>
 
-                            <div className="dashboard-name">
-                                {currentDashboard ? currentDashboard.name : "Untitled Dashboard"}
-                            </div>
-
                             <button
+                                style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
+                                padding: "6px 12px",
+                                backgroundColor: isEditMode ? "#fff" : "#000",
+                                border: "1px solid #333",
+                                borderRadius: 4,
+                                color: isEditMode ? "#000" : "#fff",
+                                fontWeight: 600,
+                                fontSize: 13,
+                                cursor: "pointer",
+                                transition: "all 0.2s ease",
+                            }}
                                 className="save-dashboard-btn"
                                 onClick={handleSaveDashboard}
                                 disabled={!currentDashboard}
@@ -477,6 +521,20 @@ export const WidgetEditor: React.FC = () => {
 
                             <button
                                 className="load-dashboard-btn"
+                                style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 8,
+                                padding: "6px 12px",
+                                backgroundColor: isEditMode ? "#fff" : "#000",
+                                border: "1px solid #333",
+                                borderRadius: 4,
+                                color: isEditMode ? "#000" : "#fff",
+                                fontWeight: 600,
+                                fontSize: 13,
+                                cursor: "pointer",
+                                transition: "all 0.2s ease",
+                            }}
                                 onClick={handleLoadDashboard}
                             >
                                 Load

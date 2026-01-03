@@ -84,7 +84,7 @@ export function SearchPanelFullEditor({
             fontWeight: "600",
           }}
         >
-          📋 Search Model
+          Search Model
         </button>
         <button
           onClick={() => setActiveTab("query")}
@@ -99,7 +99,7 @@ export function SearchPanelFullEditor({
             fontWeight: "600",
           }}
         >
-          🔍 Predefined Query
+            Query
         </button>
       </div>
 
@@ -112,18 +112,15 @@ export function SearchPanelFullEditor({
             </h4>
             <SearchModelPanel
               onModelChange={onSearchModelChange}
-              searchModel={searchModel} // TODO FIX
-              //initialModel={searchModel}
+              searchModel={searchModel}
             />
           </div>
         ) : (
           <div>
-            <h4 style={{ margin: "0 0 12px 0", color: "#b0b0b0", fontSize: "13px" }}>
-              Set a Predefined Query (Optional)
+
+              <h4 style={{ margin: "0 0 12px 0", color: "#b0b0b0", fontSize: "13px" }}>
+               A predefined query will be automatically loaded when the search panel initializes.
             </h4>
-            <p style={{ color: "#888", fontSize: "12px", marginBottom: "12px" }}>
-              A predefined query will be automatically loaded when the search panel initializes.
-            </p>
             
             {searchModel && searchModel.criteria && searchModel.criteria.length > 0 ? (
               <div
@@ -163,7 +160,7 @@ export function SearchPanelFullEditor({
               </div>
             )}
 
-            {predefinedQuery && (
+            {predefinedQuery && false && (
               <button
                 onClick={() => onPredefinedQueryChange(null)}
                 style={{

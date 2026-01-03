@@ -401,7 +401,7 @@ export const ChipSearchPanel = React.memo(({
       )}
 
       {/* Search Button */}
-      {literalExpressions.length > 0 && (
+      {literalExpressions.length > 0 && false && (
         <div style={{ display: "flex", gap: "8px", paddingTop: "8px" }}>
           <button
             onClick={handleSearch}
@@ -419,21 +419,6 @@ export const ChipSearchPanel = React.memo(({
             }}
           >
             🔍 Search
-          </button>
-          <button
-            onClick={() => onQueryExpressionChange(null)}
-            style={{
-              padding: "10px 16px",
-              backgroundColor: "#3a3a3a",
-              border: "1px solid #505050",
-              borderRadius: "4px",
-              color: "#e0e0e0",
-              cursor: "pointer",
-              fontSize: "13px",
-              fontWeight: "600",
-            }}
-          >
-            Clear
           </button>
         </div>
       )}

@@ -143,54 +143,6 @@ export function SearchPanelCompactEditor({
             </ul>
           )}
         </div>
-        <button
-          onClick={() => {
-            // This would open a full configuration dialog
-            console.log("Open full search model editor");
-          }}
-          style={{
-            marginTop: "8px",
-            padding: "6px 12px",
-            backgroundColor: "#2a4a5a",
-            border: "1px solid #3a6a7a",
-            borderRadius: "3px",
-            color: "#e0e0e0",
-            fontSize: "11px",
-            cursor: "pointer",
-            width: "100%",
-          }}
-        >
-          📐 Configure Model
-        </button>
-      </CollapsibleSection>
-
-      {/* Predefined Query Section */}
-      <CollapsibleSection title="Predefined Query" defaultOpen={false}>
-        <div style={{ fontSize: "11px", color: "#888" }}>
-          {predefinedQuery ? (
-            <p style={{ margin: "0 0 8px 0", color: "#4caf50" }}>✓ Query configured</p>
-          ) : (
-            <p style={{ margin: "0 0 8px 0", color: "#999" }}>No query defined (optional)</p>
-          )}
-        </div>
-        <button
-          onClick={() => {
-            // This would open a query builder dialog
-            console.log("Open predefined query builder");
-          }}
-          style={{
-            padding: "6px 12px",
-            backgroundColor: predefinedQuery ? "#2a5a4a" : "#2a3a4a",
-            border: predefinedQuery ? "1px solid #3a7a5a" : "1px solid #3a4a5a",
-            borderRadius: "3px",
-            color: "#e0e0e0",
-            fontSize: "11px",
-            cursor: "pointer",
-            width: "100%",
-          }}
-        >
-          {predefinedQuery ? "📋 Edit Query" : "➕ Add Query"}
-        </button>
       </CollapsibleSection>
 
       {/* Expand to Full Editor */}
@@ -208,7 +160,7 @@ export function SearchPanelCompactEditor({
           width: "100%",
         }}
       >
-        🔧 Expand to Full Editor
+        🔧 Edit
       </button>
     </div>
   );
