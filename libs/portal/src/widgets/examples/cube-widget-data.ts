@@ -17,7 +17,7 @@ export interface CubeWidgetConfiguration {
   filters: Array<{
     dimension: string;
     operator: string;
-    value: ValueType;
+    values: any[];
   }>;
   renderingComponent: "linechart" | "barchart" | "table";
   xAxisField: string;
