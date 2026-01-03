@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { PropertyEditor } from "../property-editor-metadata";
 import { RegisterPropertyEditor } from "../property-editor-registry";
-import { CubeWidgetConfiguration, ValueType } from "../../examples/cube-widget-data";
-import {
-  FilterOperator,
-  operatorsForType,
-  CubeOperator,
-} from "../../../query/cube-widget-data";
+import { CubeWidgetConfiguration } from "../../examples/cube-widget-data";
+
 import { OperandEditor, OperandValue } from "@portal/widgets/property-editor/editors/cube-operand-editor";
+import {CubeOperator, FilterOperator, operatorsForType} from "@portal/query/cube-widget-data";
 
 /* ------------------------------------------------------------------ */
 /* Local cube database with dimension types for filtering             */
@@ -101,7 +98,7 @@ function CubeConfigurationForm({
     updateConfig({ ...config, dimensions: newDimensions });
   };
 
-  const sectionStyle: React.CSSProperties = {
+  const sectionStyle = {
     backgroundColor: "#1e1e1e",
     border: "1px solid #3a3a3a",
     borderRadius: "4px",
@@ -109,43 +106,42 @@ function CubeConfigurationForm({
     marginBottom: "12px",
   };
 
-  const sectionTitleStyle: React.CSSProperties = {
+  const sectionTitleStyle = {
     fontSize: "11px",
-    fontWeight: 600,
+    fontWeight: "600",
     color: "#b0b0b0",
     marginBottom: "8px",
     textTransform: "uppercase",
     letterSpacing: "0.5px",
   };
 
-  // @ts-ignore
-    // @ts-ignore
-    return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
       {/* Cube selection */}
       <div style={sectionStyle}>
         <div style={sectionTitleStyle}>Cube</div>
         <select
           value={config.cubeName}
-          onChange={(e) =>
+          onChange={(e) => {
+            const cubeName = e.target.value;
             updateConfig({
               ...config,
-              cubeName: e.target.value,
+              cubeName,
               measures: [],
               dimensions: [],
               xAxisField: "",
               yAxisField: "",
               filters: [],
-            })
-          }
+            });
+          }}
           style={{
             width: "100%",
             padding: "6px 8px",
             backgroundColor: "#1a1a1a",
             color: "#e0e0e0",
             border: "1px solid #404040",
-            borderRadius: 2,
-            fontSize: 12,
+            borderRadius: "2px",
+            fontSize: "12px",
           }}
         >
           {LOCAL_CUBES.map(c => (
@@ -160,7 +156,7 @@ function CubeConfigurationForm({
       <div style={sectionStyle}>
         <div style={sectionTitleStyle}>Measures</div>
         {currentCube.measures.map(m => (
-          <label key={m.name} style={{ display: "flex", gap: 6, alignItems: "center", color: "#e0e0e0", fontSize: 12 }}>
+          <label key={m.name} style={{ display: "flex", gap: 6, alignItems: "center", color: "#e0e0e0", fontSize: "12px" }}>
             <input
               type="checkbox"
               checked={config.measures.includes(m.name)}
@@ -175,7 +171,7 @@ function CubeConfigurationForm({
       <div style={sectionStyle}>
         <div style={sectionTitleStyle}>Dimensions</div>
         {currentCube.dimensions.map(d => (
-          <label key={d.name} style={{ display: "flex", gap: 6, alignItems: "center", color: "#e0e0e0", fontSize: 12 }}>
+          <label key={d.name} style={{ display: "flex", gap: 6, alignItems: "center", color: "#e0e0e0", fontSize: "12px" }}>
             <input
               type="checkbox"
               checked={config.dimensions.includes(d.name)}
@@ -191,13 +187,9 @@ function CubeConfigurationForm({
         <div style={sectionTitleStyle}>Filters</div>
         {config.filters.map((filter, idx) => {
           const dimension = currentCube.dimensions.find(d => d.name === filter.dimension);
-          const dimType: "string" | "number" | "time" | "boolean" = dimension?.type || "string";
-          // @ts-ignore
-            const operators: CubeOperator[] = operatorsForType(dimType) || [];
-          const operatorMeta: CubeOperator | null = operators.find(op => op.name === filter.operator) || operators[0];
-            if (!operatorMeta) {
-              console.warn("No operator found for filter", filter);
-            }
+          const dimType = (dimension?.type || "string");
+          const operators: CubeOperator[] = operatorsForType(dimType) || [];
+          const operatorMeta = operators.find(op => op.name === filter.operator);
 
           // @ts-ignore
             // @ts-ignore
@@ -245,32 +237,149 @@ function CubeConfigurationForm({
                 </button>
               </div>
 
-              {operatorMeta && (
+              {/* OperandEditor */}
               <OperandEditor
-                operator={operatorMeta}
+                operator={operatorMeta!}
                 value={filter.values || null}
-                onChange={(vals) => {
+                onChange={(vals: OperandValue[]) => {
                   const newFilters = [...config.filters];
-                  newFilters[idx] = { ...filter, values: vals ?? [] };
+                  newFilters[idx] = { ...filter, values: vals };
                   updateConfig({ ...config, filters: newFilters });
                 }}
-              />)}
+              />
             </div>
           );
         })}
 
         <button
           onClick={() =>
-            updateConfig({
-              ...config,
-              filters: [...config.filters, { dimension: "", operator: "equals", values: [] }],
-            })
+            updateConfig({ ...config, filters: [...config.filters, { dimension: "", operator: "equals", values: [] }] })
           }
           disabled={config.dimensions.length === 0}
         >
           + Add Filter
         </button>
       </div>
+
+        {/* Section 5: Chart Type */}
+      <div style={sectionStyle}>
+        <div style={sectionTitleStyle}>Chart Type</div>
+        <div style={{ display: "flex", gap: "8px" }}>
+          {["linechart", "barchart", "table"].map(type => (
+            <label key={type} style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: "#e0e0e0", cursor: "pointer" }}>
+              <input
+                type="radio"
+                name="chart-type"
+                checked={config.renderingComponent === type as any}
+                onChange={() => {
+                  const newConfig = { ...config, renderingComponent: type as any };
+                  setConfig(newConfig);
+                  onChange(newConfig);
+                }}
+              />
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Section 6: Axes Configuration (only for chart types) */}
+      {(config.renderingComponent === "linechart" || config.renderingComponent === "barchart") && (
+        <div style={sectionStyle}>
+          <div style={sectionTitleStyle}>Axes</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div>
+              <label style={{ fontSize: "10px", color: "#b0b0b0", display: "block", marginBottom: "4px" }}>
+                X-Axis (Dimension)
+              </label>
+              <select
+                value={config.xAxisField}
+                onChange={(e) => {
+                  const newConfig = { ...config, xAxisField: e.target.value };
+                  setConfig(newConfig);
+                  onChange(newConfig);
+                }}
+                disabled={config.dimensions.length === 0}
+                style={{
+                  width: "100%",
+                  padding: "6px 8px",
+                  backgroundColor: config.dimensions.length === 0 ? "#2a2a2a" : "#1a1a1a",
+                  color: "#e0e0e0",
+                  border: "1px solid #404040",
+                  borderRadius: "2px",
+                  fontSize: "12px",
+                }}
+              >
+                <option value="">-- None --</option>
+                {config.dimensions.map(d => (
+                  <option key={d} value={d}>
+                    {currentCube.dimensions.find(dim => dim.name === d)?.displayName || d}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label style={{ fontSize: "10px", color: "#b0b0b0", display: "block", marginBottom: "4px" }}>
+                Y-Axis (Measure)
+              </label>
+              <select
+                value={config.yAxisField}
+                onChange={(e) => {
+                  const newConfig = { ...config, yAxisField: e.target.value };
+                  setConfig(newConfig);
+                  onChange(newConfig);
+                }}
+                disabled={config.measures.length === 0}
+                style={{
+                  width: "100%",
+                  padding: "6px 8px",
+                  backgroundColor: config.measures.length === 0 ? "#2a2a2a" : "#1a1a1a",
+                  color: "#e0e0e0",
+                  border: "1px solid #404040",
+                  borderRadius: "2px",
+                  fontSize: "12px",
+                }}
+              >
+                <option value="">-- None --</option>
+                {config.measures.map(m => (
+                  <option key={m} value={m}>
+                    {currentCube.measures.find(meas => meas.name === m)?.displayName || m}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Section 6b: Columns Configuration (only for table) */}
+      {config.renderingComponent === "table" && (
+        <div style={sectionStyle}>
+          <div style={sectionTitleStyle}>Columns</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+            {config.measures.length === 0 && config.dimensions.length === 0 ? (
+              <div style={{ fontSize: "11px", color: "#808080" }}>
+                Select measures or dimensions to display as columns
+              </div>
+            ) : (
+              <>
+                {config.dimensions.map(d => (
+                  <label key={d} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#e0e0e0" }}>
+                    <input type="checkbox" defaultChecked />
+                    {currentCube.dimensions.find(dim => dim.name === d)?.displayName || d}
+                  </label>
+                ))}
+                {config.measures.map(m => (
+                  <label key={m} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#e0e0e0" }}>
+                    <input type="checkbox" defaultChecked />
+                    {currentCube.measures.find(meas => meas.name === m)?.displayName || m}
+                  </label>
+                ))}
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

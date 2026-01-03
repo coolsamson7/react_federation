@@ -7,6 +7,12 @@ export type ValueType = {
   value:  string | number | boolean;
 };
 
+export interface FilterConfig {
+  dimension: string; // e.g. "Orders.status" (cube name + dimension name)
+  operator: string;
+  values: any[];
+}
+
 /**
  * Cube widget configuration type
  */
@@ -14,11 +20,7 @@ export interface CubeWidgetConfiguration {
   cubeName: string;
   measures: string[];
   dimensions: string[];
-  filters: Array<{
-    dimension: string;
-    operator: string;
-    values: any[];
-  }>;
+  filters: FilterConfig[];
   renderingComponent: "linechart" | "barchart" | "table";
   xAxisField: string;
   yAxisField: string;

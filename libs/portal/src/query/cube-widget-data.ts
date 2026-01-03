@@ -1,124 +1,262 @@
-import { CubeDescriptor, DimensionDescriptor, DimensionType as DimensionTypeImport } from "@portal/metadata/cube_metadata";
+import { CubeDescriptor, DimensionType as DimensionTypeImport } from "@portal/metadata/cube_metadata";
 
 export type DimensionType = DimensionTypeImport;
 
 /**
  * Cube.js compatible filter operators
  */
-export type FilterOperator = 
+export type FilterOperator =
   | "equals"
   | "notEquals"
-  | "greaterThan"
-  | "lessThan"
-  | "greaterThanOrEqual"
-  | "lessThanOrEqual"
   | "contains"
   | "notContains"
+  | "startsWith"
+  | "endsWith"
   | "in"
   | "notIn"
-  | "beforeDate"
-  | "afterDate"
-  | "inDateRange";
+  | "set"
+  | "notSet"
+  | "gt"
+  | "gte"
+  | "lt"
+  | "lte"
+  | "before"
+  | "after"
+  | "onOrBefore"
+  | "onOrAfter"
+  | "inDateRange"
+  | "notInDateRange";
 
-/**
- * Operators available for each dimension type
- */
-export const OPERATORS_BY_TYPE: Record<DimensionType, FilterOperator[]> = {
-  string: ["equals", "notEquals", "contains", "notContains", "in", "notIn"],
-  number: ["equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEqual", "lessThanOrEqual", "in", "notIn"],
-  time: ["equals", "notEquals", "greaterThan", "lessThan", "beforeDate", "afterDate", "inDateRange"],
-  boolean: ["equals", "notEquals"],
+export type OperandType =
+  | "string"
+  | "number"
+  | "boolean"
+  | "date"
+  | "string[]"
+  | "number[]"
+  | "date[]"
+  | "none"; // for set / notSet
+
+
+export type CubeOperator = {
+  name: string;              // Cube.js operator
+  label: string;             // UI label
+  operandTypes: OperandType[];
+  arity: number;             // number of operands
 };
 
-/**
- * Input type for filter value based on dimension type
- */
-export const INPUT_TYPE_BY_DIMENSION: Record<DimensionType, string> = {
-  string: "string", // TODO? text
-  number: "number",
-  time: "date",
-  boolean: "select",
+export const STRING_OPERATORS: CubeOperator[] = [
+  {
+    name: "equals",
+    label: "equals",
+    operandTypes: ["string"],
+    arity: 1
+  },
+  {
+    name: "notEquals",
+    label: "does not equal",
+    operandTypes: ["string"],
+    arity: 1
+  },
+  {
+    name: "contains",
+    label: "contains",
+    operandTypes: ["string"],
+    arity: 1
+  },
+  {
+    name: "notContains",
+    label: "does not contain",
+    operandTypes: ["string"],
+    arity: 1
+  },
+  {
+    name: "startsWith",
+    label: "starts with",
+    operandTypes: ["string"],
+    arity: 1
+  },
+  {
+    name: "endsWith",
+    label: "ends with",
+    operandTypes: ["string"],
+    arity: 1
+  },
+  {
+    name: "in",
+    label: "is one of",
+    operandTypes: ["string[]"],
+    arity: 1
+  },
+  {
+    name: "notIn",
+    label: "is not one of",
+    operandTypes: ["string[]"],
+    arity: 1
+  },
+  {
+    name: "set",
+    label: "is not empty",
+    operandTypes: ["none"],
+    arity: 0
+  },
+  {
+    name: "notSet",
+    label: "is empty",
+    operandTypes: ["none"],
+    arity: 0
+  }
+];
+
+export const NUMBER_OPERATORS: CubeOperator[] = [
+  {
+    name: "equals",
+    label: "equals",
+    operandTypes: ["number"],
+    arity: 1
+  },
+  {
+    name: "notEquals",
+    label: "does not equal",
+    operandTypes: ["number"],
+    arity: 1
+  },
+  {
+    name: "gt",
+    label: "greater than",
+    operandTypes: ["number"],
+    arity: 1
+  },
+  {
+    name: "gte",
+    label: "greater than or equal",
+    operandTypes: ["number"],
+    arity: 1
+  },
+  {
+    name: "lt",
+    label: "less than",
+    operandTypes: ["number"],
+    arity: 1
+  },
+  {
+    name: "lte",
+    label: "less than or equal",
+    operandTypes: ["number"],
+    arity: 1
+  },
+  {
+    name: "in",
+    label: "is one of",
+    operandTypes: ["number[]"],
+    arity: 1
+  },
+  {
+    name: "notIn",
+    label: "is not one of",
+    operandTypes: ["number[]"],
+    arity: 1
+  },
+  {
+    name: "set",
+    label: "is not empty",
+    operandTypes: ["none"],
+    arity: 0
+  },
+  {
+    name: "notSet",
+    label: "is empty",
+    operandTypes: ["none"],
+    arity: 0
+  }
+];
+
+export const DATE_OPERATORS: CubeOperator[] = [
+  {
+    name: "equals",
+    label: "on",
+    operandTypes: ["date"],
+    arity: 1
+  },
+  {
+    name: "notEquals",
+    label: "not on",
+    operandTypes: ["date"],
+    arity: 1
+  },
+  {
+    name: "after",
+    label: "after",
+    operandTypes: ["date"],
+    arity: 1
+  },
+  {
+    name: "before",
+    label: "before",
+    operandTypes: ["date"],
+    arity: 1
+  },
+  {
+    name: "onOrAfter",
+    label: "on or after",
+    operandTypes: ["date"],
+    arity: 1
+  },
+  {
+    name: "onOrBefore",
+    label: "on or before",
+    operandTypes: ["date"],
+    arity: 1
+  },
+  {
+    name: "inDateRange",
+    label: "between",
+    operandTypes: ["date", "date"],
+    arity: 2
+  },
+  {
+    name: "notInDateRange",
+    label: "not between",
+    operandTypes: ["date", "date"],
+    arity: 2
+  },
+  {
+    name: "set",
+    label: "is not empty",
+    operandTypes: ["none"],
+    arity: 0
+  },
+  {
+    name: "notSet",
+    label: "is empty",
+    operandTypes: ["none"],
+    arity: 0
+  }
+];
+
+export const CRITERION_REFERENCE_OPERATOR: CubeOperator = {
+  name: "usesCriterion",
+  label: "uses criterion",
+  operandTypes: ["string"], // criterionId
+  arity: 1
 };
 
-/**
- * Value type for filter configuration
- */
-export type ValueType = {
-  type: 'variable' | 'value';
-  value: string | number | boolean;
-};
+export function operatorsForType(type: string) {
+  console.log(`operator fpr type ${type}`)
+    switch (type) {
+    case "string": return [...STRING_OPERATORS, CRITERION_REFERENCE_OPERATOR];
+    case "number": return [...NUMBER_OPERATORS, CRITERION_REFERENCE_OPERATOR];
+    case "date": return [...DATE_OPERATORS, CRITERION_REFERENCE_OPERATOR];
+    case "time": return [...DATE_OPERATORS, CRITERION_REFERENCE_OPERATOR];
+  }
+}
 
-/**
- * Filter configuration for a cube query - Cube.js compatible
- */
 export interface FilterConfig {
   dimension: string; // e.g. "Orders.status" (cube name + dimension name)
   operator: FilterOperator;
-  value: ValueType;
+  values: any[];
 }
 
-/**
- * Evaluate a ValueType with the predefinedQuery context
- *
- * This function evaluates a ValueType object based on its type:
- * - If type is 'value', it returns the direct value
- * - If type is 'variable', it looks up the variable name in the predefinedQuery context
- *
- * @example
- * // Direct value
- * const valueType = { type: 'value', value: 'completed' };
- * evaluateValueType(valueType); // Returns 'completed'
- *
- * // Variable reference
- * const valueType = { type: 'variable', value: 'orderStatus' };
- * const context = { predefinedQuery: { orderStatus: 'completed' } };
- * evaluateValueType(valueType, context); // Returns 'completed'
- *
- * @param valueType - The ValueType object to evaluate
- * @param context - The context object containing predefinedQuery variables
- * @returns The evaluated value
- */
-export function evaluateValueType(valueType: ValueType, context: any = {}) {
-  if (!valueType || typeof valueType !== 'object') {
-    console.warn('Invalid ValueType provided:', valueType);
-    return valueType;
-  }
-
-  if (valueType.type === 'value') {
-    return valueType.value;
-  } else if (valueType.type === 'variable') {
-    // Get the variable name from valueType.value
-    const variableName = String(valueType.value);
-
-    // Look for the variable in predefinedQuery from context
-    if (context.predefinedQuery && context.predefinedQuery[variableName] !== undefined) {
-      return context.predefinedQuery[variableName];
-    } else {
-      console.warn(`Variable ${variableName} not found in predefinedQuery context`);
-      return valueType.value; // Fall back to the variable name as a string
-    }
-  }
-
-  return valueType.value;
-}
-
-/**
- * Convert FilterConfig to Cube.js API format
- */
-export function toCubeJsFilter(filter: FilterConfig, context: any = {}) {
-  // Evaluate the value based on its type (direct value or variable)
-  const evaluatedValue = evaluateValueType(filter.value, context);
-
-  const values = Array.isArray(evaluatedValue)
-    ? evaluatedValue
-    : [evaluatedValue];
-
-  return {
-    member: filter.dimension,
-    operator: filter.operator,
-    values,
-  };
-}
 
 /**
  * Rendering component types available
@@ -140,136 +278,4 @@ export interface AxisConfig {
 export interface ChartConfig {
   xAxis: AxisConfig;
   yAxis: AxisConfig;
-}
-
-/**
- * Complete cube widget configuration
- */
-export interface CubeWidgetConfig {
-  id: string;
-  cubeName: string;
-  measures: string[]; // Selected measure names
-  dimensions: string[]; // Selected dimension names
-  filters: FilterConfig[];
-  renderingComponent: RenderingComponentType;
-  chartConfig?: ChartConfig; // Required for chart rendering components
-  title?: string;
-  description?: string;
-}
-
-/**
- * Query data returned from Cube.js API
- */
-export interface QueryResult {
-  data: Record<string, string | number>[];
-  meta: Record<string, unknown>;
-}
-
-/**
- * Build a Cube.js query object from widget config
- *
- * This function converts a CubeWidgetConfig into a Cube.js compatible query object.
- * It handles filter value resolution from context for variable references.
- *
- * @example
- * // Usage with variable binding in filters
- * const config = {
- *   id: 'order-stats',
- *   cubeName: 'Orders',
- *   measures: ['count'],
- *   dimensions: ['status'],
- *   filters: [{
- *     dimension: 'Orders.status',
- *     operator: 'equals',
- *     value: { type: 'variable', value: 'statusFilter' }
- *   }],
- *   renderingComponent: 'barchart'
- * };
- *
- * // Context with predefined variables
- * const context = {
- *   predefinedQuery: {
- *     statusFilter: 'completed'
- *   }
- * };
- *
- * const query = buildCubeQuery(config, context);
- * // The filter value 'statusFilter' will be replaced with 'completed'
- *
- * @param config - The widget configuration
- * @param context - The context containing predefinedQuery variables
- * @returns A Cube.js compatible query object
- */
-export function buildCubeQuery(config: CubeWidgetConfig, context: any = {}) {
-  const measures = config.measures.map(
-    (m) => `${config.cubeName}.${m}`
-  );
-  const dimensions = config.dimensions.map(
-    (d) => `${config.cubeName}.${d}`
-  );
-
-  const filters = config.filters.map(filter => toCubeJsFilter(filter, context));
-
-  return {
-    measures,
-    dimensions,
-    filters: filters.length > 0 ? filters : undefined,
-  };
-}
-
-/**
- * Extract available fields from a cube for axis selection
- */
-export function getAvailableFields(cube: CubeDescriptor) {
-  const measures = cube.measures?.map((m) => ({
-    name: m.name,
-    displayName: m.title || m.name,
-    type: "measure" as const,
-  })) || [];
-
-  const dimensions = cube.dimensions?.map((d) => ({
-    name: d.name,
-    displayName: d.title || d.name,
-    type: "dimension" as const,
-    dimensionType: d.type,
-  })) || [];
-
-  return { measures, dimensions };
-}
-
-/**
- * Get valid operators for a dimension based on its type
- */
-export function getOperatorsForDimension(cube: CubeDescriptor, dimensionName: string) {
-  const dimension = cube.dimensions?.find(d => d.name === dimensionName);
-  if (!dimension) return ["equals"];
-  
-  return OPERATORS_BY_TYPE[dimension.type] || ["equals"];
-}
-
-/**
- * Get the input type for a dimension
- */
-export function getInputTypeForDimension(cube: CubeDescriptor, dimensionName: string) {
-  const dimension = cube.dimensions?.find(d => d.name === dimensionName);
-  if (!dimension) return "text";
-  
-  return INPUT_TYPE_BY_DIMENSION[dimension.type] || "text";
-}
-
-/**
- * Get sample/enum values for a dimension if available
- */
-export function getSampleValuesForDimension(cube: CubeDescriptor, dimensionName: string): string[] {
-  const dimension = cube.dimensions?.find(d => d.name === dimensionName);
-  if (!dimension) return [];
-
-  // Mock data - in real app, this would come from API or dimension config
-  const valuesByDimension: Record<string, string[]> = {
-    "status": ["pending", "completed", "cancelled", "shipped"],
-    "country": ["USA", "UK", "Germany", "France", "Canada"],
-    "category": ["Electronics", "Clothing", "Books", "Home & Garden"],
-  };
-
-  return valuesByDimension[dimensionName] || [];
 }

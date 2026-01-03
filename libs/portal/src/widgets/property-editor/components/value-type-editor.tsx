@@ -1,5 +1,12 @@
 import React from "react";
 import { ValueType } from "../../examples/cube-widget-data";
+
+/**
+ * export type ValueType = {
+ *   type: 'variable' | 'value';
+ *   value:  string | number | boolean;
+ * };
+ */
 interface ValueTypeEditorProps {
   value: ValueType;
   onChange: (value: ValueType) => void;

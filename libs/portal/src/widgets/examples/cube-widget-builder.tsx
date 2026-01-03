@@ -1,6 +1,6 @@
 import React from "react";
 import { WidgetBuilder, RegisterBuilder } from "../widget-factory";
-import {CubeWidgetData} from "./cube-widget-data";
+import {CubeWidgetData, FilterConfig} from "./cube-widget-data";
 import { SelectionOverlay } from "../editor/SelectionOverlay";
 
 import cubejs from '@cubejs-client/core';
@@ -21,6 +21,49 @@ import {
 } from "recharts";
 import { messageBus } from "../editor/message-bus";
 import {SearchPanelContext, SearchPanelContextValue} from "@portal/widgets/search-panel/search-panel-context";
+import {
+    LiteralQueryExpression,
+    LogicalQueryExpression,
+    NotQueryExpression,
+    QueryExpression
+} from "@portal/query/query-model";
+
+/**
+ * Recursively searches a QueryExpression tree for the first LiteralQueryExpression
+ * matching the given criterion name.
+ *
+ * @param expr - The root of the QueryExpression tree
+ * @param criterionName - The name of the criterion to find
+ * @returns The first matching LiteralQueryExpression, or undefined if not found
+ */
+export function findFirstLiteralByCriterion(
+  expr: QueryExpression,
+  criterionName: string
+): LiteralQueryExpression | undefined {
+  switch (expr.type) {
+    case "literal": {
+      const lit = expr as LiteralQueryExpression;
+      const name = typeof lit.criterion === "string" ? lit.criterion : lit.criterion.name;
+      return name === criterionName ? lit : undefined;
+    }
+
+    case "and":
+    case "or": {
+      const logical = expr as LogicalQueryExpression;
+      for (const child of logical.values) {
+        const found = findFirstLiteralByCriterion(child, criterionName);
+        if (found) return found;
+      }
+      return undefined;
+    }
+
+    case "not": {
+      const notExpr = expr as NotQueryExpression;
+      return findFirstLiteralByCriterion(notExpr.value, criterionName);
+    }
+  }
+}
+
 
 /**
  * Runtime builder for CubeWidget
@@ -62,17 +105,35 @@ export class CubeWidgetBuilder extends WidgetBuilder<CubeWidgetData> {
 
     const config = data.configuration;
 
+    const createFilters = (filters: FilterConfig[]) => {
+       let createFilter = (filter: FilterConfig) : any =>  {
+           return {
+              member: filter.dimension,
+              operator: filter.operator,
+              values: filter.values
+            };
+        };
+
+         let createCriterionFilter = (filter: FilterConfig) : any =>  {
+           let expression = findFirstLiteralByCriterion(predefinedQuery!, filter.values[0])
+           return {
+              member: filter.dimension,
+              operator: expression?.operator,
+              values: expression?.values
+            };
+        }
+
+       return filters
+        .filter((f) => f.dimension && f.operator && f.values.length > 0)
+        .map((f) => f.operator == "usesCriterion" ? createCriterionFilter(f) : createFilter(f))
+      };
+
+
     // Build the query
     const query = {
       measures: config.measures || [],
       dimensions: config.dimensions || [],
-      filters: (config.filters || [])
-        .filter((f: any) => f.dimension && f.operator && f.value !== "" && f.value !== null)
-        .map((f: any) => ({
-          member: f.dimension,
-          operator: f.operator,
-          values: Array.isArray(f.value) ? f.value : [f.value],
-        })) || [],
+      filters: createFilters(config.filters),
       limit: 20,
     };
 
