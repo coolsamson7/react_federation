@@ -586,34 +586,61 @@ export default function CubeConfigurator() {
                                     }}
                                 />
                                 <div style={{display: "flex", gap: "8px"}}>
-                                    <button
-                                        onClick={async () => {
-                                            if (cube) {
-                                                try {
-                                                    await cubeService.createCube(cube);
-                                                    //alert("Cube deployed successfully!");
-                                                } catch (err) {
-                                                    alert(`Failed to deploy cube: ${err}`);
-                                                }
-                                            }
-                                        }}
-                                        style={{
-                                            padding: "8px 16px",
-                                            backgroundColor: "#00a884",
-                                            border: "none",
-                                            borderRadius: "6px",
-                                            color: "#fff",
-                                            fontSize: "13px",
-                                            fontWeight: "500",
-                                            cursor: "pointer",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "6px",
-                                        }}>
-                                        <Save size={14}/>
-                                        Save
-                                    </button>
-                                </div>
+                            <button
+                                onClick={async () => {
+                                    if (cube) {
+                                        try {
+                                            await cubeService.createCube(cube);
+                                            //alert("Cube saved successfully!");
+                                        } catch (err) {
+                                            alert(`Failed to save cube: ${err}`);
+                                        }
+                                    }
+                                }}
+                                style={{
+                                    padding: "8px 16px",
+                                    backgroundColor: "#2a3942",
+                                    border: "none",
+                                    borderRadius: "6px",
+                                    color: "#e9edef",
+                                    fontSize: "13px",
+                                    fontWeight: "500",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "6px",
+                                }}>
+                                <Save size={14}/>
+                                Save
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    if (cube) {
+                                        try {
+                                            await cubeService.deployCube(cube);
+                                            alert("Cube deployed successfully!");
+                                        } catch (err) {
+                                            alert(`Failed to deploy cube: ${err}`);
+                                        }
+                                    }
+                                }}
+                                style={{
+                                    padding: "8px 16px",
+                                    backgroundColor: "#00a884",
+                                    border: "none",
+                                    borderRadius: "6px",
+                                    color: "#fff",
+                                    fontSize: "13px",
+                                    fontWeight: "500",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "6px",
+                                }}>
+                                <Wand2 size={14}/>
+                                Deploy
+                            </button>
+                        </div>
                             </div>
                             <input
                                 type="text"
