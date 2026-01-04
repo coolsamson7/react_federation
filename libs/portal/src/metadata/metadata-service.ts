@@ -16,7 +16,6 @@ export class MetadataService {
    * @param dialect Optional SQL dialect, defaults to 'postgres'
    */
   async getMetadata(dialect: string = "postgres"): Promise<DatabaseDescriptor> {
-      console.log( "######## " , this.baseUrl)
     const url = new URL("fetch", this.baseUrl);
     url.searchParams.set("dialect", dialect);
 
