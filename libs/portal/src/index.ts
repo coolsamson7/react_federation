@@ -1,6 +1,8 @@
 import "reflect-metadata";
 
-export * from "./metadata"
+export * from "./orm"
+export * from "./cube"
+export * from "./communication"
 export * from './registry';
 export * from './di';
 export * from './remote-loader';
