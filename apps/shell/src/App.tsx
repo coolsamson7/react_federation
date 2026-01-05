@@ -8,8 +8,8 @@ import { initializeRemote, loadRemoteModule } from "@portal/remote-loader";
 import { detectClient, clientMatchesConstraints } from "@portal/client-detector";
 import ShellLayout from "./ShellLayout";
 import ShellHome from "./ShellHome";
-import QuerySearchSample from "./QuerySearchSample";
-import { MFE_REMOTES } from "./config/remotes";
+import {ChatPanel} from "./ChatPanel";
+import CubeConfigurator from "@portal/cube/MetadataPanel";
 
 // Shell routes defined inline to avoid encoding issues
 const shellRoutes = [
@@ -19,11 +19,31 @@ const shellRoutes = [
     label: "Home",
     icon: "H" // Using simple letter to avoid UTF-8 issues
   },
+  // search sample
+
   {
     path: "/query-search",
     component: "QuerySearchSample",
     label: "Query Search",
     icon: "Q" // Using simple letter to avoid UTF-8 issues
+  },
+
+  // cube sample
+
+  {
+    path: "/cube",
+    component: "CubeConfigurator",
+    label: "Cube",
+    icon: "J" // Using simple letter to avoid UTF-8 issues
+  },
+
+  // chat sample
+
+  {
+    path: "/chat",
+    component: "ChatPanel",
+    label: "Chat",
+    icon: "C" // Using simple letter to avoid UTF-8 issues
   }
 ];
 
@@ -52,12 +72,19 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Register ShellHome and QuerySearchSample components
+    // Register ShellHome and QuerySearchSample components// TODO: WHat is that?
+
     DI.resolve(DefaultComponentRegistry).register("ShellHome", () =>
       Promise.resolve({ default: ShellHome })
     );
-    DI.resolve(DefaultComponentRegistry).register("QuerySearchSample", () =>
-      Promise.resolve({ default: QuerySearchSample })
+    //DI.resolve(DefaultComponentRegistry).register("QuerySearchSample", () =>
+    //  Promise.resolve({ default: QuerySearchSample })
+    //);
+    DI.resolve(DefaultComponentRegistry).register("ChatPanel", () =>
+      Promise.resolve({ default: ChatPanel })
+    );
+    DI.resolve(DefaultComponentRegistry).register("CubeConfigurator", () =>
+      Promise.resolve({ default: CubeConfigurator })
     );
 
     // Initialize app - load metadata only, not remote scripts
