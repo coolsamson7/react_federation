@@ -3,14 +3,65 @@ import { Plus, X, Filter, BarChart3, Layers } from "lucide-react";
 import { PropertyEditor } from "../property-editor-metadata";
 import { RegisterPropertyEditor } from "../property-editor-registry";
 
-import { CubeService,  } from "@portal/cube";
-import {CubeWidgetConfiguration} from "@portal/dashboard/widgets/cube-widget-data";
+import { CubeService } from "@portal/cube";
+import { CubeWidgetConfiguration } from "@portal/dashboard/widgets/cube-widget-data";
 import {
     CubeOperator,
     FilterOperator,
     operatorsForType
 } from "@portal/dashboard/property-editor/editors/cube-widget-data";
-import {OperandEditor, OperandValue} from "@portal/dashboard/property-editor/editors/cube-operand-editor";
+import { OperandEditor, OperandValue } from "@portal/dashboard/property-editor/editors/cube-operand-editor";
+import { CubeDescriptor, DimensionType } from "@portal/cube/cube-metadata";
+
+/* ------------------------------------------------------------------ */
+/* Helper: Get all available dimensions including joined cubes        */
+/* ------------------------------------------------------------------ */
+interface AvailableDimension {
+  fullPath: string;         // "orders.status" or "customers.name"
+  displayName: string;      // "Status" or "Customer Name"
+  cubeName: string;         // "orders" or "customers"
+  dimensionName: string;    // "status" or "name"
+  type: DimensionType;
+  isMainCube: boolean;
+}
+
+function getAvailableDimensions(
+  cube: CubeDescriptor,
+  allCubes: CubeDescriptor[]
+): AvailableDimension[] {
+  const dimensions: AvailableDimension[] = [];
+
+  // 1. Add main cube dimensions
+  cube.dimensions?.forEach(dim => {
+    dimensions.push({
+      fullPath: `${cube.name}.${dim.name}`,
+      displayName: dim.title || dim.name,
+      cubeName: cube.name,
+      dimensionName: dim.name,
+      type: dim.type,
+      isMainCube: true
+    });
+  });
+
+  // 2. Add joined cube dimensions
+  cube.joins?.forEach(join => {
+    const joinedCube = allCubes.find(c => c.name === join.name);
+    if (joinedCube) {
+      joinedCube.dimensions?.forEach(dim => {
+        dimensions.push({
+          fullPath: `${join.name}.${dim.name}`,
+          displayName: `${dim.title || dim.name} (${joinedCube.title || join.name})`,
+          cubeName: join.name,
+          dimensionName: dim.name,
+          type: dim.type,
+          isMainCube: false
+        });
+      });
+    }
+  });
+
+  return dimensions;
+}
 
 /* ------------------------------------------------------------------ */
 /* Cube configuration form component                                   */
@@ -33,7 +84,7 @@ function CubeConfigurationForm({
   };
 
   const [config, setConfig] = useState<CubeWidgetConfiguration>(defaultConfig);
-  const [cubes, setCubes] = useState<any[]>([]);
+  const [cubes, setCubes] = useState<CubeDescriptor[]>([]);
 
   /* ---------------- Load cubes from service ---------------- */
   useEffect(() => {
@@ -58,16 +109,20 @@ function CubeConfigurationForm({
   };
 
   const toggleMeasure = (measure: string) => {
-    const newMeasures = config.measures.includes(measure)
-      ? config.measures.filter((m) => m !== measure)
-      : [...config.measures, measure];
+    // Add cube prefix: "orders.count" instead of just "count"
+    const fullMeasurePath = `${currentCube.name}.${measure}`;
+    const newMeasures = config.measures.includes(fullMeasurePath)
+      ? config.measures.filter((m) => m !== fullMeasurePath)
+      : [...config.measures, fullMeasurePath];
     updateConfig({ ...config, measures: newMeasures });
   };
 
   const toggleDimension = (dimension: string) => {
-    const newDimensions = config.dimensions.includes(dimension)
-      ? config.dimensions.filter((d) => d !== dimension)
-      : [...config.dimensions, dimension];
+    // Add cube prefix: "orders.status" instead of just "status"
+    const fullDimensionPath = `${currentCube.name}.${dimension}`;
+    const newDimensions = config.dimensions.includes(fullDimensionPath)
+      ? config.dimensions.filter((d) => d !== fullDimensionPath)
+      : [...config.dimensions, fullDimensionPath];
     updateConfig({ ...config, dimensions: newDimensions });
   };
 
@@ -76,6 +131,18 @@ function CubeConfigurationForm({
     next.splice(idx, 1);
     updateConfig({ ...config, filters: next });
   };
+
+  // Get all available dimensions (main + joined)
+  const availableDimensions = currentCube ? getAvailableDimensions(currentCube, cubes) : [];
+
+  // Group dimensions by cube for better UX
+  const groupedDimensions = availableDimensions.reduce((acc, dim) => {
+    if (!acc[dim.cubeName]) {
+      acc[dim.cubeName] = [];
+    }
+    acc[dim.cubeName].push(dim);
+    return acc;
+  }, {} as Record<string, AvailableDimension[]>);
 
   const sectionStyle = {
     backgroundColor: "#1f2c33",
@@ -152,51 +219,54 @@ function CubeConfigurationForm({
           Measures
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          {currentCube.measures.map((m: any) => (
-            <label
-              key={m.name}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "8px 12px",
-                backgroundColor: config.measures.includes(m.name) ? "#2a3942" : "transparent",
-                borderRadius: "6px",
-                cursor: "pointer",
-                transition: "background-color 0.2s",
-                border: config.measures.includes(m.name) ? "1px solid #00a884" : "1px solid transparent",
-              }}
-              onMouseEnter={(e) => {
-                if (!config.measures.includes(m.name)) {
-                  e.currentTarget.style.backgroundColor = "#2a3942";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!config.measures.includes(m.name)) {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                }
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={config.measures.includes(m.name)}
-                onChange={() => toggleMeasure(m.name)}
+          {currentCube.measures?.map((m: any) => {
+            const fullMeasurePath = `${currentCube.name}.${m.name}`;
+            return (
+              <label
+                key={m.name}
                 style={{
-                  width: "16px",
-                  height: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "8px 12px",
+                  backgroundColor: config.measures.includes(fullMeasurePath) ? "#2a3942" : "transparent",
+                  borderRadius: "6px",
                   cursor: "pointer",
-                  accentColor: "#00a884",
+                  transition: "background-color 0.2s",
+                  border: config.measures.includes(fullMeasurePath) ? "1px solid #00a884" : "1px solid transparent",
                 }}
-              />
-              <span style={{
-                color: "#e9edef",
-                fontSize: "14px",
-                flex: 1,
-              }}>
-                {m.title}
-              </span>
-            </label>
-          ))}
+                onMouseEnter={(e) => {
+                  if (!config.measures.includes(fullMeasurePath)) {
+                    e.currentTarget.style.backgroundColor = "#2a3942";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!config.measures.includes(fullMeasurePath)) {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={config.measures.includes(fullMeasurePath)}
+                  onChange={() => toggleMeasure(m.name)}
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    cursor: "pointer",
+                    accentColor: "#00a884",
+                  }}
+                />
+                <span style={{
+                  color: "#e9edef",
+                  fontSize: "14px",
+                  flex: 1,
+                }}>
+                  {m.title}
+                </span>
+              </label>
+            );
+          })}
         </div>
       </div>
 
@@ -207,55 +277,58 @@ function CubeConfigurationForm({
           Dimensions
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          {currentCube.dimensions.map((d: any) => (
-            <label
-              key={d.name}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "8px 12px",
-                backgroundColor: config.dimensions.includes(d.name) ? "#2a3942" : "transparent",
-                borderRadius: "6px",
-                cursor: "pointer",
-                transition: "background-color 0.2s",
-                border: config.dimensions.includes(d.name) ? "1px solid #00a884" : "1px solid transparent",
-              }}
-              onMouseEnter={(e) => {
-                if (!config.dimensions.includes(d.name)) {
-                  e.currentTarget.style.backgroundColor = "#2a3942";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!config.dimensions.includes(d.name)) {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                }
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={config.dimensions.includes(d.name)}
-                onChange={() => toggleDimension(d.name)}
+          {currentCube.dimensions?.map((d: any) => {
+            const fullDimensionPath = `${currentCube.name}.${d.name}`;
+            return (
+              <label
+                key={d.name}
                 style={{
-                  width: "16px",
-                  height: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "8px 12px",
+                  backgroundColor: config.dimensions.includes(fullDimensionPath) ? "#2a3942" : "transparent",
+                  borderRadius: "6px",
                   cursor: "pointer",
-                  accentColor: "#00a884",
+                  transition: "background-color 0.2s",
+                  border: config.dimensions.includes(fullDimensionPath) ? "1px solid #00a884" : "1px solid transparent",
                 }}
-              />
-              <span style={{
-                color: "#e9edef",
-                fontSize: "14px",
-                flex: 1,
-              }}>
-                {d.title}
-              </span>
-            </label>
-          ))}
+                onMouseEnter={(e) => {
+                  if (!config.dimensions.includes(fullDimensionPath)) {
+                    e.currentTarget.style.backgroundColor = "#2a3942";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!config.dimensions.includes(fullDimensionPath)) {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={config.dimensions.includes(fullDimensionPath)}
+                  onChange={() => toggleDimension(d.name)}
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    cursor: "pointer",
+                    accentColor: "#00a884",
+                  }}
+                />
+                <span style={{
+                  color: "#e9edef",
+                  fontSize: "14px",
+                  flex: 1,
+                }}>
+                  {d.title}
+                </span>
+              </label>
+            );
+          })}
         </div>
       </div>
 
-      {/* Filters */}
+      {/* Filters - Enhanced with joined cube support */}
       <div style={sectionStyle}>
         <div style={sectionTitleStyle}>
           <Filter size={14} color="#00a884" />
@@ -264,10 +337,9 @@ function CubeConfigurationForm({
 
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {config.filters.map((filter, idx) => {
-            const dimension = currentCube.dimensions.find(
-              (d: any) => d.name === filter.dimension
-            );
-            const dimType = dimension?.type || "string";
+            // Find the dimension info (could be from main or joined cube)
+            const dimensionInfo = availableDimensions.find(d => d.fullPath === filter.dimension);
+            const dimType = dimensionInfo?.type || "string";
             const operators: CubeOperator[] = operatorsForType(dimType) || [];
             const operatorMeta = operators.find(
               (op) => op.name === filter.operator
@@ -305,11 +377,18 @@ function CubeConfigurationForm({
                     cursor: "pointer",
                   }}
                 >
-                  <option value="">-- Dimension --</option>
-                  {config.dimensions.map((d) => (
-                    <option key={d} value={d}>
-                      {d}
-                    </option>
+                  <option value="">-- Select Dimension --</option>
+                  {Object.entries(groupedDimensions).map(([cubeName, dims]) => (
+                    <optgroup
+                      key={cubeName}
+                      label={cubeName === currentCube.name ? `${cubeName} (main)` : `${cubeName} (joined)`}
+                    >
+                      {dims.map(dim => (
+                        <option key={dim.fullPath} value={dim.fullPath}>
+                          {dim.displayName}
+                        </option>
+                      ))}
+                    </optgroup>
                   ))}
                 </select>
 
@@ -422,12 +501,23 @@ function CubeConfigurationForm({
         </button>
       </div>
 
-        {/* Section 5: Chart Type */}
+      {/* Chart Type */}
       <div style={sectionStyle}>
         <div style={sectionTitleStyle}>Chart Type</div>
         <div style={{ display: "flex", gap: "8px" }}>
           {["linechart", "barchart", "table"].map(type => (
-            <label key={type} style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: "#e0e0e0", cursor: "pointer" }}>
+            <label key={type} style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "13px",
+              color: "#e9edef",
+              cursor: "pointer",
+              padding: "6px 12px",
+              backgroundColor: config.renderingComponent === type ? "#2a3942" : "transparent",
+              borderRadius: "6px",
+              border: config.renderingComponent === type ? "1px solid #00a884" : "1px solid transparent",
+            }}>
               <input
                 type="radio"
                 name="chart-type"
@@ -437,6 +527,7 @@ function CubeConfigurationForm({
                   setConfig(newConfig);
                   onChange(newConfig);
                 }}
+                style={{ accentColor: "#00a884" }}
               />
               {type.charAt(0).toUpperCase() + type.slice(1)}
             </label>
@@ -444,13 +535,13 @@ function CubeConfigurationForm({
         </div>
       </div>
 
-      {/* Section 6: Axes Configuration (only for chart types) */}
+      {/* Axes Configuration (only for chart types) */}
       {(config.renderingComponent === "linechart" || config.renderingComponent === "barchart") && (
         <div style={sectionStyle}>
           <div style={sectionTitleStyle}>Axes</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             <div>
-              <label style={{ fontSize: "10px", color: "#b0b0b0", display: "block", marginBottom: "4px" }}>
+              <label style={{ fontSize: "12px", color: "#8696a0", display: "block", marginBottom: "6px" }}>
                 X-Axis (Dimension)
               </label>
               <select
@@ -463,24 +554,31 @@ function CubeConfigurationForm({
                 disabled={config.dimensions.length === 0}
                 style={{
                   width: "100%",
-                  padding: "6px 8px",
-                  backgroundColor: config.dimensions.length === 0 ? "#2a2a2a" : "#1a1a1a",
-                  color: "#e0e0e0",
-                  border: "1px solid #404040",
-                  borderRadius: "2px",
-                  fontSize: "12px",
+                  padding: "8px 12px",
+                  backgroundColor: config.dimensions.length === 0 ? "#1a1f24" : "#2a3942",
+                  color: "#e9edef",
+                  border: "1px solid #3b4a54",
+                  borderRadius: "6px",
+                  fontSize: "13px",
+                  outline: "none",
+                  cursor: "pointer",
                 }}
               >
                 <option value="">-- None --</option>
-                {config.dimensions.map(d => (
-                  <option key={d} value={d}>
-                    {currentCube.dimensions.find((dim: { name: string; }) => dim.name === d)?.displayName || d}
-                  </option>
-                ))}
+                {config.dimensions.map(d => {
+                  // Extract dimension name from full path (e.g., "orders.status" -> "status")
+                  const dimensionName = d.split('.').pop() || d;
+                  const dimension = currentCube.dimensions?.find((dim: { name: string; }) => dim.name === dimensionName);
+                  return (
+                    <option key={d} value={d}>
+                      {dimension?.title || dimensionName}
+                    </option>
+                  );
+                })}
               </select>
             </div>
             <div>
-              <label style={{ fontSize: "10px", color: "#b0b0b0", display: "block", marginBottom: "4px" }}>
+              <label style={{ fontSize: "12px", color: "#8696a0", display: "block", marginBottom: "6px" }}>
                 Y-Axis (Measure)
               </label>
               <select
@@ -493,49 +591,82 @@ function CubeConfigurationForm({
                 disabled={config.measures.length === 0}
                 style={{
                   width: "100%",
-                  padding: "6px 8px",
-                  backgroundColor: config.measures.length === 0 ? "#2a2a2a" : "#1a1a1a",
-                  color: "#e0e0e0",
-                  border: "1px solid #404040",
-                  borderRadius: "2px",
-                  fontSize: "12px",
+                  padding: "8px 12px",
+                  backgroundColor: config.measures.length === 0 ? "#1a1f24" : "#2a3942",
+                  color: "#e9edef",
+                  border: "1px solid #3b4a54",
+                  borderRadius: "6px",
+                  fontSize: "13px",
+                  outline: "none",
+                  cursor: "pointer",
                 }}
               >
                 <option value="">-- None --</option>
-                {config.measures.map(m => (
-                  <option key={m} value={m}>
-                    {currentCube.measures.find((meas: { name: string; }) => meas.name === m)?.displayName || m}
-                  </option>
-                ))}
+                {config.measures.map(m => {
+                  // Extract measure name from full path (e.g., "orders.count" -> "count")
+                  const measureName = m.split('.').pop() || m;
+                  const measure = currentCube.measures?.find((meas: { name: string; }) => meas.name === measureName);
+                  return (
+                    <option key={m} value={m}>
+                      {measure?.title || measureName}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
         </div>
       )}
 
-      {/* Section 6b: Columns Configuration (only for table) */}
+      {/* Columns Configuration (only for table) */}
       {config.renderingComponent === "table" && (
         <div style={sectionStyle}>
           <div style={sectionTitleStyle}>Columns</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {config.measures.length === 0 && config.dimensions.length === 0 ? (
-              <div style={{ fontSize: "11px", color: "#808080" }}>
+              <div style={{ fontSize: "12px", color: "#8696a0" }}>
                 Select measures or dimensions to display as columns
               </div>
             ) : (
               <>
-                {config.dimensions.map(d => (
-                  <label key={d} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#e0e0e0" }}>
-                    <input type="checkbox" defaultChecked />
-                    {currentCube.dimensions.find((dim: { name: string; }) => dim.name === d)?.displayName || d}
-                  </label>
-                ))}
-                {config.measures.map(m => (
-                  <label key={m} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#e0e0e0" }}>
-                    <input type="checkbox" defaultChecked />
-                    {currentCube.measures.find((meas: { name: string; }) => meas.name === m)?.displayName || m}
-                  </label>
-                ))}
+                {config.dimensions.map(d => {
+                  const dimensionName = d.split('.').pop() || d;
+                  const dimension = currentCube.dimensions?.find((dim: { name: string; }) => dim.name === dimensionName);
+                  return (
+                    <label key={d} style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      fontSize: "13px",
+                      color: "#e9edef",
+                      padding: "6px 8px",
+                      backgroundColor: "#2a3942",
+                      borderRadius: "6px",
+                    }}>
+                      <input type="checkbox" defaultChecked style={{ accentColor: "#00a884" }} />
+                      {dimension?.title || dimensionName}
+                    </label>
+                  );
+                })}
+                {config.measures.map(m => {
+                  const measureName = m.split('.').pop() || m;
+                  const measure = currentCube.measures?.find((meas: { name: string; }) => meas.name === measureName);
+                  return (
+                    <label key={m} style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      fontSize: "13px",
+                      color: "#e9edef",
+                      padding: "6px 8px",
+                      backgroundColor: "#2a3942",
+                      borderRadius: "6px",
+                    }}>
+                      <input type="checkbox" defaultChecked style={{ accentColor: "#00a884" }} />
+                      {measure?.title || measureName}
+                    </label>
+                  );
+                })}
               </>
             )}
           </div>
