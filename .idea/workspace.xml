@@ -4,35 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="new stuff">
-      <change afterPath="$PROJECT_DIR$/apps/shell/src/QuerySearchSample.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/query/components/chip-search-panel.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/query/components/constraint-chip.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/query/components/constraint-panel.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/query/components/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/query/components/search-model-definition.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/query/examples/search-examples.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/query/type-search-builder.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/widgets/property-editor/editors/cube-widget-configuration-editor.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/widgets/property-editor/editors/span-editor.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/widgets/property-editor/grid-items-editor.tsx" afterDir="false" />
+    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="refactoring">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/mfe1/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/dist/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/mfe1/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/dist/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/mfe1/dist/remoteEntry.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/mfe1/dist/remoteEntry.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/dist/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/dist/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/query/SearchPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/query/SearchPanel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/query/input-editor/input-editor-registry.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/query/input-editor/input-editor-registry.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/query/query-model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/query/query-model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/query/sample-query-models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/query/sample-query-models.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/widgets/examples/widget-registry.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/widgets/examples/widget-registry.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/portal/src/dashboard/property-editor/editors/cube-widget-configuration-editor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/dashboard/property-editor/editors/cube-widget-configuration-editor.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -49,6 +37,9 @@
     &quot;accountId&quot;: &quot;5eada779-732f-475d-af7f-05973b6b02ee&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../aspyx/packages/aspyx/src/aspyx/validation/validation.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="McpProjectServerCommands">
     <McpServerCommand sourceId="UserConfigurationSource">
       <option name="allowedToolsNames" />
@@ -59,6 +50,9 @@
       <option name="workingDirectory" value="" />
       <envs />
     </McpServerCommand>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -72,61 +66,72 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Jest.cloneDeep.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.query.executor&quot;: &quot;Run&quot;,
-    &quot;Jest.validation.executor&quot;: &quot;Run&quot;,
-    &quot;Nx.metadata:scan.executor&quot;: &quot;Run&quot;,
-    &quot;Nx.mfe1:build-with-metadata.executor&quot;: &quot;Run&quot;,
-    &quot;Nx.mfe1:serve.executor&quot;: &quot;Run&quot;,
-    &quot;Nx.mfe1:serve:development.executor&quot;: &quot;Run&quot;,
-    &quot;Nx.shell:serve:development.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;dev.nx.console.last_ai_configure_notification_timestamp&quot;: &quot;1767006900024&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/andreasernst/Documents/projects/react_federation/libs/portal/src&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs.jest.jest_package&quot;: &quot;/Users/andreasernst/Documents/projects/react_federation/node_modules/jest&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.mfe1 &gt; scan:metadata.executor&quot;: &quot;Run&quot;,
-    &quot;npm.mfe1 &gt; serve.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMThirdPartyAiProvidersConfigurable&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/andreasernst/Documents/projects/react_federation/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Jest.cloneDeep.executor": "Run",
+    "Jest.query.executor": "Run",
+    "Jest.validation.executor": "Debug",
+    "Jest.validation.should parse json.executor": "Debug",
+    "Jest.validation.should produce json.executor": "Debug",
+    "Jest.validation.should validate numbers.executor": "Debug",
+    "Jest.validation.should work.executor": "Debug",
+    "Nx.metadata:scan.executor": "Run",
+    "Nx.mfe1:build-with-metadata.executor": "Run",
+    "Nx.mfe1:serve.executor": "Run",
+    "Nx.mfe1:serve:development.executor": "Run",
+    "Nx.shell:serve:development.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "dev.nx.console.last_ai_configure_notification_timestamp": "1767006900024",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/andreasernst/Documents/projects/react_federation/libs/portal/src/communication",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs.jest.jest_package": "/Users/andreasernst/Documents/projects/react_federation/node_modules/jest",
+    "nodejs_package_manager_path": "npm",
+    "npm.mfe1 > scan:metadata.executor": "Run",
+    "npm.mfe1 > serve.executor": "Run",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "show.migrate.to.gradle.popup": "false",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Users/andreasernst/Documents/projects/react_federation/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ],
-    &quot;dev.nx.console.project_details_files&quot;: [
-      &quot;/Users/andreasernst/Documents/projects/react_federation/tools/metadata/project.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/tools/metadata/package.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/project.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/package.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/shell/project.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/shell/package.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/libs/portal/project.json&quot;,
-      &quot;/Users/andreasernst/Documents/projects/react_federation/libs/portal/package.json&quot;
+    "dev.nx.console.project_details_files": [
+      "/Users/andreasernst/Documents/projects/react_federation/tools/metadata/project.json",
+      "/Users/andreasernst/Documents/projects/react_federation/tools/metadata/package.json",
+      "/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/project.json",
+      "/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/package.json",
+      "/Users/andreasernst/Documents/projects/react_federation/apps/shell/project.json",
+      "/Users/andreasernst/Documents/projects/react_federation/apps/shell/package.json",
+      "/Users/andreasernst/Documents/projects/react_federation/libs/portal/project.json",
+      "/Users/andreasernst/Documents/projects/react_federation/libs/portal/package.json"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/libs/portal/src" />
-      <recent name="$PROJECT_DIR$/apps/shell/src" />
+      <recent name="$PROJECT_DIR$/libs/portal/src/communication" />
+      <recent name="$PROJECT_DIR$/libs/portal/src/orm" />
       <recent name="$PROJECT_DIR$/libs/portal/src/metadata" />
       <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/libs/portal/src/widgets/examples" />
+      <recent name="$PROJECT_DIR$/libs/portal/src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/libs/portal/src/dashboard/property-editor/editors" />
+      <recent name="$PROJECT_DIR$/libs/portal/src/dashboard/widgets" />
+      <recent name="$PROJECT_DIR$/libs/portal/src/orm" />
+      <recent name="$PROJECT_DIR$/libs/portal/src/metadata" />
+      <recent name="$PROJECT_DIR$/libs/portal/src/query/components" />
     </key>
   </component>
   <component name="RunManager" selected="Nx.shell:serve:development">
@@ -137,29 +142,18 @@
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method />
     </configuration>
-    <configuration default="true" factoryName="Application" type="Application">
+    <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
-        <option enabled="true" name="Make" />
+        <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" factoryName="JUnit" type="JUnit">
+    <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
       <method v="2">
-        <option enabled="true" name="Make" />
+        <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="react_federation" />
-      <method v="2">
-        <option enabled="true" name="Make" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="react_federation" />
-      <option name="filePath" />
-      <method v="2" />
     </configuration>
     <configuration default="true" type="TestNG">
       <option name="TEST_OBJECT" value="CLASS" />
@@ -167,7 +161,7 @@
       <properties />
       <listeners />
       <method v="2">
-        <option enabled="true" name="Make" />
+        <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" factoryName="Plugin" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
@@ -176,30 +170,6 @@
       <option name="PROGRAM_PARAMETERS" />
       <predefined_log_file enabled="true" id="idea.log" />
       <method />
-    </configuration>
-    <configuration name="cloneDeep" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
-      <working-dir value="$PROJECT_DIR$" />
-      <envs />
-      <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/libs/portal/src/lang/clone.spec.ts" />
-      <test-names>
-        <test-name value="cloneDeep" />
-      </test-names>
-      <method v="2" />
-    </configuration>
-    <configuration name="query" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
-      <node-interpreter value="project" />
-      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
-      <working-dir value="$PROJECT_DIR$" />
-      <envs />
-      <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/libs/portal/src/util/stream.spec.ts" />
-      <test-names>
-        <test-name value="query" />
-      </test-names>
-      <method v="2" />
     </configuration>
     <configuration name="validation" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
@@ -213,17 +183,61 @@
       </test-names>
       <method v="2" />
     </configuration>
+    <configuration name="validation.should parse json" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/libs/portal/src/validation/validation.spec.ts" />
+      <test-names>
+        <test-name value="validation" />
+        <test-name value="should parse json" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="validation.should produce json" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/libs/portal/src/validation/validation.spec.ts" />
+      <test-names>
+        <test-name value="validation" />
+        <test-name value="should produce json" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="validation.should validate numbers" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/libs/portal/src/validation/validation.spec.ts" />
+      <test-names>
+        <test-name value="validation" />
+        <test-name value="should validate numbers" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="validation.should work" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/libs/portal/src/validation/validation.spec.ts" />
+      <test-names>
+        <test-name value="validation" />
+        <test-name value="should work" />
+      </test-names>
+      <method v="2" />
+    </configuration>
     <configuration name="metadata:scan" type="NxRunConfigurationType">
       <option name="nx-projects" value="metadata" />
       <option name="nx-targets" value="scan" />
-      <option name="nx-target-configuration" value="" />
-      <envs />
-      <option name="arguments" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="mfe1:build-with-metadata" type="NxRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="nx-projects" value="mfe1" />
-      <option name="nx-targets" value="build-with-metadata" />
       <option name="nx-target-configuration" value="" />
       <envs />
       <option name="arguments" value="" />
@@ -253,25 +267,6 @@
       <option name="arguments" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="mfe1 &gt; scan:metadata" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/apps/mfe1/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="scan:metadata" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Jest.validation" />
-        <item itemvalue="Jest.query" />
-        <item itemvalue="Jest.cloneDeep" />
-        <item itemvalue="Nx.mfe1:build-with-metadata" />
-        <item itemvalue="npm.mfe1 &gt; scan:metadata" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -297,198 +292,23 @@
       <workItem from="1767024338219" duration="4138000" />
       <workItem from="1767082808587" duration="13563000" />
       <workItem from="1767102275781" duration="4038000" />
-    </task>
-    <task id="LOCAL-00001" summary="INITIAL CODE">
-      <option name="closed" value="true" />
-      <created>1763714474382</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1763714474382</updated>
-    </task>
-    <task id="LOCAL-00002" summary="INITIAL CODE">
-      <option name="closed" value="true" />
-      <created>1763731450085</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1763731450085</updated>
-    </task>
-    <task id="LOCAL-00003" summary="dynamic mfe working">
-      <option name="closed" value="true" />
-      <created>1764603337255</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1764603337255</updated>
-    </task>
-    <task id="LOCAL-00004" summary="parser intregration">
-      <option name="closed" value="true" />
-      <created>1764607513702</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1764607513702</updated>
-    </task>
-    <task id="LOCAL-00005" summary="parser intregration">
-      <option name="closed" value="true" />
-      <created>1764607524656</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1764607524656</updated>
-    </task>
-    <task id="LOCAL-00006" summary="new stuff">
-      <option name="closed" value="true" />
-      <created>1764607550625</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1764607550625</updated>
-    </task>
-    <task id="LOCAL-00007" summary="new stuff">
-      <option name="closed" value="true" />
-      <created>1764607564825</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1764607564825</updated>
-    </task>
-    <task id="LOCAL-00008" summary="harmonized structures with server">
-      <option name="closed" value="true" />
-      <created>1764693104831</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1764693104831</updated>
-    </task>
-    <task id="LOCAL-00009" summary="pretty">
-      <option name="closed" value="true" />
-      <created>1764693651354</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1764693651354</updated>
-    </task>
-    <task id="LOCAL-00010" summary="cleanup and lazy loading">
-      <option name="closed" value="true" />
-      <created>1764693859564</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1764693859564</updated>
-    </task>
-    <task id="LOCAL-00011" summary="show load status">
-      <option name="closed" value="true" />
-      <created>1764694058723</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1764694058723</updated>
-    </task>
-    <task id="LOCAL-00012" summary="added client info">
-      <option name="closed" value="true" />
-      <created>1764750348961</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1764750348961</updated>
-    </task>
-    <task id="LOCAL-00013" summary="fix client info">
-      <option name="closed" value="true" />
-      <created>1764752004870</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1764752004870</updated>
-    </task>
-    <task id="LOCAL-00014" summary="navigation is dynamic">
-      <option name="closed" value="true" />
-      <created>1764756390184</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1764756390184</updated>
-    </task>
-    <task id="LOCAL-00015" summary="fix">
-      <option name="closed" value="true" />
-      <created>1764756683175</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1764756683175</updated>
-    </task>
-    <task id="LOCAL-00016" summary="delayed rebndering of navigation">
-      <option name="closed" value="true" />
-      <created>1764756792937</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1764756792937</updated>
-    </task>
-    <task id="LOCAL-00017" summary="refactor">
-      <option name="closed" value="true" />
-      <created>1764757203100</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1764757203100</updated>
-    </task>
-    <task id="LOCAL-00018" summary="webpack.confi is updated automtically">
-      <option name="closed" value="true" />
-      <created>1764757479848</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1764757479848</updated>
-    </task>
-    <task id="LOCAL-00019" summary="capacitor">
-      <option name="closed" value="true" />
-      <created>1764765725634</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1764765725634</updated>
-    </task>
-    <task id="LOCAL-00020" summary="capacitor navigation">
-      <option name="closed" value="true" />
-      <created>1764767052757</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1764767052757</updated>
-    </task>
-    <task id="LOCAL-00021" summary="cube">
-      <option name="closed" value="true" />
-      <created>1765361512392</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1765361512392</updated>
-    </task>
-    <task id="LOCAL-00022" summary="growing">
-      <option name="closed" value="true" />
-      <created>1765542976412</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1765542976412</updated>
-    </task>
-    <task id="LOCAL-00023" summary="svg icons">
-      <option name="closed" value="true" />
-      <created>1765543590885</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1765543590885</updated>
-    </task>
-    <task id="LOCAL-00024" summary="changes">
-      <option name="closed" value="true" />
-      <created>1765544460741</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1765544460741</updated>
+      <workItem from="1767114109126" duration="5364000" />
+      <workItem from="1767170344633" duration="4160000" />
+      <workItem from="1767175161628" duration="976000" />
+      <workItem from="1767176156766" duration="21443000" />
+      <workItem from="1767203289300" duration="5841000" />
+      <workItem from="1767262081715" duration="11470000" />
+      <workItem from="1767276158098" duration="5138000" />
+      <workItem from="1767302157539" duration="1204000" />
+      <workItem from="1767340365315" duration="1269000" />
+      <workItem from="1767343104966" duration="3851000" />
+      <workItem from="1767346983230" duration="1892000" />
+      <workItem from="1767348887237" duration="6238000" />
+      <workItem from="1767362401925" duration="29000" />
+      <workItem from="1767362449625" duration="12222000" />
+      <workItem from="1767450483341" duration="2347000" />
+      <workItem from="1767452840996" duration="23000" />
+      <workItem from="1767452881779" duration="11287000" />
     </task>
     <task id="LOCAL-00025" summary="breadcrumb">
       <option name="closed" value="true" />
@@ -682,30 +502,224 @@
       <option name="project" value="LOCAL" />
       <updated>1767097047261</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="new stuff">
+      <option name="closed" value="true" />
+      <created>1767114433450</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1767114433450</updated>
+    </task>
+    <task id="LOCAL-00050" summary="new stuff">
+      <option name="closed" value="true" />
+      <created>1767175411712</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1767175411713</updated>
+    </task>
+    <task id="LOCAL-00051" summary="added edit">
+      <option name="closed" value="true" />
+      <created>1767178741151</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1767178741151</updated>
+    </task>
+    <task id="LOCAL-00052" summary="types &amp; json conversion">
+      <option name="closed" value="true" />
+      <created>1767189353863</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1767189353863</updated>
+    </task>
+    <task id="LOCAL-00053" summary="query stuff">
+      <option name="closed" value="true" />
+      <created>1767263468073</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1767263468073</updated>
+    </task>
+    <task id="LOCAL-00054" summary="query stuff">
+      <option name="closed" value="true" />
+      <created>1767264944194</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1767264944194</updated>
+    </task>
+    <task id="LOCAL-00055" summary="propert constraitn assignment">
+      <option name="closed" value="true" />
+      <created>1767268280665</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1767268280665</updated>
+    </task>
+    <task id="LOCAL-00056" summary="operator factory">
+      <option name="closed" value="true" />
+      <created>1767271243524</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1767271243524</updated>
+    </task>
+    <task id="LOCAL-00057" summary="ValueType">
+      <option name="closed" value="true" />
+      <created>1767275439526</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1767275439526</updated>
+    </task>
+    <task id="LOCAL-00058" summary="ValueType">
+      <option name="closed" value="true" />
+      <created>1767276830929</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1767276830929</updated>
+    </task>
+    <task id="LOCAL-00059" summary="db autocompletion...">
+      <option name="closed" value="true" />
+      <created>1767301834650</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1767301834650</updated>
+    </task>
+    <task id="LOCAL-00060" summary="renamings to fit python...">
+      <option name="closed" value="true" />
+      <created>1767359105593</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1767359105593</updated>
+    </task>
+    <task id="LOCAL-00061" summary="save dashboard">
+      <option name="closed" value="true" />
+      <created>1767367141850</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1767367141850</updated>
+    </task>
+    <task id="LOCAL-00062" summary="ui cleanup">
+      <option name="closed" value="true" />
+      <created>1767445530994</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1767445530994</updated>
+    </task>
+    <task id="LOCAL-00063" summary="filter">
+      <option name="closed" value="true" />
+      <created>1767450829667</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1767450829667</updated>
+    </task>
+    <task id="LOCAL-00064" summary="filter">
+      <option name="closed" value="true" />
+      <created>1767450836479</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1767450836479</updated>
+    </task>
+    <task id="LOCAL-00065" summary="gosh,llms suck">
+      <option name="closed" value="true" />
+      <created>1767454249851</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1767454249853</updated>
+    </task>
+    <task id="LOCAL-00066" summary="removed local cubes">
+      <option name="closed" value="true" />
+      <created>1767529961966</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1767529961966</updated>
+    </task>
+    <task id="LOCAL-00067" summary="ui">
+      <option name="closed" value="true" />
+      <created>1767530272771</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1767530272771</updated>
+    </task>
+    <task id="LOCAL-00068" summary="ui">
+      <option name="closed" value="true" />
+      <created>1767530332793</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1767530332793</updated>
+    </task>
+    <task id="LOCAL-00069" summary="ui">
+      <option name="closed" value="true" />
+      <created>1767530915313</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1767530915313</updated>
+    </task>
+    <task id="LOCAL-00070" summary="deploy">
+      <option name="closed" value="true" />
+      <created>1767532052003</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1767532052003</updated>
+    </task>
+    <task id="LOCAL-00071" summary="missing charts...">
+      <option name="closed" value="true" />
+      <created>1767533116736</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1767533116736</updated>
+    </task>
+    <task id="LOCAL-00072" summary="refactoring">
+      <option name="closed" value="true" />
+      <created>1767602204477</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1767602204478</updated>
+    </task>
+    <task id="LOCAL-00073" summary="refactoring">
+      <option name="closed" value="true" />
+      <created>1767602229041</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1767602229041</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="show load status" />
-    <MESSAGE value="added client info" />
-    <MESSAGE value="fix client info" />
-    <MESSAGE value="navigation is dynamic" />
-    <MESSAGE value="fix" />
-    <MESSAGE value="delayed rebndering of navigation" />
-    <MESSAGE value="refactor" />
-    <MESSAGE value="webpack.confi is updated automtically" />
-    <MESSAGE value="capacitor" />
-    <MESSAGE value="capacitor navigation" />
-    <MESSAGE value="growing" />
-    <MESSAGE value="svg icons" />
-    <MESSAGE value="changes" />
-    <MESSAGE value="breadcrumb" />
-    <MESSAGE value="group headers" />
-    <MESSAGE value="growin" />
-    <MESSAGE value="cube charts" />
     <MESSAGE value="layout" />
     <MESSAGE value="d&amp;d" />
     <MESSAGE value="span" />
@@ -714,23 +728,24 @@
     <MESSAGE value="filters" />
     <MESSAGE value="query" />
     <MESSAGE value="new stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="new stuff" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/libs/portal/src/manifest-loader.ts</url>
-          <line>67</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/apps/shell/src/App.tsx</url>
-          <line>76</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="added edit" />
+    <MESSAGE value="types &amp; json conversion" />
+    <MESSAGE value="query stuff" />
+    <MESSAGE value="propert constraitn assignment" />
+    <MESSAGE value="operator factory" />
+    <MESSAGE value="ValueType" />
+    <MESSAGE value="db autocompletion..." />
+    <MESSAGE value="renamings to fit python..." />
+    <MESSAGE value="save dashboard" />
+    <MESSAGE value="ui cleanup" />
+    <MESSAGE value="filter" />
+    <MESSAGE value="gosh,llms suck" />
+    <MESSAGE value="removed local cubes" />
+    <MESSAGE value="ui" />
+    <MESSAGE value="deploy" />
+    <MESSAGE value="missing charts..." />
+    <MESSAGE value="refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactoring" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1005,6 +1020,156 @@
           <option name="totalLines" value="130187" />
           <option name="info" value="new stuff" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767114434121" />
+          <option name="linesCode" value="108207" />
+          <option name="totalLines" value="138215" />
+          <option name="info" value="new stuff" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767175412348" />
+          <option name="linesCode" value="109188" />
+          <option name="totalLines" value="140964" />
+          <option name="info" value="new stuff" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767178741286" />
+          <option name="linesCode" value="109216" />
+          <option name="totalLines" value="141284" />
+          <option name="info" value="added edit" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767189353999" />
+          <option name="linesCode" value="109308" />
+          <option name="totalLines" value="141428" />
+          <option name="info" value="types &amp; json conversion" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767263468210" />
+          <option name="linesCode" value="109447" />
+          <option name="totalLines" value="140958" />
+          <option name="info" value="query stuff" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767264944340" />
+          <option name="linesCode" value="109283" />
+          <option name="totalLines" value="140729" />
+          <option name="info" value="query stuff" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767268280806" />
+          <option name="linesCode" value="109279" />
+          <option name="totalLines" value="140760" />
+          <option name="info" value="propert constraitn assignment" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767271243633" />
+          <option name="linesCode" value="109372" />
+          <option name="totalLines" value="140868" />
+          <option name="info" value="operator factory" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767275439637" />
+          <option name="linesCode" value="109399" />
+          <option name="totalLines" value="140933" />
+          <option name="info" value="ValueType" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767276831080" />
+          <option name="linesCode" value="109399" />
+          <option name="totalLines" value="140944" />
+          <option name="info" value="ValueType" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767301834768" />
+          <option name="linesCode" value="110080" />
+          <option name="totalLines" value="142137" />
+          <option name="info" value="db autocompletion..." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767359105759" />
+          <option name="linesCode" value="110209" />
+          <option name="totalLines" value="142267" />
+          <option name="info" value="renamings to fit python..." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767367141980" />
+          <option name="linesCode" value="110281" />
+          <option name="totalLines" value="142768" />
+          <option name="info" value="save dashboard" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767445531108" />
+          <option name="linesCode" value="110281" />
+          <option name="totalLines" value="142762" />
+          <option name="info" value="ui cleanup" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767450829837" />
+          <option name="linesCode" value="110445" />
+          <option name="totalLines" value="142977" />
+          <option name="info" value="filter" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767450836539" />
+          <option name="linesCode" value="110504" />
+          <option name="totalLines" value="142977" />
+          <option name="info" value="filter" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767454249987" />
+          <option name="linesCode" value="110417" />
+          <option name="totalLines" value="142925" />
+          <option name="info" value="gosh,llms suck" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767529962128" />
+          <option name="linesCode" value="110396" />
+          <option name="totalLines" value="142655" />
+          <option name="info" value="removed local cubes" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767530272873" />
+          <option name="linesCode" value="110402" />
+          <option name="totalLines" value="142857" />
+          <option name="info" value="ui" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767530332881" />
+          <option name="linesCode" value="110402" />
+          <option name="totalLines" value="142857" />
+          <option name="info" value="ui" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767530915584" />
+          <option name="linesCode" value="110417" />
+          <option name="totalLines" value="142915" />
+          <option name="info" value="ui" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767532052123" />
+          <option name="linesCode" value="110402" />
+          <option name="totalLines" value="142918" />
+          <option name="info" value="deploy" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767533116856" />
+          <option name="linesCode" value="110402" />
+          <option name="totalLines" value="143041" />
+          <option name="info" value="missing charts..." />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767602204593" />
+          <option name="linesCode" value="104331" />
+          <option name="totalLines" value="129330" />
+          <option name="info" value="refactoring" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767602229146" />
+          <option name="linesCode" value="104331" />
+          <option name="totalLines" value="129330" />
+          <option name="info" value="refactoring" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1046,10 +1211,58 @@
           <option name="info" value="30.12.2025" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1767097047402" />
-          <option name="linesCode" value="104682" />
-          <option name="totalLines" value="130187" />
+          <option name="timestamp" value="1767114434121" />
+          <option name="linesCode" value="108207" />
+          <option name="totalLines" value="138215" />
           <option name="info" value="30.12.2025" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767178741286" />
+          <option name="linesCode" value="109216" />
+          <option name="totalLines" value="141284" />
+          <option name="info" value="31.12.2025" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767189353999" />
+          <option name="linesCode" value="109308" />
+          <option name="totalLines" value="141428" />
+          <option name="info" value="31.12.2025" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767264944340" />
+          <option name="linesCode" value="109283" />
+          <option name="totalLines" value="140729" />
+          <option name="info" value="01.01.2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767301834768" />
+          <option name="linesCode" value="110080" />
+          <option name="totalLines" value="142137" />
+          <option name="info" value="01.01.2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767367141980" />
+          <option name="linesCode" value="110281" />
+          <option name="totalLines" value="142768" />
+          <option name="info" value="02.01.2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767454249987" />
+          <option name="linesCode" value="110417" />
+          <option name="totalLines" value="142925" />
+          <option name="info" value="03.01.2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767533116856" />
+          <option name="linesCode" value="110402" />
+          <option name="totalLines" value="143041" />
+          <option name="info" value="04.01.2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767602229146" />
+          <option name="linesCode" value="104331" />
+          <option name="totalLines" value="129330" />
+          <option name="info" value="05.01.2026" />
         </TimePoint>
       </list>
     </option>
