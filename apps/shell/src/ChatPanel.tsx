@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { EventWebSocketClient } from "../../../libs/portal/src/event_ws";
+import {EventWebSocketClient} from "@portal/event";
 
 interface ChatMessage {
   id: string;

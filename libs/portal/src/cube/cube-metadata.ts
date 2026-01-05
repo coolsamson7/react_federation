@@ -1,12 +1,7 @@
-// cubeDescriptors.ts
 
 // -------------------------
 // Cube.js enums / unions
 // -------------------------
-
-import {DatabaseDescriptor} from "../orm/";
-import {MetadataServiceOptions} from "../orm";
-import {HTTPService} from "@portal/communication";
 
 export type MeasureType =
   | "count"

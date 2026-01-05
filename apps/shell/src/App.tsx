@@ -19,14 +19,6 @@ const shellRoutes = [
     label: "Home",
     icon: "H" // Using simple letter to avoid UTF-8 issues
   },
-  // search sample
-
-  {
-    path: "/query-search",
-    component: "QuerySearchSample",
-    label: "Query Search",
-    icon: "Q" // Using simple letter to avoid UTF-8 issues
-  },
 
   // cube sample
 

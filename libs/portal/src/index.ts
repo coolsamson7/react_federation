@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
 export * from "./orm"
+export * from "./event"
 export * from "./cube"
 export * from "./communication"
 export * from './registry';
