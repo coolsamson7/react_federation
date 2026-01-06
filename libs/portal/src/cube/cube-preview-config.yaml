@@ -1,0 +1,215 @@
+# Cube Preview Configuration
+# Defines templates and settings for cube preview generation
+
+preview_config:
+  version: "1.0"
+  description: "Configuration for cube preview generation in JS and YAML formats"
+
+# Templates for different output formats
+templates:
+  js_cube_template: |
+    cube(`{cube_name}`, {{
+      sql: `{sql_query}`,
+      
+      {measures_section}
+      
+      {dimensions_section}
+      
+      {segments_section}
+      
+      {joins_section}
+    }});
+
+  yaml_cube_template: |
+    cube: {cube_name}
+    table: {table_name}
+    sql: {sql_query}
+    measures:
+      {measures_yaml}
+    dimensions:
+      {dimensions_yaml}
+    segments:
+      {segments_yaml}
+    joins:
+      {joins_yaml}
+
+# Measure type definitions
+measure_types:
+  count:
+    description: "Count of records"
+    sql_pattern: "1"
+    default_title: "Count"
+  countDistinct:
+    description: "Count of distinct values"
+    sql_pattern: "{column}"
+    default_title: "Unique {column}"
+  sum:
+    description: "Sum of values"
+    sql_pattern: "{column}"
+    default_title: "Total {column}"
+  avg:
+    description: "Average of values"
+    sql_pattern: "{column}"
+    default_title: "Average {column}"
+  min:
+    description: "Minimum value"
+    sql_pattern: "{column}"
+    default_title: "Min {column}"
+  max:
+    description: "Maximum value"
+    sql_pattern: "{column}"
+    default_title: "Max {column}"
+
+# Dimension type definitions
+dimension_types:
+  string:
+    description: "Text/string values"
+    default_format: "string"
+  number:
+    description: "Numeric values"
+    default_format: "number"
+  time:
+    description: "Date/time values"
+    default_format: "time"
+  boolean:
+    description: "Boolean values"
+    default_format: "boolean"
+
+# Join relationship definitions
+join_relationships:
+  belongsTo:
+    description: "Many-to-one relationship (this cube belongs to target cube)"
+    cardinality: "many:one"
+  hasMany:
+    description: "One-to-many relationship (this cube has many target cubes)"
+    cardinality: "one:many"
+  hasOne:
+    description: "One-to-one relationship (this cube has one target cube)"
+    cardinality: "one:one"
+
+# Time granularity options
+time_granularities:
+  - second
+  - minute
+  - hour
+  - day
+  - week
+  - month
+  - quarter
+  - year
+
+# Preview formatting options
+formatting:
+  js:
+    indent_size: 2
+    use_template_literals: true
+    quote_style: "backtick"
+    preserve_comments: true
+  
+  yaml:
+    indent_size: 2
+    sort_keys: false
+    preserve_quotes: false
+    line_width: 80
+
+# Sample cube configurations for testing/examples
+sample_cubes:
+  orders:
+    name: "Orders"
+    table: "public.orders"
+    description: "Customer orders data"
+    measures:
+      - name: "count"
+        type: "count"
+        title: "Total Orders"
+      - name: "totalAmount"
+        type: "sum"
+        column: "amount"
+        title: "Total Order Amount"
+    dimensions:
+      - name: "orderId"
+        column: "order_id"
+        type: "number"
+        primary_key: true
+      - name: "orderDate"
+        column: "order_date"
+        type: "time"
+      - name: "status"
+        column: "status"
+        type: "string"
+    joins:
+      - name: "Customers"
+        relationship: "belongsTo"
+        on: "${CUBE}.customer_id = ${Customers}.customer_id"
+
+  customers:
+    name: "Customers"
+    table: "public.customers"
+    description: "Customer information"
+    measures:
+      - name: "count"
+        type: "count"
+        title: "Customer Count"
+    dimensions:
+      - name: "customerId"
+        column: "customer_id"
+        type: "number"
+        primary_key: true
+      - name: "name"
+        column: "name"
+        type: "string"
+      - name: "email"
+        column: "email"
+        type: "string"
+      - name: "country"
+        column: "country"
+        type: "string"
+
+# Validation rules for previews
+validation_rules:
+  require_primary_key: true
+  require_at_least_one_measure: true
+  validate_join_syntax: true
+  check_column_references: true
+  validate_sql_expressions: false  # Can be enabled when SQL parser is available
+
+# Export options
+export_options:
+  js:
+    file_extension: ".js"
+    include_comments: true
+    format_code: true
+  yaml:
+    file_extension: ".yaml"
+    include_metadata: true
+    format_document: true
+
+# Panel display options
+panel_config:
+  default_format: "js"
+  show_summary: true
+  enable_syntax_highlighting: true
+  auto_refresh: true
+  max_preview_lines: 1000
+  
+  sections:
+    - id: "measures"
+      label: "Measures"
+      icon: "BarChart3"
+      collapsible: true
+      default_expanded: true
+    - id: "dimensions"
+      label: "Dimensions"
+      icon: "Filter"
+      collapsible: true
+      default_expanded: true
+    - id: "joins"
+      label: "Joins"
+      icon: "Link"
+      collapsible: true
+      default_expanded: false
+    - id: "segments"
+      label: "Segments"
+      icon: "Tag"
+      collapsible: true
+      default_expanded: false

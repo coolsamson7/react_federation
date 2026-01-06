@@ -1,3 +1,5 @@
 export * from "./cube-metadata"
 export * from"./MetadataPanel"
 export * from "./cube-service"
+export * from "./cube-preview-generator"
+export * from "./CubePreviewPanel"

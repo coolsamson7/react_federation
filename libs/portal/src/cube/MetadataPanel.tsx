@@ -15,7 +15,8 @@ import {
     ChevronDown,
     Tag,
     Wand2,
-    Table
+    Table,
+    Eye
 } from "lucide-react";
 import {
     CubeDescriptor,
@@ -29,6 +30,7 @@ import {ColumnDescriptor, DatabaseDescriptor, RelationDescriptor, TableDescripto
 
 import {CubeService} from "./cube-service";
 import { MetadataService} from "../orm";
+import CubePreviewPanel from "./CubePreviewPanel";
 
 export default function CubeConfigurator() {
 
@@ -76,6 +78,7 @@ export default function CubeConfigurator() {
     });
     const [editingItem, setEditingItem] = useState<{ type: string; index: number } | null>(null);
     const [showTableSelector, setShowTableSelector] = useState(false);
+    const [showPreview, setShowPreview] = useState(false);
 
     const toggleSection = (section: string) => {
         setExpandedSections(prev => ({...prev, [section]: !prev[section]}));
@@ -641,6 +644,24 @@ export default function CubeConfigurator() {
                                 <Wand2 size={14}/>
                                 Deploy
                             </button>
+                            <button
+                                onClick={() => setShowPreview(!showPreview)}
+                                style={{
+                                    padding: "8px 16px",
+                                    backgroundColor: showPreview ? "#005c4b" : "#2a3942",
+                                    border: "none",
+                                    borderRadius: "6px",
+                                    color: "#fff",
+                                    fontSize: "13px",
+                                    fontWeight: "500",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "6px",
+                                }}>
+                                <Eye size={14}/>
+                                Preview
+                            </button>
                         </div>
                             </div>
                             <input
@@ -789,6 +810,15 @@ export default function CubeConfigurator() {
                     </div>
                 )}
             </div>
+
+            {/* Preview Panel */}
+            {cube && (
+                <CubePreviewPanel
+                    cube={cube}
+                    visible={showPreview}
+                    onToggle={() => setShowPreview(!showPreview)}
+                />
+            )}
         </div>
     );
 }
