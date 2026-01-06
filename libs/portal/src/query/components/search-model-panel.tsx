@@ -18,7 +18,6 @@ export function SearchModelPanel({
   searchModel,
 }: SearchModelPanelProps) {
   const [criteria, setCriteria] = useState<SearchCriterion[]>(searchModel?.criteria || []);
-  const [selectedType, setSelectedType] = useState<string | null>(null); // null??
   const [criterionName, setCriterionName] = useState<string>("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   // State per criterion for constraint input
@@ -32,16 +31,16 @@ export function SearchModelPanel({
   }
 
   const handleAddCriterion = () => {
-    if (!selectedType || !criterionName.trim()) return;
+    if (!criterionName.trim()) return;
 
     const newCriterion: SearchCriterion = {
       name: criterionName.trim().toLowerCase().replace(/\s+/g, "_"),
       label: criterionName.trim(),
       path: criterionName.trim().toLowerCase().replace(/\s+/g, "_"),
-      type: newType(selectedType),
+      type: newType("string"), // Default to string
       mandatory: false,
       default: false,
-      //operators: getDefaultOperatorsForType(newType(selectedType)),
+      //operators: getDefaultOperatorsForType(newType("string")),
     };
 
     const updated = [...criteria, newCriterion];
@@ -50,7 +49,6 @@ export function SearchModelPanel({
 
     onModelChange({ ...searchModel, criteria: updated });
 
-    setSelectedType(null);
     setCriterionName("");
   };
 
@@ -106,6 +104,18 @@ export function SearchModelPanel({
 
   const availableTypes = Type.getTypes()
 
+  // Function to handle type change and clear constraints
+  const handleTypeChange = (index: number, newTypeName: string) => {
+    const criterion = criteria[index];
+    const newTypeRecord = newType(newTypeName);
+    const updatedCriterion = { ...criterion, type: newTypeRecord };
+
+    const updated = [...criteria];
+    updated[index] = updatedCriterion;
+    setCriteria(updated);
+    onModelChange({ ...searchModel, criteria: updated });
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: 16, backgroundColor: "#252525", borderRadius: 8, border: "1px solid #333" }}>
       {/* Add Criterion */}
@@ -118,26 +128,16 @@ export function SearchModelPanel({
           onKeyPress={(e) => { if (e.key === "Enter") handleAddCriterion(); }}
           style={{ flex: 1, padding: 6, backgroundColor: "#1a1a1a", border: "1px solid #404040", borderRadius: 4, color: "#e0e0e0" }}
         />
-        <select
-          value={selectedType || "string"}
-          onChange={(e) => {
-            setSelectedType(e.target.value);
-          }}
-          style={{ flex: 1, padding: 6, backgroundColor: "#1a1a1a", border: "1px solid #404040", borderRadius: 4, color: "#e0e0e0" }}
-        >
-          <option value="">Select type...</option>
-          {availableTypes.map(t => <option key={t} value={t}>{t}</option>)}
-        </select>
         <button
           onClick={handleAddCriterion}
-          disabled={!selectedType || !criterionName.trim()}
+          disabled={!criterionName.trim()}
           style={{
             padding: "6px 16px",
-            backgroundColor: (!selectedType || !criterionName.trim()) ? "#3a3a3a" : "#1e6b34",
-            color: (!selectedType || !criterionName.trim()) ? "#606060" : "#4caf50",
+            backgroundColor: !criterionName.trim() ? "#3a3a3a" : "#1e6b34",
+            color: !criterionName.trim() ? "#606060" : "#4caf50",
             border: "1px solid #2a7a42",
             borderRadius: 4,
-            cursor: (!selectedType || !criterionName.trim()) ? "not-allowed" : "pointer"
+            cursor: !criterionName.trim() ? "not-allowed" : "pointer"
           }}
         >
           ➕ Add
@@ -239,9 +239,26 @@ export function SearchModelPanel({
           return (
             <div key={index} style={{ padding: 12, backgroundColor: "#1a1a1a", borderRadius: 4, border: "1px solid #333" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
+                <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, color: "#e0e0e0" }}>{criterion.label || criterion.name}</div>
-                  <div style={{ fontSize: 11, color: "#808080" }}>Type: {typeName}</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+                    <span style={{ fontSize: 11, color: "#808080" }}>Type:</span>
+                    <select
+                      value={typeName}
+                      onChange={(e) => handleTypeChange(index, e.target.value)}
+                      style={{
+                        fontSize: 11,
+                        padding: "2px 6px",
+                        backgroundColor: "#2a2a2a",
+                        border: "1px solid #404040",
+                        borderRadius: 3,
+                        color: "#e0e0e0",
+                        cursor: "pointer"
+                      }}
+                    >
+                      {availableTypes.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </div>
                 </div>
                 <div style={{ display: "flex", gap: 6 }}>
                   <button
