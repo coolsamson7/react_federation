@@ -25,6 +25,7 @@ export function SearchModelPanel({
   const [paramValues, setParamValues] = useState<Record<string, string>>({});
   const [showDropdowns, setShowDropdowns] = useState<Record<number, boolean>>({});
   const [selectedSuggestionIndexes, setSelectedSuggestionIndexes] = useState<Record<number, number>>({});
+  const [shadowTexts, setShadowTexts] = useState<Record<number, string>>({});
 
   const newType = (typeName: string) => {
       return { [typeName]: {} }
@@ -100,6 +101,7 @@ export function SearchModelPanel({
     setParamValues({});
     setShowDropdowns(prev => ({ ...prev, [index]: false }));
     setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: -1 }));
+    setShadowTexts(prev => ({ ...prev, [index]: "" }));
   };
 
   const availableTypes = Type.getTypes()
@@ -158,79 +160,157 @@ export function SearchModelPanel({
           // Get state for this specific criterion
           const constraintInput = constraintInputs[index] || "";
           const showDropdown = showDropdowns[index] || false;
-          const selectedSuggestionIndex = selectedSuggestionIndexes[index] || -1;
+          const selectedSuggestionIndex = selectedSuggestionIndexes[index] ?? -1;
+          const shadowText = shadowTexts[index] || "";
 
           const methodNames = availableMethods.map(m => m.name);
           const suggestions = constraintInput
             ? methodNames.filter(m => m.toLowerCase().startsWith(constraintInput.toLowerCase()))
-            : [];
+            : methodNames; // Show all when empty
 
           const currentMethod = availableMethods.find(m => m.name === constraintInput);
           const needsParams = currentMethod?.params.length || 0;
+
+          // Calculate completion text based on current selection or first match
+          const getCompletionText = () => {
+            if (!constraintInput || suggestions.length === 0) return "";
+            const suggestion = selectedSuggestionIndex >= 0
+              ? suggestions[selectedSuggestionIndex]
+              : suggestions[0];
+            if (suggestion && suggestion.toLowerCase().startsWith(constraintInput.toLowerCase())) {
+              return suggestion;
+            }
+            return "";
+          };
+
+          const completionText = getCompletionText();
 
           // Helper functions for this criterion's autocomplete
           const handleInputChange = (value: string) => {
             setConstraintInputs(prev => ({ ...prev, [index]: value }));
             setParamValues({});
-            setShowDropdowns(prev => ({ ...prev, [index]: value.length > 0 }));
+            const newSuggestions = value
+              ? methodNames.filter(m => m.toLowerCase().startsWith(value.toLowerCase()))
+              : methodNames;
+            setShowDropdowns(prev => ({ ...prev, [index]: true }));
             setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: -1 }));
+
+            // Update completion text
+            if (value && newSuggestions.length > 0) {
+              const firstMatch = newSuggestions[0];
+              if (firstMatch.toLowerCase().startsWith(value.toLowerCase())) {
+                setShadowTexts(prev => ({ ...prev, [index]: firstMatch }));
+              } else {
+                setShadowTexts(prev => ({ ...prev, [index]: "" }));
+              }
+            } else {
+              setShadowTexts(prev => ({ ...prev, [index]: "" }));
+            }
           };
 
-          const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (!showDropdown || suggestions.length === 0) {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleAddConstraint(index, constraintInput);
+                    const acceptSuggestion = (suggestion?: string) => {
+            const suggestionToUse = suggestion || completionText;
+
+            if (suggestionToUse) {
+              setConstraintInputs(prev => ({ ...prev, [index]: suggestionToUse }));
+              setShadowTexts(prev => ({ ...prev, [index]: "" }));
+              setShowDropdowns(prev => ({ ...prev, [index]: false }));
+              setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: -1 }));
+
+              // Auto-add if no parameters needed
+              const method = availableMethods.find(m => m.name === suggestionToUse);
+              if (method && method.params.length === 0) {
+                handleAddConstraint(index, suggestionToUse);
+              }
+            }
+          };
+
+          // Update completion when selection changes
+          const updateCompletionText = (newSelectedIndex: number) => {
+            setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: newSelectedIndex }));
+            if (newSelectedIndex >= 0 && suggestions[newSelectedIndex]) {
+              const suggestion = suggestions[newSelectedIndex];
+              if (suggestion.toLowerCase().startsWith(constraintInput.toLowerCase())) {
+                setShadowTexts(prev => ({ ...prev, [index]: suggestion }));
+              }
+            } else if (suggestions.length > 0) {
+              const firstMatch = suggestions[0];
+              if (firstMatch.toLowerCase().startsWith(constraintInput.toLowerCase())) {
+                setShadowTexts(prev => ({ ...prev, [index]: firstMatch }));
+              }
+            }
+          };
+
+                    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+            const input = e.currentTarget;
+
+            if (e.key === "Tab" || e.key === "ArrowRight") {
+              e.preventDefault();
+              if (completionText && completionText !== constraintInput) {
+                acceptSuggestion(completionText);
               }
               return;
             }
 
-                          if (e.key === "ArrowDown") {
+            if (!showDropdown || suggestions.length === 0) {
+              if (e.key === "Enter") {
                 e.preventDefault();
-                setSelectedSuggestionIndexes(prev => ({
-                  ...prev,
-                  [index]: prev[index] < suggestions.length - 1 ? prev[index] + 1 : 0
-                }));
-              } else if (e.key === "ArrowUp") {
-                e.preventDefault();
-                setSelectedSuggestionIndexes(prev => ({
-                  ...prev,
-                  [index]: prev[index] > 0 ? prev[index] - 1 : suggestions.length - 1
-                }));
+                if (constraintInput.trim()) {
+                  handleAddConstraint(index, constraintInput);
+                }
+              }
+              return;
+            }
+
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              const newIndex = selectedSuggestionIndex < suggestions.length - 1
+                ? selectedSuggestionIndex + 1
+                : 0;
+              updateCompletionText(newIndex);
+
+              // Update input with selection
+              setTimeout(() => {
+                const suggestion = suggestions[newIndex];
+                if (suggestion && suggestion.toLowerCase().startsWith(constraintInput.toLowerCase())) {
+                  input.value = suggestion;
+                  input.setSelectionRange(constraintInput.length, suggestion.length);
+                }
+              }, 0);
+            } else if (e.key === "ArrowUp") {
+              e.preventDefault();
+              const newIndex = selectedSuggestionIndex > 0
+                ? selectedSuggestionIndex - 1
+                : suggestions.length - 1;
+              updateCompletionText(newIndex);
+
+              // Update input with selection
+              setTimeout(() => {
+                const suggestion = suggestions[newIndex];
+                if (suggestion && suggestion.toLowerCase().startsWith(constraintInput.toLowerCase())) {
+                  input.value = suggestion;
+                  input.setSelectionRange(constraintInput.length, suggestion.length);
+                }
+              }, 0);
             } else if (e.key === "Enter") {
               e.preventDefault();
               if (selectedSuggestionIndex >= 0) {
-                const selectedSuggestion = suggestions[selectedSuggestionIndex];
-                setConstraintInputs(prev => ({ ...prev, [index]: selectedSuggestion }));
-                setShowDropdowns(prev => ({ ...prev, [index]: false }));
-                setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: -1 }));
-                // Auto-add if no parameters needed
-                const method = availableMethods.find(m => m.name === selectedSuggestion);
-                if (method && method.params.length === 0) {
-                  handleAddConstraint(index, selectedSuggestion);
-                }
+                acceptSuggestion(suggestions[selectedSuggestionIndex]);
               } else if (constraintInput.trim()) {
-                selectSuggestion(constraintInput);
+                handleAddConstraint(index, constraintInput);
               }
-                          } else if (e.key === "Escape") {
-                setShowDropdowns(prev => ({ ...prev, [index]: false }));
-                setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: -1 }));
-              } else if (e.key === "Tab") {
-                e.preventDefault();
-                if (selectedSuggestionIndex >= 0) {
-                  setConstraintInputs(prev => ({ ...prev, [index]: suggestions[selectedSuggestionIndex] }));
-                } else if (suggestions.length > 0) {
-                  setConstraintInputs(prev => ({ ...prev, [index]: suggestions[0] }));
-                }
-                setShowDropdowns(prev => ({ ...prev, [index]: false }));
-                setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: -1 }));
-              }
+            } else if (e.key === "Escape") {
+              setShowDropdowns(prev => ({ ...prev, [index]: false }));
+              setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: -1 }));
+              setShadowTexts(prev => ({ ...prev, [index]: "" }));
+            }
           };
 
           const selectSuggestion = (suggestion: string) => {
             setConstraintInputs(prev => ({ ...prev, [index]: "" }));
             setShowDropdowns(prev => ({ ...prev, [index]: false }));
             setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: -1 }));
+            setShadowTexts(prev => ({ ...prev, [index]: "" }));
 
             // Just add the constraint immediately - parameters can be filled in the chip
             handleAddConstraint(index, suggestion);
@@ -270,6 +350,7 @@ export function SearchModelPanel({
                       setParamValues({});
                       setShowDropdowns(prev => ({ ...prev, [index]: false }));
                       setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: -1 }));
+                      setShadowTexts(prev => ({ ...prev, [index]: "" }));
                     }}
                     style={{ fontSize: 11, padding: "4px 8px" }}
                   >
@@ -409,23 +490,38 @@ export function SearchModelPanel({
                           })}
                         </div>
 
-                        {/* Input field for adding new constraints */}
+                                                {/* Input field for adding new constraints */}
                         <div style={{ position: "relative" }}>
                           <input
                             type="text"
                             value={constraintInput}
                             placeholder="Type constraint name..."
-                            onChange={(e) => handleInputChange(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            onFocus={() => {
-                              if (constraintInput.length > 0) {
-                                setShowDropdowns(prev => ({ ...prev, [index]: true }));
+                            onChange={(e) => {
+                              const newValue = e.target.value;
+                              // Prevent onChange when we're just updating selection
+                              if (newValue.length >= constraintInput.length || !completionText.startsWith(newValue)) {
+                                handleInputChange(newValue);
                               }
                             }}
-                            onBlur={() => {
+                            onKeyDown={handleKeyDown}
+                            onFocus={(e) => {
+                              setShowDropdowns(prev => ({ ...prev, [index]: true }));
+                              // Show completion on focus if there's a match
+                              const input = e.currentTarget;
+                              if (completionText && completionText !== constraintInput) {
+                                setTimeout(() => {
+                                  input.value = completionText;
+                                  input.setSelectionRange(constraintInput.length, completionText.length);
+                                }, 0);
+                              }
+                            }}
+                            onBlur={(e) => {
                               setTimeout(() => {
                                 setShowDropdowns(prev => ({ ...prev, [index]: false }));
                                 setSelectedSuggestionIndexes(prev => ({ ...prev, [index]: -1 }));
+                                setShadowTexts(prev => ({ ...prev, [index]: "" }));
+                                // Reset to actual input value on blur
+                                e.target.value = constraintInput;
                               }, 200);
                             }}
                             style={{
