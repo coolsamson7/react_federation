@@ -1,0 +1,40 @@
+[project]
+name = "aspyx-monorepo"
+version = "0.0.0"
+description = "Development workspace for Aspyx libraries"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch]
+projects = [
+    "packages/portal",
+    "packages/cube",
+    "packages/application",
+]
+
+[tool.hatch.envs.default]
+dependencies = [
+    "pytest",
+    "pytest-asyncio"
+]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest"
+build-all = "bash scripts/build-all.sh"
+
+[tool.hatch.envs.test.scripts]
+portal = "pytest packages/portal/tests"
+cube = "pytest packages/cube/tests"
+all = "pytest packages"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.envs.default.pip-compile]
+all-extras = true
+
+[tool.hatch.envs.default.env-vars]
+PYTHONPATH = "packages/application/src:packages/portal/src:packages/cube/src"

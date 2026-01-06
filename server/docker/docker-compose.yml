@@ -1,0 +1,109 @@
+version: '3'
+services:
+  # NSQ
+  nsqlookupd:
+    image: nsqio/nsq:latest
+    command: /nsqlookupd
+    ports:
+      - "4160:4160"  # TCP client connections
+      - "4161:4161"  # HTTP lookupd API
+
+  nsqd:
+    image: nsqio/nsq:latest
+    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160
+    ports:
+      - "4150:4150"  # TCP for producers/consumers
+      - "4151:4151"  # HTTP for stats and debug
+    depends_on:
+      - nsqlookupd
+
+  nsqadmin:
+    image: nsqio/nsq:latest
+    command: /nsqadmin --lookupd-http-address=nsqlookupd:4161
+    ports:
+      - "4171:4171"  # Web UI
+    depends_on:
+      - nsqlookupd
+  #----------------------------------------------------------------
+  consul:
+    image: consul:1.15
+    command: consul agent -dev -client 0.0.0.0
+    ports:
+      - '8500:8500'
+    expose:
+      - '8500'
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
+    networks:
+      - network
+  #----------------------------------------------------------------
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - network
+  #----------------------------------------------------------------
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.0
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_HOSTNAME: keycloak
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - '8080:8080'
+    expose:
+      - '8080'
+    links:
+      - db
+    depends_on:
+      - db
+    labels:
+      collect_logs_with_filebeat: "true"
+      decode_log_event_to_json_object: "true"
+    volumes:
+      - ./keycloak/:/opt/keycloak/data/import:ro
+    entrypoint: '/opt/keycloak/bin/kc.sh start-dev --import-realm'
+    networks:
+      - network
+  # cube
+  cubejs-backend:
+    image: cubejs/cube:latest
+    container_name: cubejs-backend
+    ports:
+      - "4000:4000"
+    environment:
+      - CUBEJS_DEV_MODE=true
+      - CUBEJS_DB_TYPE=postgres
+      - CUBEJS_DB_HOST=db
+      - CUBEJS_DB_PORT=5432
+      - CUBEJS_DB_NAME=postgres
+      - CUBEJS_DB_USER=postgres
+      - CUBEJS_DB_PASS=postgres
+      - CUBEJS_API_SECRET=SECRET_KEY
+      - CUBEJS_PRE_AGG_STORAGE=postgres
+      - CUBEJS_DEV_MODE=true
+    volumes:
+      - ./cube/cube.js:/cube/conf/cube.js
+      - ./cube/model:/cube/conf/model
+    depends_on:
+      - db
+    networks:
+      - network
+  #----------------------------------------------------------------
+networks:
+  network:
+volumes:
+  postgres:

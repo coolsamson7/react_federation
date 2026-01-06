@@ -4,20 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="dist">
-      <change afterPath="$PROJECT_DIR$/jest.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/event/event-ws.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/portal/src/event/index.ts" afterDir="false" />
+    <list default="true" id="a952cdd3-2dc8-4d54-b7fe-0be488c88922" name="Changes" comment="optimized autocompletion ui">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/shell/src/ChatPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/shell/src/ChatPanel.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cube/cube.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cube/model/customers.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cube/model/orderItems.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cube/model/orders.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cube/model/products.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cube/model/sales.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/cube/cube-metadata.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/cube/cube-metadata.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/portal/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/libs/portal/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="344" />
+    <option name="cachedIndexableFilesCount" value="349" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -51,6 +39,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file:///Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/aspyx/mapper/mapper.py" root0="SKIP_INSPECTION" />
     <setting file="file:///Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/aspyx_persistence/repository.py" root0="SKIP_INSPECTION" />
     <setting file="file:///Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/pip/_vendor/resolvelib/reporters.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/../aspyx/packages/aspyx/src/aspyx/di/__init__.py" root0="SKIP_INSPECTION" />
@@ -59,12 +48,25 @@
     <setting file="file://$PROJECT_DIR$/../aspyx/packages/aspyx/src/aspyx/mapper/operation_builder.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/../aspyx/packages/aspyx/src/aspyx/mapper/transformer.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/../aspyx/packages/aspyx/src/aspyx/validation/validation.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/server/packages/application/pyproject.toml" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/server/packages/cube/src/cube/server/cube/cube_generator.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/server/packages/cube/src/cube/server/cube_service_impl.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/server/packages/cube/src/cube/server/dashboard_service_impl.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/server/packages/cube/src/cube/server/orm/sqlalchemy_orm_extractor.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/server/packages/cube/src/cube/server/persistence/cube_repository.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/server/packages/cube/src/cube/server/persistence/entity/__init__.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/server/packages/portal/pyproject.toml" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/server/packages/portal/src/portal/server/persistence/repository.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/server/packages/portal/src/portal/server/portal_crud_service_impl.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
   <component name="ProblemsViewState">
+    <hideBySeverity>
+      <option value="300" />
+    </hideBySeverity>
     <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
@@ -79,63 +81,66 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Jest.cloneDeep.executor": "Run",
-    "Jest.query.executor": "Run",
-    "Jest.validation.executor": "Debug",
-    "Jest.validation.should parse json.executor": "Debug",
-    "Jest.validation.should produce json.executor": "Debug",
-    "Jest.validation.should validate numbers.executor": "Debug",
-    "Jest.validation.should work.executor": "Debug",
-    "Nx.metadata:scan.executor": "Run",
-    "Nx.mfe1:build-with-metadata.executor": "Run",
-    "Nx.mfe1:serve.executor": "Run",
-    "Nx.mfe1:serve:development.executor": "Run",
-    "Nx.shell:serve:development.executor": "Run",
-    "Python tests.Python tests for server.packages.portal.tests.test_portal.TestPortal.test_read_data.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "ai.playground.ignore.import.keys.banner.in.settings": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "dev.nx.console.last_ai_configure_notification_timestamp": "1767615845290",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/andreasernst/Documents/projects/react_federation/libs/portal/src/event",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs.jest.jest_package": "/Users/andreasernst/Documents/projects/react_federation/node_modules/jest",
-    "nodejs_package_manager_path": "npm",
-    "npm.mfe1 > scan:metadata.executor": "Run",
-    "npm.mfe1 > serve.executor": "Run",
-    "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
-    "show.migrate.to.gradle.popup": "false",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/Users/andreasernst/Documents/projects/react_federation/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Jest.cloneDeep.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.query.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.validation.executor&quot;: &quot;Debug&quot;,
+    &quot;Jest.validation.should parse json.executor&quot;: &quot;Debug&quot;,
+    &quot;Jest.validation.should produce json.executor&quot;: &quot;Debug&quot;,
+    &quot;Jest.validation.should validate numbers.executor&quot;: &quot;Debug&quot;,
+    &quot;Jest.validation.should work.executor&quot;: &quot;Debug&quot;,
+    &quot;Nx.metadata:scan.executor&quot;: &quot;Run&quot;,
+    &quot;Nx.mfe1:build-with-metadata.executor&quot;: &quot;Run&quot;,
+    &quot;Nx.mfe1:serve.executor&quot;: &quot;Run&quot;,
+    &quot;Nx.mfe1:serve:development.executor&quot;: &quot;Run&quot;,
+    &quot;Nx.shell:serve:development.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for server.packages.portal.tests.test_portal.TestPortal.test_read_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;dev.nx.console.last_ai_configure_notification_timestamp&quot;: &quot;1767615845290&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/andreasernst/Documents/projects/react_federation/libs/portal/src/event&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs.jest.jest_package&quot;: &quot;/Users/andreasernst/Documents/projects/react_federation/node_modules/jest&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.mfe1 &gt; scan:metadata.executor&quot;: &quot;Run&quot;,
+    &quot;npm.mfe1 &gt; serve.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMThirdPartyAiProvidersConfigurable&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/andreasernst/Documents/projects/react_federation/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ],
-    "dev.nx.console.project_details_files": [
-      "/Users/andreasernst/Documents/projects/react_federation/tools/metadata/project.json",
-      "/Users/andreasernst/Documents/projects/react_federation/tools/metadata/package.json",
-      "/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/project.json",
-      "/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/package.json",
-      "/Users/andreasernst/Documents/projects/react_federation/apps/shell/project.json",
-      "/Users/andreasernst/Documents/projects/react_federation/apps/shell/package.json",
-      "/Users/andreasernst/Documents/projects/react_federation/libs/portal/project.json",
-      "/Users/andreasernst/Documents/projects/react_federation/libs/portal/package.json"
+    &quot;dev.nx.console.project_details_files&quot;: [
+      &quot;/Users/andreasernst/Documents/projects/react_federation/tools/metadata/project.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/tools/metadata/package.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/project.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/mfe1/package.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/shell/project.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/apps/shell/package.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/libs/portal/project.json&quot;,
+      &quot;/Users/andreasernst/Documents/projects/react_federation/libs/portal/package.json&quot;
     ]
   }
-}]]></component>
+}</component>
+  <component name="RecapUselessUpdatesCounter">
+    <option name="suspendCountdown" value="6" />
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/libs/portal/src/event" />
@@ -152,7 +157,7 @@
       <recent name="$PROJECT_DIR$/libs/portal/src/dashboard/property-editor/editors" />
     </key>
   </component>
-  <component name="RunManager" selected="Nx.shell:serve:development">
+  <component name="RunManager" selected="Python.main">
     <configuration default="true" factoryName="Applet" type="Applet">
       <module />
       <option name="WIDTH" value="400" />
@@ -359,47 +364,23 @@
       <workItem from="1767628283091" duration="148000" />
       <workItem from="1767628496794" duration="96000" />
       <workItem from="1767628612371" duration="330000" />
-      <workItem from="1767628960076" duration="1121000" />
-    </task>
-    <task id="LOCAL-00028" summary="cube charts">
-      <option name="closed" value="true" />
-      <created>1765546894701</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1765546894701</updated>
-    </task>
-    <task id="LOCAL-00029" summary="layout">
-      <option name="closed" value="true" />
-      <created>1765549807721</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1765549807721</updated>
-    </task>
-    <task id="LOCAL-00030" summary="layout">
-      <option name="closed" value="true" />
-      <created>1765550333539</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1765550333539</updated>
-    </task>
-    <task id="LOCAL-00031" summary="layout">
-      <option name="closed" value="true" />
-      <created>1765550902408</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1765550902408</updated>
-    </task>
-    <task id="LOCAL-00032" summary="layout">
-      <option name="closed" value="true" />
-      <created>1765551095296</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1765551095296</updated>
+      <workItem from="1767628960076" duration="1599000" />
+      <workItem from="1767630590358" duration="501000" />
+      <workItem from="1767631105881" duration="172000" />
+      <workItem from="1767631299906" duration="596000" />
+      <workItem from="1767687362999" duration="171000" />
+      <workItem from="1767687562152" duration="35000" />
+      <workItem from="1767687658782" duration="175000" />
+      <workItem from="1767687851519" duration="174000" />
+      <workItem from="1767688037644" duration="23000" />
+      <workItem from="1767688074027" duration="41000" />
+      <workItem from="1767688130694" duration="113000" />
+      <workItem from="1767688258848" duration="670000" />
+      <workItem from="1767689728355" duration="594000" />
+      <workItem from="1767690341809" duration="5275000" />
+      <workItem from="1767695784299" duration="40000" />
+      <workItem from="1767695840335" duration="2773000" />
+      <workItem from="1767700213520" duration="326000" />
     </task>
     <task id="LOCAL-00033" summary="layout">
       <option name="closed" value="true" />
@@ -753,7 +734,47 @@
       <option name="project" value="LOCAL" />
       <updated>1767603286867</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="growin">
+      <option name="closed" value="true" />
+      <created>1767630308596</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1767630308596</updated>
+    </task>
+    <task id="LOCAL-00078" summary="preview">
+      <option name="closed" value="true" />
+      <created>1767691893136</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1767691893136</updated>
+    </task>
+    <task id="LOCAL-00079" summary="grid load fix">
+      <option name="closed" value="true" />
+      <created>1767692693726</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1767692693726</updated>
+    </task>
+    <task id="LOCAL-00080" summary="optimized ui">
+      <option name="closed" value="true" />
+      <created>1767693211856</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1767693211856</updated>
+    </task>
+    <task id="LOCAL-00081" summary="optimized autocompletion ui">
+      <option name="closed" value="true" />
+      <created>1767693866088</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1767693866088</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -771,11 +792,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="crlanup" />
-    <MESSAGE value="cube" />
-    <MESSAGE value="filters" />
-    <MESSAGE value="query" />
-    <MESSAGE value="new stuff" />
     <MESSAGE value="added edit" />
     <MESSAGE value="types &amp; json conversion" />
     <MESSAGE value="query stuff" />
@@ -796,7 +812,12 @@
     <MESSAGE value="filters include joins!" />
     <MESSAGE value="intellij" />
     <MESSAGE value="dist" />
-    <option name="LAST_COMMIT_MESSAGE" value="dist" />
+    <MESSAGE value="growin" />
+    <MESSAGE value="preview" />
+    <MESSAGE value="grid load fix" />
+    <MESSAGE value="optimized ui" />
+    <MESSAGE value="optimized autocompletion ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="optimized autocompletion ui" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -815,7 +836,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/../aspyx/packages/aspyx/src/aspyx/mapper/mapper.py</url>
-          <line>421</line>
+          <line>425</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
@@ -1262,6 +1283,36 @@
           <option name="totalLines" value="128115" />
           <option name="info" value="dist" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767630308732" />
+          <option name="linesCode" value="98974" />
+          <option name="totalLines" value="119548" />
+          <option name="info" value="growin" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767691893240" />
+          <option name="linesCode" value="99441" />
+          <option name="totalLines" value="120564" />
+          <option name="info" value="preview" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767692693835" />
+          <option name="linesCode" value="99478" />
+          <option name="totalLines" value="120682" />
+          <option name="info" value="grid load fix" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767693211974" />
+          <option name="linesCode" value="99478" />
+          <option name="totalLines" value="120700" />
+          <option name="info" value="optimized ui" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767693866222" />
+          <option name="linesCode" value="99478" />
+          <option name="totalLines" value="120749" />
+          <option name="info" value="optimized autocompletion ui" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1356,11 +1407,23 @@
           <option name="totalLines" value="128115" />
           <option name="info" value="05.01.2026" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767630308732" />
+          <option name="linesCode" value="98974" />
+          <option name="totalLines" value="119548" />
+          <option name="info" value="05.01.2026" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1767693866222" />
+          <option name="linesCode" value="99478" />
+          <option name="totalLines" value="120749" />
+          <option name="info" value="06.01.2026" />
+        </TimePoint>
       </list>
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/react_federation$main.coverage" NAME="main Coverage Results" MODIFIED="1767629734701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server/packages/application/src/application" />
+    <SUITE FILE_PATH="coverage/react_federation$main.coverage" NAME="main Coverage Results" MODIFIED="1767695972903" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server/packages/application/src/application" />
     <SUITE FILE_PATH="coverage/react_federation$.coverage" NAME=" Coverage Results" MODIFIED="1767615822396" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
