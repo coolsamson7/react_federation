@@ -98,4 +98,60 @@ export class GridItem {
 
     return item;
   }
+
+  /**
+   * Create GridItem from plain object (useful for JSON deserialization)
+   */
+  static fromPlainObject(obj: any): GridItem {
+    return new GridItem(
+      obj?.sizeMode || GridSizeMode.fr,
+      obj?.size || 1,
+      obj?.alignment || GridAlignment.start
+    );
+  }
+
+  /**
+   * Convert array of plain objects to GridItem instances
+   */
+  static fromPlainArray(array: any[]): GridItem[] {
+    return array.map(item => GridItem.fromPlainObject(item));
+  }
+
+  /**
+   * Ensure item is a GridItem instance (convert from plain object if needed)
+   */
+  static ensure(item: GridItem | any): GridItem {
+    if (item instanceof GridItem) {
+      return item;
+    }
+    return GridItem.fromPlainObject(item);
+  }
+}
+
+/**
+ * Utility function to safely get CSS value from GridItem or plain object
+ */
+export function getGridItemCSSValue(item: GridItem | any): string {
+  if (typeof item?.toCSSValue === 'function') {
+    return item.toCSSValue();
+  }
+
+  // Handle plain object
+  const sizeMode = item?.sizeMode || GridSizeMode.fr;
+  const size = item?.size || 1;
+
+  switch (sizeMode) {
+    case GridSizeMode.auto:
+      return "auto";
+    case GridSizeMode.fr:
+      return `${size}fr`;
+    case GridSizeMode.px:
+      return `${size}px`;
+    case GridSizeMode.percent:
+      return `${size}%`;
+    case GridSizeMode.minmax:
+      return `minmax(${size}px, 1fr)`;
+    default:
+      return "1fr";
+  }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { WidgetBuilder, RegisterBuilder } from "../widget-factory";
 import { GridWidgetData } from "./grid-widget-data";
-import { GridItem, GridSizeMode } from "./grid-item";
+import { GridItem, GridSizeMode, GridAlignment, getGridItemCSSValue } from "./grid-item";
 import { WidgetRenderer } from "../widget-renderer";
 import { TypeRegistry } from "../type-registry";
 import { WidgetFactory } from "../widget-factory";
@@ -10,6 +10,8 @@ import { DropContainer } from "../editor/DropContainer";
 import { insertChild, bumpVersion } from "../editor/tree-utils";
 import { messageBus } from "../editor/message-bus";
 import { SelectionOverlay } from "../editor/SelectionOverlay";
+
+
 
 /**
  * Runtime builder for GridWidget
@@ -22,11 +24,11 @@ export class GridWidgetBuilder extends WidgetBuilder<GridWidgetData> {
     const typeRegistry = container.resolve(TypeRegistry);
     const widgetFactory = container.resolve(WidgetFactory);
 
-    // Convert GridItem arrays to CSS values
+    // Convert GridItem arrays to CSS values - handle both class instances and plain objects
     const columns = data.columns || [new GridItem(GridSizeMode.fr, 1), new GridItem(GridSizeMode.fr, 1)];
     const rows = data.rows || [new GridItem(GridSizeMode.auto, 0)];
-    const gridTemplateColumns = columns.map(c => c.toCSSValue()).join(" ");
-    const gridTemplateRows = rows.map(r => r.toCSSValue()).join(" ");
+    const gridTemplateColumns = columns.map(c => getGridItemCSSValue(c)).join(" ");
+    const gridTemplateRows = rows.map(r => getGridItemCSSValue(r)).join(" ");
 
     const style: React.CSSProperties = {
       display: "grid",
@@ -90,11 +92,11 @@ export class GridWidgetEditBuilder extends WidgetBuilder<GridWidgetData> {
 
     const isSelected = context?.selectedId === data.id;
 
-    // Convert GridItem arrays to CSS values
+    // Convert GridItem arrays to CSS values - handle both class instances and plain objects
     const columns = data.columns || [new GridItem(GridSizeMode.fr, 1), new GridItem(GridSizeMode.fr, 1)];
     const rows = data.rows || [new GridItem(GridSizeMode.auto, 0)];
-    const gridTemplateColumns = columns.map(c => c.toCSSValue()).join(" ");
-    const gridTemplateRows = rows.map(r => r.toCSSValue()).join(" ");
+    const gridTemplateColumns = columns.map(c => getGridItemCSSValue(c)).join(" ");
+    const gridTemplateRows = rows.map(r => getGridItemCSSValue(r)).join(" ");
 
     // Determine grid dimensions
     const cols = columns.length;

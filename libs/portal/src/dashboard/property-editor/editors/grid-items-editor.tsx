@@ -1,5 +1,5 @@
 import React from "react";
-import {GridAlignment, GridItem, GridSizeMode} from "@portal/dashboard/widgets/grid-item";
+import {GridAlignment, GridItem, GridSizeMode, getGridItemCSSValue} from "../../widgets/grid-item";
 import {RegisterPropertyEditor} from "@portal/dashboard";
 
 interface GridItemsEditorProps {
@@ -170,6 +170,15 @@ export class GridItemsEditor extends React.Component<GridItemsEditorProps> {
     const { label, value, propertyName } = this.props;
     const items = value || [];
     
+    // Ensure all items are GridItem instances
+    const gridItems = items.map(item => {
+      if (item instanceof GridItem) {
+        return item;
+      }
+      // Convert plain object to GridItem
+      return GridItem.fromPlainObject(item);
+    });
+
     // Determine orientation from property name (columns vs rows)
     const orientation: Orientation = propertyName.toLowerCase().includes("column") ? "column" : "row";
 
@@ -203,7 +212,7 @@ export class GridItemsEditor extends React.Component<GridItemsEditorProps> {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          {items.map((item, index) => (
+          {gridItems.map((item, index) => (
             <div
               key={index}
               style={{
@@ -248,7 +257,7 @@ export class GridItemsEditor extends React.Component<GridItemsEditorProps> {
               {item.sizeMode !== GridSizeMode.auto && (
                 <input
                   type="number"
-                  value={item.size}
+                  value={item.size || 0}
                   onChange={(e) =>
                     this.handleChangeSize(index, parseFloat(e.target.value) || 0)
                   }
@@ -291,23 +300,22 @@ export class GridItemsEditor extends React.Component<GridItemsEditorProps> {
                   alignItems: "center",
                   justifyContent: "center",
                 }}
-                title={`Alignment: ${item.alignment}`}
-              >
-                {this.getAlignmentIcon(item.alignment, orientation)}
+                                title={`Alignment: ${item.alignment || GridAlignment.start}`}>
+                {this.getAlignmentIcon(item.alignment || GridAlignment.start, orientation)}
               </button>
 
               {/* Delete Button */}
               <button
                 onClick={() => this.handleRemoveItem(index)}
-                disabled={items.length <= 1}
+                disabled={gridItems.length <= 1}
                 style={{
                   padding: "4px 8px",
                   fontSize: 11,
-                  backgroundColor: items.length <= 1 ? "#333" : "#d9534f",
-                  color: items.length <= 1 ? "#666" : "#fff",
+                  backgroundColor: gridItems.length <= 1 ? "#333" : "#d9534f",
+                  color: gridItems.length <= 1 ? "#666" : "#fff",
                   border: "none",
                   borderRadius: 3,
-                  cursor: items.length <= 1 ? "not-allowed" : "pointer",
+                  cursor: gridItems.length <= 1 ? "not-allowed" : "pointer",
                 }}
                 title="Remove"
               >
@@ -329,7 +337,7 @@ export class GridItemsEditor extends React.Component<GridItemsEditorProps> {
             fontFamily: "monospace",
           }}
         >
-          {items.map((item) => item.toCSSValue()).join(" ")}
+          {gridItems.map((item) => getGridItemCSSValue(item)).join(" ")}
         </div>
       </div>
     );
